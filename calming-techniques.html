@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calming Techniques</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e0f7fa; /* Light blue background for tranquility */
+            color: #004d40; /* Dark teal text for contrast */
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .technique {
+            background-color: rgba(255, 255, 255, 0.8); /* White background with transparency */
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer; /* Change cursor to pointer */
+        }
+
+        .description {
+            display: none; /* Initially hidden */
+            margin-top: 10px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly different background for description */
+            border-radius: 5px;
+        }
+
+        .counter {
+            font-size: 72px; /* Increased font size for prominence */
+            margin-top: 20px;
+            color: #00796b; /* Teal color for the counter */
+            font-family: 'Courier New', Courier, monospace; /* Digital clock font */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Shadow for a digital effect */
+            position: relative; /* Position relative for wave effect */
+            overflow: hidden; /* Hide overflow for wave effect */
+        }
+
+        .wave-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(173, 216, 230, 0.5); /* Light blue background */
+            border-radius: 10px; /* Rounded corners */
+            animation: wave 1s infinite; /* Wave animation */
+            z-index: -1; /* Send background behind text */
+            opacity: 0.7; /* Slightly more opaque for better visibility */
+        }
+
+        @keyframes wave {
+            0% { transform: translateY(0); background: rgba(173, 216, 230, 0.5); }
+            25% { transform: translateY(-10px); background: rgba(135, 206, 250, 0.5); } /* Change color slightly */
+            50% { transform: translateY(0); background: rgba(173, 216, 230, 0.5); }
+            75% { transform: translateY(10px); background: rgba(135, 206, 250, 0.5); } /* Change color slightly */
+            100% { transform: translateY(0); background: rgba(173, 216, 230, 0.5); }
+        }
+
+        .breathing-visual {
+            width: 150px; /* Increased size for prominence */
+            height: 150px; /* Increased size for prominence */
+            border: 10px solid #00796b; /* Thicker teal border */
+            border-radius: 50%;
+            margin: 20px auto;
+            animation: breathe 6s ease-in-out infinite; /* Slower breathing animation */
+            transition: transform 0.5s ease; /* Smooth transition for scaling */
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); } /* Increased scale for more prominence */
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #00796b; /* Teal color for links */
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .music-button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .music-button {
+            background-color: #00796b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .smiley {
+            display: inline-block;
+            margin: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            font-size: 64px; /* Increased size for emoticons */
+        }
+
+        .smiley img {
+            width: 50px; /* Adjust size as needed */
+            height: 50px; /* Adjust size as needed */
+        }
+
+        .smiley:hover {
+            transform: scale(1.1); /* Slightly enlarge on hover */
+        }
+
+        .smiley div {
+            text-align: center; /* Center the text below the emoticon */
+            font-size: 16px; /* Adjust font size as needed */
+            margin-top: 5px; /* Space between emoticon and name */
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <h1>
+        Calming Techniques
+        <i class="fas fa-pause" onclick="toggleMusic()" style="cursor: pointer; margin-left: 10px;" title="Pause Music"></i>
+        <a href="Index.html" style="position: absolute; top: 20px; right: 20px; text-decoration: none;">
+            <i class="fas fa-home" title="Home"></i>
+        </a>
+    </h1>
+    
+    <div class="technique" onclick="toggleDescription('breathing')">
+        <h2>Breathing Exercises</h2>
+        <div id="breathing" class="description">
+            <div class="breathing-visual"></div>
+            <p>Practice deep breathing to help calm the mind and body.</p>
+            <p><strong>Instructions:</strong> Inhale deeply through your nose for 4 seconds, hold for 4 seconds, and exhale slowly through your mouth for 4 seconds.</p>
+            <p><strong>Interval:</strong> Repeat this cycle for 5 minutes.</p>
+            <audio id="breathingAudio" controls>
+                <source src="slow-breathing.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+            <p>Listen to the audio for example, repeat as necessary.</p>
+        </div>
+    </div>
+    
+    <div class="technique" onclick="toggleDescription('countTo10')">
+        <h2>Count to 10</h2>
+        <div id="countTo10" class="description">
+            <p>Take a moment to count to 10 slowly, focusing on each number.</p>
+            <div id="counter" class="counter">
+                <div class="wave-background"></div>
+                Start
+            </div>
+        </div>
+    </div>
+    
+    <div class="technique" onclick="toggleDescription('makeShape')">
+        <h2>Make a Shape</h2>
+        <div id="makeShape" class="description">
+            <p>Use your hands to create shapes in the air, focusing on the movement.</p>
+            <div id="shapeMessage" style="display: none;">
+                <p id="shapeSuggestion"></p>
+                <button onclick="getRandomShape()" style="cursor: pointer; padding: 10px 20px; background-color: #00796b; color: white; border: none; border-radius: 5px;">Refresh Shape</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="technique" onclick="toggleDescription('meditation')">
+        <h2>Meditation</h2>
+        <div id="meditation" class="description">
+            <p>Engage in a short meditation session to clear your mind.</p>
+            <button onclick="showMeditationTechniques()" style="cursor: pointer; padding: 10px 20px; background-color: #00796b; color: white; border: none; border-radius: 5px;">Show Techniques</button>
+            <div id="meditationTechniques" style="display: none; margin-top: 20px; text-align: center;">
+                <button onclick="toggleTechnique('mindfulness')" style="margin-bottom: 10px; background-color: #00796b; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;">Mindfulness</button>
+                <button onclick="toggleTechnique('bodyScan')" style="margin-bottom: 10px; background-color: #00796b; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;">Body Scan</button>
+                <button onclick="toggleTechnique('mantra')" style="margin-bottom: 10px; background-color: #00796b; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;">Mantra</button>
+                <button onclick="toggleTechnique('lovingKindness')" style="margin-bottom: 10px; background-color: #00796b; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;">Loving Kindness</button>
+                <button onclick="toggleTechnique('progressiveMuscle')" style="margin-bottom: 10px; background-color: #00796b; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;">Progressive Muscle Relaxation</button>
+                <button onclick="toggleTechnique('transcendental')" style="margin-bottom: 10px; background-color: #00796b; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;">Transcendental Meditation</button>
+                <button onclick="toggleTechnique('guided')" style="margin-bottom: 10px; background-color: #00796b; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;">Guided Meditation</button>
+                <button onclick="toggleTechnique('walking')" style="margin-bottom: 10px; background-color: #00796b; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;">Walking Meditation</button>
+                
+                <div id="descriptionContainer" style="display: none; margin-top: 20px; padding: 15px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+                    <div id="descriptionText"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="technique" onclick="toggleDescription('relaxingMusic')">
+        <h2>Relaxing Music</h2>
+        <div id="relaxingMusic" class="description">
+            <p>Listen to calming music to soothe your senses.</p>
+            <div id="musicButtons" class="music-button-container">
+                <button onclick="playMusic('animal_sounds.mp3')" class="music-button">
+                    <i class="fas fa-paw" aria-hidden="true"></i> Animal Sounds
+                </button>
+                <button onclick="playMusic('relax_music_1.mp3')" class="music-button">
+                    <i class="fas fa-music" aria-hidden="true"></i> Relax Music 1
+                </button>
+                <button onclick="playMusic('tranquil.mp3')" class="music-button">
+                    <i class="fas fa-music" aria-hidden="true"></i> Tranquil Music
+                </button>
+                <button onclick="playMusic('waves.mp3')" class="music-button">
+                    <i class="fas fa-water" aria-hidden="true"></i> Waves
+                </button>
+                <button onclick="playMusic('white_noise.mp3')" class="music-button">
+                    <i class="fas fa-volume-up" aria-hidden="true"></i> White Noise
+                </button>
+                <button onclick="playMusic('whale_sounds.mp3')" class="music-button">
+                    <i class="fas fa-fish" aria-hidden="true"></i> Whale Sounds
+                </button>
+                <button onclick="playMusic('wind_sounds.mp3')" class="music-button">
+                    <i class="fas fa-wind" aria-hidden="true"></i> Wind Sounds
+                </button>
+            </div>
+            <audio id="musicPlayer" controls loop>
+                <source src="relax_music_1.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+    </div>
+    
+    <div class="technique" onclick="toggleDescription('shareFeelings')">
+        <h2>Share My Feelings</h2>
+        <div id="shareFeelings" class="description">
+            <p>Talk about your feelings with someone you trust.</p>
+            <div id="smileyGrid" style="display: none; margin-top: 20px;">
+                <div class="smiley" onclick="selectFeeling('happy')" title="Happy">
+                    😊 <!-- Happy Emoticon -->
+                    <div>Happy</div> <!-- Name of the emoticon -->
+                </div>
+                <div class="smiley" onclick="selectFeeling('sad')" title="Sad">
+                    😢 <!-- Sad Emoticon -->
+                    <div>Sad</div> <!-- Name of the emoticon -->
+                </div>
+                <div class="smiley" onclick="selectFeeling('angry')" title="Angry">
+                    😠 <!-- Angry Emoticon -->
+                    <div>Angry</div> <!-- Name of the emoticon -->
+                </div>
+                <div class="smiley" onclick="selectFeeling('confused')" title="Confused">
+                    😕 <!-- Confused Emoticon -->
+                    <div>Confused</div> <!-- Name of the emoticon -->
+                </div>
+                <div class="smiley" onclick="selectFeeling('excited')" title="Excited">
+                    😃 <!-- Excited Emoticon -->
+                    <div>Excited</div> <!-- Name of the emoticon -->
+                </div>
+                <div class="smiley" onclick="selectFeeling('scared')" title="Scared">
+                    😨 <!-- Scared Emoticon -->
+                    <div>Scared</div> <!-- Name of the emoticon -->
+                </div>
+                <div class="smiley" onclick="selectFeeling('bored')" title="Bored">
+                    😐 <!-- Bored Emoticon -->
+                    <div>Bored</div> <!-- Name of the emoticon -->
+                </div>
+                <div class="smiley" onclick="selectFeeling('loved')" title="Loved">
+                    ❤️ <!-- Loved Emoticon -->
+                    <div>Loved</div> <!-- Name of the emoticon -->
+                </div>
+                <div class="smiley" onclick="selectFeeling('surprised')" title="Surprised">
+                    😲 <!-- Surprised Emoticon -->
+                    <div>Surprised</div> <!-- Name of the emoticon -->
+                </div>
+                <div class="smiley" onclick="selectFeeling('tired')" title="Tired">
+                    😴 <!-- Tired Emoticon -->
+                    <div>Tired</div> <!-- Name of the emoticon -->
+                </div>
+                <div class="smiley" onclick="selectFeeling('nervous')" title="Nervous">
+                    😬 <!-- Nervous Emoticon -->
+                    <div>Nervous</div> <!-- Name of the emoticon -->
+                </div>
+                <div class="smiley" onclick="selectFeeling('silly')" title="Silly">
+                    🤪 <!-- Silly Emoticon -->
+                    <div>Silly</div> <!-- Name of the emoticon -->
+                </div>
+                <div class="smiley" onclick="selectFeeling('cool')" title="Cool">
+                    😎 <!-- Cool Emoticon -->
+                    <div>Cool</div> <!-- Name of the emoticon -->
+                </div>
+                <div class="smiley" onclick="selectFeeling('sleepy')" title="Sleepy">
+                    😪 <!-- Sleepy Emoticon -->
+                    <div>Sleepy</div> <!-- Name of the emoticon -->
+                </div>
+                <div class="smiley" onclick="selectFeeling('grateful')" title="Grateful">
+                    🙏 <!-- Grateful Emoticon -->
+                    <div>Grateful</div> <!-- Name of the emoticon -->
+                </div>
+                <div class="smiley" onclick="selectFeeling('hopeful')" title="Hopeful">
+                    🌈 <!-- Hopeful Emoticon -->
+                    <div>Hopeful</div> <!-- Name of the emoticon -->
+                </div>
+                <div class="smiley" onclick="selectFeeling('confident')" title="Confident">
+                    💪 <!-- Confident Emoticon -->
+                    <div>Confident</div> <!-- Name of the emoticon -->
+                </div>
+                <div class="smiley" onclick="selectFeeling('playful')" title="Playful">
+                    🎉 <!-- Playful Emoticon -->
+                    <div>Playful</div> <!-- Name of the emoticon -->
+                </div>
+                <div class="smiley" onclick="selectFeeling('curious')" title="Curious">
+                    🤔 <!-- Curious Emoticon -->
+                    <div>Curious</div> <!-- Name of the emoticon -->
+                </div>
+                <div class="smiley" onclick="selectFeeling('lonely')" title="Lonely">
+                    😞 <!-- Lonely Emoticon -->
+                    <div>Lonely</div> <!-- Name of the emoticon -->
+                </div>
+                <div class="smiley" onclick="selectFeeling('relaxed')" title="Relaxed">
+                    😌 <!-- Relaxed Emoticon -->
+                    <div>Relaxed</div> <!-- Name of the emoticon -->
+                </div>
+            </div>
+            <div id="emotionDescription" style="margin-top: 20px; font-size: 18px;"></div> <!-- Description Container -->
+        </div>
+    </div>
+
+    <script>
+        let countingInterval; // Declare a variable to hold the interval ID
+
+        const shapes = [
+            { name: "Star" },
+            { name: "Circle" },
+            { name: "Triangle" },
+            { name: "Square" },
+            { name: "Heart" },
+            { name: "Diamond" },
+            { name: "Rectangle" },
+            { name: "Wave" },
+            { name: "X" },
+            { name: "T" },
+            { name: "L" },
+            { name: "Z" },
+            { name: "O" },
+            { name: "V" },
+            { name: "Arrow" },
+            { name: "Spiral" }
+        ];
+
+        function getRandomShape() {
+            const randomIndex = Math.floor(Math.random() * shapes.length);
+            const shape = shapes[randomIndex];
+            document.getElementById('shapeSuggestion').textContent = `Make a ${shape.name} with your body!`;
+        }
+
+        function toggleDescription(id) {
+            // Get all descriptions
+            const descriptions = document.querySelectorAll('.description');
+            descriptions.forEach(desc => {
+                // Hide all descriptions
+                desc.style.display = 'none';
+            });
+
+            // Toggle the clicked description
+            const currentDescription = document.getElementById(id);
+            if (currentDescription.style.display === 'block') {
+                currentDescription.style.display = 'none'; // Hide if already visible
+            } else {
+                currentDescription.style.display = 'block'; // Show the clicked description
+                if (id === 'countTo10') {
+                    const counterDiv = document.getElementById('counter');
+                    clearInterval(countingInterval); // Clear any existing counting interval
+                    counterDiv.textContent = 'Start'; // Reset counter display
+                    startCounting(); // Start counting immediately
+                }
+                if (id === 'makeShape') {
+                    document.getElementById('shapeMessage').style.display = 'block'; // Show shape message
+                    getRandomShape(); // Get a random shape suggestion
+                }
+                if (id === 'shareFeelings') {
+                    document.getElementById('smileyGrid').style.display = 'block'; // Show smiley grid
+                }
+            }
+        }
+
+        // Set the default volume for the audio element
+        window.onload = function() {
+            const audioElement = document.getElementById('breathingAudio');
+            audioElement.volume = 0.5; // Set volume to 50%
+            const musicPlayer = document.getElementById('musicPlayer');
+            musicPlayer.play(); // Play "relax_music_1.mp3" when the page loads
+        };
+
+        function startCounting() {
+            const counterDiv = document.getElementById('counter');
+            let count = 1; // Start counting from 1
+
+            countingInterval = setInterval(() => {
+                counterDiv.textContent = count; // Update the counter text
+                count++; // Increment count
+
+                if (count > 10) {
+                    count = 1; // Reset to 1 after reaching 10
+                }
+            }, 1000); // Change number every 1 second
+        }
+
+        function showMeditationTechniques() {
+            const techniquesDiv = document.getElementById('meditationTechniques');
+            techniquesDiv.style.display = techniquesDiv.style.display === 'block' ? 'none' : 'block'; // Toggle visibility
+        }
+
+        function toggleTechnique(id) {
+            const descriptionContainer = document.getElementById('descriptionContainer');
+            const descriptionText = document.getElementById('descriptionText');
+            const musicPlayer = document.getElementById('musicPlayer'); // Get the music player
+
+            // Define descriptions for each technique with expanded steps
+            const descriptions = {
+                mindfulness: `<p>1. Find a comfortable position, either sitting or lying down.</p>
+                              <p>2. Close your eyes and take a few deep breaths to center yourself.</p>
+                              <p>3. Begin to observe your thoughts without judgment, allowing them to come and go.</p>
+                              <p>4. Focus on your breath, feeling the air enter and leave your body.</p>
+                              <p>5. Practice this for 5-10 minutes, gradually increasing the time as you become more comfortable with the practice.</p>`,
+                bodyScan: `<p>1. Lie down comfortably on your back with your arms at your sides.</p>
+                            <p>2. Close your eyes and take a few deep breaths to relax.</p>
+                            <p>3. Start at your toes and focus on each part of your body, moving upwards.</p>
+                            <p>4. Notice any sensations, tension, or relaxation in each area.</p>
+                            <p>5. Continue this practice for 10-15 minutes, covering your entire body to promote relaxation and awareness.</p>`,
+                mantra: `<p>1. Choose a word or phrase that resonates with you.</p>
+                          <p>2. Find a quiet place to sit comfortably and close your eyes.</p>
+                          <p>3. Take a few deep breaths to relax.</p>
+                          <p>4. Begin to silently repeat your chosen mantra.</p>
+                          <p>5. Focus on the sound and meaning of the mantra for 10-20 minutes, allowing it to anchor your thoughts and create a sense of calm.</p>`,
+                lovingKindness: `<p>1. Find a comfortable seated position and close your eyes.</p>
+                                 <p>2. Take a few deep breaths to center yourself.</p>
+                                 <p>3. Begin by sending love and kindness to yourself.</p>
+                                 <p>4. Visualize someone you care about and send them loving thoughts.</p>
+                                 <p>5. Expand this practice to include all beings, wishing them happiness and peace.</p>
+                                 <p>6. Practice this for 10-15 minutes to cultivate positive emotions.</p>`,
+                progressiveMuscle: `<p>1. Find a comfortable position, either sitting or lying down.</p>
+                                    <p>2. Take a few deep breaths to relax.</p>
+                                    <p>3. Start with your toes, tensing them for 5 seconds, then relaxing.</p>
+                                    <p>4. Move up through your body, tensing and relaxing each muscle group.</p>
+                                    <p>5. Finish with your head and neck, taking your time with each area to increase awareness of physical sensations.</p>`,
+                transcendental: `<p>1. Choose a mantra that resonates with you.</p>
+                                 <p>2. Find a quiet place to sit comfortably.</p>
+                                 <p>3. Close your eyes and take a few deep breaths.</p>
+                                 <p>4. Begin to silently repeat your mantra.</p>
+                                 <p>5. Whenever your mind wanders, gently return to the mantra.</p>
+                                 <p>6. Continue for 15-20 minutes to promote deep relaxation and mental clarity.</p>`,
+                guided: `<p>1. Find a quiet and comfortable place to sit or lie down.</p>
+                         <p>2. Close your eyes and take a few deep breaths.</p>
+                         <p>3. Visualize a peaceful scene, such as a beach or forest.</p>
+                         <p>4. Engage all your senses to immerse yourself in the scene.</p>
+                         <p>5. Stay in this visualization for 10-15 minutes, allowing yourself to relax and escape from stress.</p>`,
+                walking: `<p>1. Find a quiet place where you can walk without distractions.</p>
+                          <p>2. Begin walking slowly, paying attention to each step.</p>
+                          <p>3. Focus on the sensations in your feet and legs as you walk.</p>
+                          <p>4. Notice your surroundings, the sounds, and the air on your skin.</p>
+                          <p>5. Continue for 10-15 minutes, maintaining a slow and mindful pace.</p>`
+            };
+
+            // Set the description text based on the selected technique
+            descriptionText.innerHTML = descriptions[id];
+            descriptionContainer.style.display = 'block'; // Show the description container
+
+            // Pause the music if a different technique is selected
+            if (id !== 'relaxingMusic') {
+                musicPlayer.pause(); // Pause the music
+                musicPlayer.currentTime = 0; // Reset the music to the beginning (optional)
+            }
+        }
+
+        function playMusic(file) {
+            const musicPlayer = document.getElementById('musicPlayer');
+            musicPlayer.src = file; // Set the audio source to the selected file
+            musicPlayer.play(); // Play the selected music
+        }
+
+        function toggleMusic() {
+            const musicPlayer = document.getElementById('musicPlayer');
+            if (musicPlayer.paused) {
+                musicPlayer.play(); // Play the music if it's paused
+            } else {
+                musicPlayer.pause(); // Pause the music if it's playing
+            }
+        }
+
+        function selectFeeling(feeling) {
+            const descriptionContainer = document.getElementById('emotionDescription');
+            let description = '';
+
+            // Define descriptions for each feeling
+            const descriptions = {
+                happy: "That's wonderful! It's great to feel happy. Keep smiling!",
+                sad: "It's okay to feel sad sometimes. Talking about it can help.",
+                angry: "Feeling angry is normal. Try to take deep breaths and calm down.",
+                confused: "It's okay to feel confused. Take your time to understand your feelings.",
+                excited: "Excitement is a great feeling! Enjoy the moment!",
+                scared: "Feeling scared can be tough. Remember, it's okay to ask for help.",
+                bored: "Boredom can be a chance to explore new activities. What do you want to do?",
+                loved: "Feeling loved is amazing! Cherish those who care about you.",
+                surprised: "Surprises can be fun! Embrace the unexpected.",
+                tired: "It's important to rest. Make sure to take care of yourself.",
+                nervous: "Feeling nervous is normal. Try to focus on your breathing.",
+                silly: "Being silly is a fun way to express yourself! Enjoy the laughter.",
+                cool: "Feeling cool is great! Keep being yourself.",
+                sleepy: "If you're sleepy, it's a good time to relax or take a nap.",
+                grateful: "Gratitude is powerful. Think of the things you appreciate.",
+                hopeful: "Hope is a wonderful feeling. Keep believing in good things!",
+                confident: "Confidence is key! Believe in yourself and your abilities.",
+                playful: "Playfulness brings joy! Enjoy your time and have fun.",
+                curious: "Curiosity is a great way to learn. Keep asking questions!",
+                lonely: "Feeling lonely can be hard. Reach out to someone you trust.",
+                relaxed: "Relaxation is important. Take a moment to breathe deeply."
+            };
+
+            // Set the description based on the selected feeling
+            description = descriptions[feeling] || "I'm not sure how to describe that feeling.";
+            descriptionContainer.textContent = description; // Display the description
+        }
+    </script>
+
+    <footer style="background-color: rgba(0, 123, 255, 0.8); color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; text-align: center;">
+        ZenZac™
+    </footer>
+</body>
+</html> 

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fart Soundboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        .button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #soundboard {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fart Soundboard</h1>
+    <a href="index.html" style="text-decoration: none;">
+        <i class="fas fa-home" style="font-size: 24px; color: #333;"></i>
+    </a>
+    <div id="soundboard">
+        <button class="button" onclick="playSound('short')">Short Fart</button>
+        <button class="button" onclick="playSound('long')">Long Fart</button>
+        <button class="button" onclick="playSound('random')">Random Fart</button>
+        <br>
+        <label for="frequency">Frequency:</label>
+        <input type="range" id="frequency" min="1" max="10" value="5">
+        <label for="length">Length:</label>
+        <input type="range" id="length" min="1" max="10" value="5">
+    </div>
+
+    <footer style="background-color: rgba(0, 123, 255, 0.8); color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; text-align: center;">
+        ZenZac™
+    </footer>
+
+    <script>
+        const fartSounds = {
+            short: new Audio('sounds/short-fart.mp3'),
+            long: new Audio('sounds/long-fart.mp3'),
+            random: [
+                new Audio('sounds/fart1.mp3'),
+                new Audio('sounds/fart2.mp3'),
+                new Audio('sounds/fart3.mp3')
+            ]
+        };
+
+        function playSound(type) {
+            if (type === 'random') {
+                const randomIndex = Math.floor(Math.random() * fartSounds.random.length);
+                fartSounds.random[randomIndex].play();
+            } else {
+                fartSounds[type].play();
+            }
+        }
+
+        // Adjust sound frequency and length (for demonstration purposes)
+        document.getElementById('frequency').addEventListener('input', function() {
+            // Logic to adjust frequency (not implemented in this example)
+            console.log('Frequency set to:', this.value);
+        });
+
+        document.getElementById('length').addEventListener('input', function() {
+            // Logic to adjust length (not implemented in this example)
+            console.log('Length set to:', this.value);
+        });
+    </script>
+</body>
+</html> 

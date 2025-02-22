@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutrition - Parent Resource Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            height: auto;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: linear-gradient(270deg, #007BFF, #00CFFF, #007BFF);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 20px;
+        }
+
+        .food-groups-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            margin-top: 40px;
+        }
+
+        .food-group {
+            margin: 10px;
+            cursor: pointer;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            flex: 1 1 150px;
+            max-width: 150px;
+        }
+
+        .food-icon {
+            font-size: 50px;
+            margin-bottom: 5px;
+            color: white;
+        }
+
+        .description {
+            display: none;
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.8);
+            color: black;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 10;
+            width: 150px;
+            text-align: center;
+        }
+
+        .food-group:hover .description {
+            display: block;
+        }
+
+        .kids-favorites {
+            display: none;
+            margin-top: 20px;
+            color: white;
+        }
+
+        .kids-favorites h2 {
+            margin-bottom: 10px;
+        }
+
+        .details-container {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            width: 80%;
+            max-width: 600px;
+            text-align: left;
+            position: relative;
+            z-index: 5;
+            margin-bottom: 40px;
+        }
+
+        .default-icon {
+            font-size: 50px;
+            color: white;
+        }
+
+        h1 {
+            color: white;
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .food-group {
+                margin: 5px;
+            }
+
+            .food-icon {
+                font-size: 40px;
+            }
+        }
+
+        .frost-button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .frost-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.5s ease;
+            z-index: 0;
+        }
+
+        .frost-button:hover::before {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .frost-button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .frost-button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .home-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="frost-button home-button" onclick="window.location.href='index.html'">
+            <i class="fas fa-home"></i>
+        </button>
+        <h1 id="nutrition-header">Nutrition</h1>
+        <div class="food-groups-container">
+            <div class="food-group" onclick="showDetails('fruits')">
+                <i class="fas fa-apple-alt food-icon default-icon"></i>
+                <p>Fruits</p>
+                <div class="description">
+                    <h3>Fruits</h3>
+                    <p>Fruits are a great source of vitamins and minerals.</p>
+                </div>
+            </div>
+            <div class="food-group" onclick="showDetails('vegetables')">
+                <i class="fas fa-carrot food-icon default-icon"></i>
+                <p>Vegetables</p>
+                <div class="description">
+                    <h3>Vegetables</h3>
+                    <p>Essential for a balanced diet.</p>
+                </div>
+            </div>
+            <div class="food-group" onclick="showDetails('grains')">
+                <i class="fas fa-bread-slice food-icon default-icon"></i>
+                <p>Grains</p>
+                <div class="description">
+                    <h3>Grains</h3>
+                    <p>Provide energy and fiber.</p>
+                </div>
+            </div>
+            <div class="food-group" onclick="showDetails('proteins')">
+                <i class="fas fa-drumstick-bite food-icon default-icon"></i>
+                <p>Proteins</p>
+                <div class="description">
+                    <h3>Proteins</h3>
+                    <p>Important for growth and repair.</p>
+                </div>
+            </div>
+            <div class="food-group" onclick="showDetails('dairy')">
+                <i class="fas fa-glass-whiskey food-icon default-icon"></i>
+                <p>Dairy</p>
+                <div class="description">
+                    <h3>Dairy</h3>
+                    <p>Good source of calcium.</p>
+                </div>
+            </div>
+            <div class="food-group" onclick="showDetails('fats')">
+                <i class="fas fa-question-circle food-icon default-icon"></i>
+                <p>Fats</p>
+                <div class="description">
+                    <h3>Fats</h3>
+                    <p>Important for brain health.</p>
+                </div>
+            </div>
+            <div class="food-group" onclick="showDetails('sweets')">
+                <i class="fas fa-candy-cane food-icon default-icon"></i>
+                <p>Sweets</p>
+                <div class="description">
+                    <h3>Sweets</h3>
+                    <p>Should be consumed in moderation.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="details-container" id="details">
+            <h2 id="details-title">Details</h2>
+            <p id="details-description"></p>
+            <h3>Kids' Favorites</h3>
+            <ul id="kids-favorites-list"></ul>
+        </div>
+
+        <div class="kids-favorites" id="kids-favorites">
+            <h2>Kids' Favorites</h2>
+            <p>Here are some favorite foods among kids:</p>
+            <ul>
+                <li><i class="fas fa-apple-alt"></i> Apples</li>
+                <li><i class="fas fa-carrot"></i> Carrots</li>
+                <li><i class="fas fa-bread-slice"></i> Bread</li>
+                <li><i class="fas fa-drumstick-bite"></i> Chicken Nuggets</li>
+                <li><i class="fas fa-glass-whiskey"></i> Milk</li>
+                <li><i class="fas fa-candy-cane"></i> Candy</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function showDetails(foodGroup) {
+            const detailsContainer = document.getElementById('details');
+            const detailsTitle = document.getElementById('details-title');
+            const detailsDescription = document.getElementById('details-description');
+            const kidsFavoritesList = document.getElementById('kids-favorites-list');
+            const kidsFavorites = document.getElementById('kids-favorites');
+
+            detailsDescription.innerHTML = '';
+            kidsFavoritesList.innerHTML = '';
+
+            switch (foodGroup) {
+                case 'fruits':
+                    detailsTitle.innerText = 'Fruits';
+                    detailsDescription.innerHTML = `
+                        Fruits are a great source of vitamins and minerals. They are rich in antioxidants and can help reduce the risk of chronic diseases. 
+                        Examples include apples, bananas, berries, and oranges. 
+                        <br><br>
+                        **Health Benefits:**
+                        - Rich in vitamins and minerals
+                        - High in fiber and antioxidants
+                        <br><br>
+                        **Meal Ideas:**
+                        <ul>
+                            <li><strong>Fruit Salad:</strong> Combine apples, bananas, and berries with a drizzle of honey.</li>
+                            <li><strong>Smoothie:</strong> Blend bananas, spinach, and berries with yogurt for a nutritious drink.</li>
+                        </ul>
+                        <br><br>
+                        **Kids' Favorite Meals:**
+                        <ul>
+                            <li><strong>Banana Pancakes:</strong> Use mashed bananas in pancake batter for a sweet twist.</li>
+                            <li><strong>Apple Slices with Peanut Butter:</strong> A quick and healthy snack.</li>
+                        </ul>`;
+                    kidsFavoritesList.innerHTML = '<li><i class="fas fa-apple-alt"></i> Apples</li><li><i class="fas fa-banana"></i> Bananas</li>';
+                    break;
+                case 'vegetables':
+                    detailsTitle.innerText = 'Vegetables';
+                    detailsDescription.innerHTML = `
+                        Vegetables are essential for a balanced diet. They provide vital nutrients, including vitamins, minerals, and fiber. 
+                        Examples include carrots, broccoli, spinach, and bell peppers. 
+                        <br><br>
+                        **Health Benefits:**
+                        - High in vitamins and minerals
+                        - Low in calories and high in fiber
+                        <br><br>
+                        **Meal Ideas:**
+                        <ul>
+                            <li><strong>Stir-Fry:</strong> Sauté broccoli, bell peppers, and carrots with soy sauce and serve over rice.</li>
+                            <li><strong>Salad:</strong> Mix spinach, cherry tomatoes, and cucumbers with a vinaigrette dressing.</li>
+                        </ul>
+                        <br><br>
+                        **Kids' Favorite Meals:**
+                        <ul>
+                            <li><strong>Carrot Sticks with Hummus:</strong> A crunchy and healthy snack.</li>
+                            <li><strong>Veggie Pizza:</strong> Top a pizza with lots of colorful vegetables.</li>
+                        </ul>`;
+                    kidsFavoritesList.innerHTML = '<li><i class="fas fa-carrot"></i> Carrots</li><li><i class="fas fa-broccoli"></i> Broccoli</li>';
+                    break;
+                case 'grains':
+                    detailsTitle.innerText = 'Grains';
+                    detailsDescription.innerHTML = `
+                        Grains provide energy and fiber. Whole grains are particularly beneficial as they contain more nutrients than refined grains. 
+                        Examples include rice, oats, quinoa, and whole wheat bread. 
+                        <br><br>
+                        **Health Benefits:**
+                        - Good source of energy
+                        - High in fiber and essential nutrients
+                        <br><br>
+                        **Meal Ideas:**
+                        <ul>
+                            <li><strong>Quinoa Salad:</strong> Combine cooked quinoa with black beans, corn, and diced peppers.</li>
+                            <li><strong>Oatmeal:</strong> Cook oats and top with fruits and nuts for a hearty breakfast.</li>
+                        </ul>
+                        <br><br>
+                        **Kids' Favorite Meals:**
+                        <ul>
+                            <li><strong>Rice and Beans:</strong> A simple and nutritious meal.</li>
+                            <li><strong>Whole Wheat Pasta with Marinara:</strong> A kid-friendly favorite.</li>
+                        </ul>`;
+                    kidsFavoritesList.innerHTML = '<li><i class="fas fa-bread-slice"></i> Bread</li><li><i class="fas fa-rice-bowl"></i> Rice</li>';
+                    break;
+                case 'proteins':
+                    detailsTitle.innerText = 'Proteins';
+                    detailsDescription.innerHTML = `
+                        Proteins are important for growth and repair. They are made up of amino acids, which are essential for building and repairing tissues. 
+                        Examples include chicken, fish, beans, and nuts. 
+                        <br><br>
+                        **Health Benefits:**
+                        - Essential for muscle growth and repair
+                        - Provides energy and supports immune function
+                        <br><br>
+                        **Meal Ideas:**
+                        <ul>
+                            <li><strong>Chicken Stir-Fry:</strong> Cook chicken with mixed vegetables and serve over brown rice.</li>
+                            <li><strong>Bean Chili:</strong> Combine kidney beans, tomatoes, and spices for a hearty dish.</li>
+                        </ul>
+                        <br><br>
+                        **Kids' Favorite Meals:**
+                        <ul>
+                            <li><strong>Chicken Nuggets:</strong> A classic favorite among kids.</li>
+                            <li><strong>Peanut Butter and Jelly Sandwich:</strong> A simple and beloved meal.</li>
+                        </ul>`;
+                    kidsFavoritesList.innerHTML = '<li><i class="fas fa-drumstick-bite"></i> Chicken Nuggets</li><li><i class="fas fa-fish"></i> Fish</li>';
+                    break;
+                case 'dairy':
+                    detailsTitle.innerText = 'Dairy';
+                    detailsDescription.innerHTML = `
+                        Dairy products are a good source of calcium, which is vital for strong bones and teeth. They also provide protein and other essential nutrients. 
+                        Examples include milk, cheese, and yogurt. 
+                        <br><br>
+                        **Health Benefits:**
+                        - High in calcium and vitamin D
+                        - Supports bone health
+                        <br><br>
+                        **Meal Ideas:**
+                        <ul>
+                            <li><strong>Yogurt Parfait:</strong> Layer yogurt with granola and fruits for a delicious snack.</li>
+                            <li><strong>Cheese Sandwich:</strong> Use whole grain bread with cheese and add some veggies.</li>
+                        </ul>
+                        <br><br>
+                        **Kids' Favorite Meals:**
+                        <ul>
+                            <li><strong>Macaroni and Cheese:</strong> A creamy and cheesy favorite.</li>
+                            <li><strong>Cheese Quesadilla:</strong> Quick and easy to make.</li>
+                        </ul>`;
+                    kidsFavoritesList.innerHTML = '<li><i class="fas fa-glass-whiskey"></i> Milk</li><li><i class="fas fa-cheese"></i> Cheese</li>';
+                    break;
+                case 'fats':
+                    detailsTitle.innerText = 'Fats';
+                    detailsDescription.innerHTML = `
+                        Healthy fats are important for brain health and hormone production. They also help absorb fat-soluble vitamins. 
+                        Examples include avocados, nuts, seeds, and olive oil. 
+                        <br><br>
+                        **Health Benefits:**
+                        - Supports brain function
+                        - Aids in nutrient absorption
+                        <br><br>
+                        **Meal Ideas:**
+                        <ul>
+                            <li><strong>Avocado Toast:</strong> Spread avocado on whole grain toast and top with tomatoes.</li>
+                            <li><strong>Nuts and Seeds Mix:</strong> Combine almonds, walnuts, and pumpkin seeds for a healthy snack.</li>
+                        </ul>
+                        <br><br>
+                        **Kids' Favorite Meals:**
+                        <ul>
+                            <li><strong>Guacamole with Tortilla Chips:</strong> A fun and tasty snack.</li>
+                            <li><strong>Nut Butter on Toast:</strong> A quick and nutritious option.</li>
+                        </ul>`;
+                    kidsFavoritesList.innerHTML = '<li><i class="fas fa-avocado"></i> Avocados</li><li><i class="fas fa-nut"></i> Nuts</li>';
+                    break;
+                case 'sweets':
+                    detailsTitle.innerText = 'Sweets';
+                    detailsDescription.innerHTML = `
+                        Sweets should be consumed in moderation. While they can provide quick energy, excessive sugar intake can lead to health issues. 
+                        Examples include candies, cakes, and cookies. 
+                        <br><br>
+                        **Health Benefits:**
+                        - Provides quick energy
+                        - Can be enjoyed as an occasional treat
+                        <br><br>
+                        **Meal Ideas:**
+                        <ul>
+                            <li><strong>Fruit Sorbet:</strong> Blend frozen fruits for a refreshing dessert.</li>
+                            <li><strong>Chocolate-Dipped Strawberries:</strong> Dip strawberries in melted chocolate for a sweet treat.</li>
+                        </ul>
+                        <br><br>
+                        **Kids' Favorite Meals:**
+                        <ul>
+                            <li><strong>Ice Cream Sundae:</strong> A fun treat with toppings.</li>
+                            <li><strong>Chocolate Chip Cookies:</strong> A classic favorite.</li>
+                        </ul>`;
+                    kidsFavoritesList.innerHTML = '<li><i class="fas fa-candy-cane"></i> Candy</li><li><i class="fas fa-cookie"></i> Cookies</li>';
+                    break;
+            }
+
+            detailsContainer.style.display = 'block';
+            kidsFavorites.style.display = 'block';
+        }
+    </script>
+
+    <footer style="background-color: rgba(0, 123, 255, 0.8); color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; text-align: center;">
+        ZenZac™
+    </footer>
+</body>
+</html> 

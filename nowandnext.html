@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Now and Next Boards</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"> <!-- Stunning font -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet"> <!-- Robotic font -->
+    <link href="https://fonts.googleapis.com/css?family=Rockwell" rel="stylesheet"> <!-- Rockwell font -->
+    <style>
+        body {
+            font-family: 'Roboto Mono', monospace; /* Robotic style font */
+            margin: 20px;
+            background: url('images/clockbg.png') no-repeat center center fixed; /* Background image */
+            background-size: cover; /* Cover the entire background */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+        h1 {
+            text-align: center; /* Center the header */
+            color: #007BFF; /* Header color */
+            margin-bottom: 10px; /* Space below the header */
+        }
+        h2 {
+            color: #0056b3; /* Darker blue for subheader */
+            margin-top: 20px; /* Space above subheader */
+        }
+        p {
+            text-align: center; /* Center the paragraph */
+            font-size: 16px; /* Font size for instructions */
+            color: #333; /* Text color */
+            margin-bottom: 20px; /* Space below the paragraph */
+        }
+        .container {
+            display: flex; /* Use flexbox for horizontal layout */
+            justify-content: flex-start; /* Align items to the start */
+            align-items: stretch; /* Stretch items to the same height */
+            max-width: 1200px; /* Max width for larger screens */
+            margin: auto; /* Center the container */
+            margin-top: 20px; /* Space above the container */
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        }
+        .bucket {
+            width: 30%; /* Width for the task menu */
+            margin-right: 20px; /* Space between the task menu and the Now/Next areas */
+        }
+        .task-area {
+            width: 35%; /* Width for the Now and Next areas */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px; /* Space around task areas */
+            background-color: rgba(255, 255, 255, 0.9); /* Light background for clarity */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            flex: 1; /* Allow task areas to grow equally */
+        }
+        .task {
+            border: 1px solid #007BFF; /* Border for tasks */
+            background-color: #f0f8ff; /* Background color for tasks */
+            margin: 5px 0; /* Space between tasks */
+            padding: 10px; /* Increase padding for better touch targets */
+            cursor: pointer; /* Pointer cursor for tasks */
+            transition: background-color 0.3s; /* Smooth background transition */
+            font-size: 16px; /* Increase font size for better readability */
+            line-height: 1.5; /* Increase line height for better spacing */
+            font-family: 'Roboto', sans-serif; /* Use a more readable font */
+            display: flex; /* Use flexbox for task layout */
+            justify-content: space-between; /* Space between task text and delete button */
+            align-items: center; /* Center items vertically */
+        }
+        .task:hover {
+            background-color: #e0f7fa; /* Change background on hover */
+        }
+        .delete-btn {
+            background: none; /* No background */
+            border: none; /* No border */
+            color: #ff0000; /* Red color for delete */
+            cursor: pointer; /* Pointer cursor for delete button */
+            font-size: 20px; /* Font size for delete button */
+        }
+        .how-to {
+            text-align: center; /* Center the text */
+            margin-top: 20px; /* Space above the How to section */
+            font-size: 18px; /* Larger font size for readability */
+        }
+        .task-group {
+            max-height: 200px; /* Set a max height for scrolling */
+            overflow-y: auto; /* Enable vertical scrolling */
+        }
+        /* Frost Aura Effect */
+        .task-area {
+            background: rgba(255, 255, 255, 0.8); /* Light background for clarity */
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 10px 0;
+        }
+        #taskModal {
+            background: rgba(255, 255, 255, 0.9); /* Frost effect */
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        button {
+            background-color: #007BFF; /* Blue button */
+            color: white; /* White text */
+            border: none; /* No border */
+            border-radius: 5px; /* Rounded corners */
+            padding: 10px 15px; /* Padding */
+            cursor: pointer; /* Pointer cursor */
+            transition: background-color 0.3s; /* Smooth background transition */
+        }
+        button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        .how-to-icon {
+            cursor: pointer; /* Pointer cursor for the icon */
+            font-size: 24px; /* Size of the icon */
+            margin-top: 20px; /* Space above the icon */
+            color: #007BFF; /* Color of the icon */
+            transition: color 0.3s; /* Smooth color transition */
+        }
+        .how-to-icon:hover {
+            color: #0056b3; /* Darker blue on hover */
+        }
+        ul {
+            padding: 0; /* Remove default padding */
+            list-style-type: none; /* Remove bullet points */
+        }
+        li {
+            margin: 5px 0; /* Space between list items */
+        }
+        button {
+            width: 100%; /* Make buttons full width */
+        }
+        .add-task {
+            margin-top: 20px; /* Space above the add task section */
+            display: flex; /* Flexbox for input and button */
+            justify-content: space-between; /* Space between input and button */
+        }
+        .add-task input {
+            flex: 1; /* Allow input to grow */
+            padding: 5px; /* Padding for input */
+            margin-right: 10px; /* Space between input and button */
+        }
+        .info-icon {
+            cursor: pointer; /* Pointer cursor for the icon */
+            font-size: 20px; /* Size of the icon */
+            color: #007BFF; /* Color of the icon */
+            margin-left: 10px; /* Space between header and icon */
+        }
+        .how-to-description {
+            display: none; /* Initially hidden */
+            margin-top: 10px; /* Space above the description */
+            background-color: #f9f9f9; /* Light background for the description */
+            padding: 10px; /* Padding for the description */
+            border: 1px solid #ccc; /* Border for the description */
+            border-radius: 5px; /* Rounded corners */
+        }
+        .full-screen {
+            display: none; /* Initially hidden */
+            position: fixed; /* Fixed position */
+            top: 0; /* Align to top */
+            left: 0; /* Align to left */
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            background-color: rgba(0, 0, 0, 0.8); /* Dark background */
+            color: white; /* White text */
+            z-index: 1000; /* On top of other elements */
+            justify-content: center; /* Center content */
+            align-items: center; /* Center content */
+            flex-direction: column; /* Stack content vertically */
+        }
+        .full-screen .task-area {
+            width: 80%; /* Width for task area in full screen */
+            margin: 10px; /* Margin for task area */
+        }
+    </style>
+</head>
+<body>
+    <div style="position: absolute; top: 20px; right: 20px; z-index: 1000;">
+        <i class="fas fa-home" onclick="goHome()" style="cursor: pointer; font-size: 24px; margin-right: 15px;"></i>
+        <i class="fas fa-sync" onclick="refreshPage()" style="cursor: pointer; font-size: 24px; margin-right: 15px;"></i>
+        <i class="fas fa-search" onclick="toggleFullScreen()" style="cursor: pointer; font-size: 24px; margin-right: 15px;"></i>
+        <i class="fas fa-info-circle info-icon" onclick="toggleHowTo()" style="cursor: pointer; font-size: 24px;"></i>
+    </div>
+    <div class="container">
+        <div class="bucket" id="taskBucket">
+            <ul>
+                <li>
+                    <button class="button" onclick="toggleTasks('choresTasks')">Chores</button>
+                </li>
+                <li>
+                    <button class="button" onclick="toggleTasks('craftingTasks')">Crafting</button>
+                </li>
+                <li>
+                    <button class="button" onclick="toggleTasks('electronicsTasks')">Electronics</button>
+                </li>
+                <li>
+                    <button class="button" onclick="toggleTasks('familyTasks')">Family</button>
+                </li>
+                <li>
+                    <button class="button" onclick="toggleTasks('funTasks')">Fun</button>
+                </li>
+                <li>
+                    <button class="button" onclick="toggleTasks('gamingTasks')">Gaming</button>
+                </li>
+                <li>
+                    <button class="button" onclick="toggleTasks('hygieneTasks')">Hygiene</button>
+                </li>
+                <li>
+                    <button class="button" onclick="toggleTasks('kitchenTasks')">Kitchen</button>
+                </li>
+                <li>
+                    <button class="button" onclick="toggleTasks('physicalTasks')">Physical</button>
+                </li>
+                <li>
+                    <button class="button" onclick="toggleTasks('helpMumTasks')">Help Mum</button>
+                </li>
+                <li>
+                    <button class="button" onclick="toggleTasks('helpDadTasks')">Help Dad</button>
+                </li>
+            </ul>
+            
+            <div class="add-task">
+                <input type="text" id="newTaskInput" placeholder="Add your own task..." />
+                <button onclick="addCustomTask()">Add Task</button>
+            </div>
+
+            <div class="task-group" id="choresTasks" style="display: none;">
+                <ul>
+                    <li class="task" id="task1" onclick="addToNow(this)">Clean Up Toys</li>
+                    <li class="task" id="task2" onclick="addToNow(this)">Feed the Pets</li>
+                    <li class="task" id="task3" onclick="addToNow(this)">Help with Dishes</li>
+                    <li class="task" id="task4" onclick="addToNow(this)">Take Out the Rubbish</li>
+                    <li class="task" id="task5" onclick="addToNow(this)">Vacuum the Living Room</li>
+                    <li class="task" id="task6" onclick="addToNow(this)">Water the Plants</li>
+                    <li class="task" id="task7" onclick="addToNow(this)">Make the Bed</li>
+                    <li class="task" id="task8" onclick="addToNow(this)">Dust the Shelves</li>
+                    <li class="task" id="task9" onclick="addToNow(this)">Organise Books</li>
+                    <li class="task" id="task10" onclick="addToNow(this)">Help with Grocery Shopping</li>
+                    <li class="task" id="task11" onclick="addToNow(this)">Sort Recycling</li>
+                    <li class="task" id="task12" onclick="addToNow(this)">Help with Cooking</li>
+                    <li class="task" id="task13" onclick="addToNow(this)">Set the Table</li>
+                    <li class="task" id="task14" onclick="addToNow(this)">Clear the Table</li>
+                    <li class="task" id="task15" onclick="addToNow(this)">Tidy TV Room</li>
+                </ul>
+            </div>
+
+            <div class="task-group" id="craftingTasks" style="display: none;">
+                <ul>
+                    <li class="task" id="task21" onclick="addToNow(this)">Build Something Outside</li>
+                    <li class="task" id="task22" onclick="addToNow(this)">Create a Gift for Someone</li>
+                    <li class="task" id="task23" onclick="addToNow(this)">Make a Greeting Card</li>
+                    <li class="task" id="task24" onclick="addToNow(this)">Make a Nice Picture</li>
+                    <li class="task" id="task25" onclick="addToNow(this)">Paint a Stone</li>
+                    <li class="task" id="task26" onclick="addToNow(this)">Create a Collage</li>
+                    <li class="task" id="task27" onclick="addToNow(this)">Make a Scrapbook</li>
+                    <li class="task" id="task28" onclick="addToNow(this)">Create a Family Tree</li>
+                    <li class="task" id="task29" onclick="addToNow(this)">Make a Nature Journal</li>
+                    <li class="task" id="task30" onclick="addToNow(this)">Create a Vision Board</li>
+                    <li class="task" id="task31" onclick="addToNow(this)">Make a DIY Gift</li>
+                    <li class="task" id="task32" onclick="addToNow(this)">Create a Holiday Decoration</li>
+                    <li class="task" id="task33" onclick="addToNow(this)">Make a Card for a Friend</li>
+                    <li class="task" id="task34" onclick="addToNow(this)">Create a Painting</li>
+                    <li class="task" id="task35" onclick="addToNow(this)">Make a Craft from Recyclables</li>
+                </ul>
+            </div>
+
+            <div class="task-group" id="electronicsTasks" style="display: none;">
+                <ul>
+                    <li class="task" id="task41" onclick="addToNow(this)">Build a Simple Circuit</li>
+                    <li class="task" id="task42" onclick="addToNow(this)">Fix a Broken Gadget</li>
+                    <li class="task" id="task43" onclick="addToNow(this)">Learn Basic Coding</li>
+                    <li class="task" id="task44" onclick="addToNow(this)">Create a Simple Game</li>
+                    <li class="task" id="task45" onclick="addToNow(this)">Make a Video of a Game</li>
+                    <li class="task" id="task46" onclick="addToNow(this)">Assemble a Model Kit</li>
+                    <li class="task" id="task47" onclick="addToNow(this)">Create a Stop Motion Video</li>
+                    <li class="task" id="task48" onclick="addToNow(this)">Learn About Robotics</li>
+                    <li class="task" id="task49" onclick="addToNow(this)">Make a Simple Robot</li>
+                    <li class="task" id="task50" onclick="addToNow(this)">Explore Electronics Online</li>
+                    <li class="task" id="task51" onclick="addToNow(this)">Create a Light-Up Card</li>
+                    <li class="task" id="task52" onclick="addToNow(this)">Build a Solar Oven</li>
+                    <li class="task" id="task53" onclick="addToNow(this)">Watch Kids You Tube</li>
+                    <li class="task" id="task54" onclick="addToNow(this)">Create a DIY Flashlight</li>
+                    <li class="task" id="task55" onclick="addToNow(this)">Explore Coding Apps</li>
+                </ul>
+            </div>
+
+            <div class="task-group" id="familyTasks" style="display: none;">
+                <ul>
+                    <li class="task" id="task56" onclick="addToNow(this)">Plan a Family Game Night</li>
+                    <li class="task" id="task57" onclick="addToNow(this)">Organize a Family Outing</li>
+                    <li class="task" id="task58" onclick="addToNow(this)">Create a Family Movie Night</li>
+                    <li class="task" id="task59" onclick="addToNow(this)">Cook a Family Meal Together</li>
+                    <li class="task" id="task60" onclick="addToNow(this)">Create a Family Scrapbook</li>
+                    <li class="task" id="task61" onclick="addToNow(this)">Plan a Family Picnic</li>
+                    <li class="task" id="task62" onclick="addToNow(this)">Write a Family Newsletter</li>
+                    <li class="task" id="task63" onclick="addToNow(this)">Have a Family Talent Show</li>
+                    <li class="task" id="task64" onclick="addToNow(this)">Create a Family Tree</li>
+                    <li class="task" id="task65" onclick="addToNow(this)">Plan a Family Holiday</li>
+                    <li class="task" id="task66" onclick="addToNow(this)">Organise Family Photos</li>
+                    <li class="task" id="task67" onclick="addToNow(this)">Create a Family Recipe Book</li>
+                    <li class="task" id="task68" onclick="addToNow(this)">Have a Family Sports Day</li>
+                    <li class="task" id="task69" onclick="addToNow(this)">Plan a Family Game Tournament</li>
+                    <li class="task" id="task70" onclick="addToNow(this)">Create a Family Vision Board</li>
+                </ul>
+            </div>
+
+            <div class="task-group" id="funTasks" style="display: none;">
+                <ul>
+                    <li class="task" id="task71" onclick="addToNow(this)">Create a Fun Video</li>
+                    <li class="task" id="task72" onclick="addToNow(this)">Plan a Scavenger Hunt</li>
+                    <li class="task" id="task73" onclick="addToNow(this)">Have a Dance Party</li>
+                    <li class="task" id="task74" onclick="addToNow(this)">Make a DIY Puzzle</li>
+                    <li class="task" id="task75" onclick="addToNow(this)">Create a Treasure Map</li>
+                    <li class="task" id="task76" onclick="addToNow(this)">Organize a Talent Show</li>
+                    <li class="task" id="task77" onclick="addToNow(this)">Make a Fun Recipe</li>
+                    <li class="task" id="task78" onclick="addToNow(this)">Create a Fun Board Game</li>
+                    <li class="task" id="task79" onclick="addToNow(this)">Have a Picnic in the Park</li>
+                    <li class="task" id="task80" onclick="addToNow(this)">Create a Fun Playlist</li>
+                    <li class="task" id="task81" onclick="addToNow(this)">Make a DIY Craft</li>
+                    <li class="task" id="task82" onclick="addToNow(this)">Plan a Fun Day Out</li>
+                    <li class="task" id="task83" onclick="addToNow(this)">Create a Fun Photo Album</li>
+                    <li class="task" id="task84" onclick="addToNow(this)">Have a Movie Marathon</li>
+                    <li class="task" id="task85" onclick="addToNow(this)">Create a Fun Challenge</li>
+                </ul>
+            </div>
+
+            <div class="task-group" id="gamingTasks" style="display: none;">
+                <ul>
+                    <li class="task" id="task86" onclick="addToNow(this)">Play a New Video Game</li>
+                    <li class="task" id="task87" onclick="addToNow(this)">Organise a Gaming Tournament</li>
+                    <li class="task" id="task88" onclick="addToNow(this)">Create a Gaming Strategy Guide</li>
+                    <li class="task" id="task89" onclick="addToNow(this)">Design a Game Character</li>
+                    <li class="task" id="task90" onclick="addToNow(this)">Make a Gaming Video</li>
+                    <li class="task" id="task91" onclick="addToNow(this)">Create a Game Review</li>
+                    <li class="task" id="task92" onclick="addToNow(this)">Play a Board Game with Family</li>
+                    <li class="task" id="task93" onclick="addToNow(this)">Try a New Card Game</li>
+                    <li class="task" id="task94" onclick="addToNow(this)">Create a Gaming Blog</li>
+                    <li class="task" id="task95" onclick="addToNow(this)">Make a DIY Game</li>
+                    <li class="task" id="task96" onclick="addToNow(this)">Host a Game Night</li>
+                    <li class="task" id="task97" onclick="addToNow(this)">Create a Gaming Playlist</li>
+                    <li class="task" id="task98" onclick="addToNow(this)">Learn About Game Development</li>
+                    <li class="task" id="task99" onclick="addToNow(this)">Create a Gaming Challenge</li>
+                    <li class="task" id="task100" onclick="addToNow(this)">Explore Gaming History</li>
+                </ul>
+            </div>
+
+            <div class="task-group" id="hygieneTasks" style="display: none;">
+                <ul>
+                    <li class="task" id="task101" onclick="addToNow(this)">Brush Teeth</li>
+                    <li class="task" id="task102" onclick="addToNow(this)">Take a Shower</li>
+                    <li class="task" id="task103" onclick="addToNow(this)">Wash Hands Before Meals</li>
+                    <li class="task" id="task104" onclick="addToNow(this)">Change into Clean Clothes</li>
+                    <li class="task" id="task105" onclick="addToNow(this)">Comb Hair</li>
+                    <li class="task" id="task106" onclick="addToNow(this)">Clean Up After Yourself</li>
+                    <li class="task" id="task107" onclick="addToNow(this)">Organize Your Room</li>
+                    <li class="task" id="task108" onclick="addToNow(this)">Help with Laundry</li>
+                    <li class="task" id="task109" onclick="addToNow(this)">Help with Cleaning</li>
+                    <li class="task" id="task110" onclick="addToNow(this)">Help with Pet Care</li>
+                    <li class="task" id="task111" onclick="addToNow(this)">Help with Family Chores</li>
+                    <li class="task" id="task112" onclick="addToNow(this)">Help with Organising</li>
+                    <li class="task" id="task113" onclick="addToNow(this)">Help with Planning Family Events</li>
+                    <li class="task" id="task114" onclick="addToNow(this)">Help with Shopping Lists</li>
+                    <li class="task" id="task115" onclick="addToNow(this)">Help with Family Budgets</li>
+                </ul>
+            </div>
+
+            <div class="task-group" id="kitchenTasks" style="display: none;">
+                <ul>
+                    <li class="task" id="task116" onclick="addToNow(this)">Help with Cooking</li>
+                    <li class="task" id="task117" onclick="addToNow(this)">Set the Table</li>
+                    <li class="task" id="task118" onclick="addToNow(this)">Help with Meal Prep</li>
+                    <li class="task" id="task119" onclick="addToNow(this)">Organize the Pantry</li>
+                    <li class="task" id="task120" onclick="addToNow(this)">Help with Grocery Shopping</li>
+                    <li class="task" id="task121" onclick="addToNow(this)">Clean Up After Cooking</li>
+                    <li class="task" id="task122" onclick="addToNow(this)">Help with Baking</li>
+                    <li class="task" id="task123" onclick="addToNow(this)">Help with Setting Up for Meals</li>
+                    <li class="task" id="task124" onclick="addToNow(this)">Help with Organizing Kitchen Supplies</li>
+                    <li class="task" id="task125" onclick="addToNow(this)">Help with Family Cooking Nights</li>
+                    <li class="task" id="task126" onclick="addToNow(this)">Help with Cleaning the Kitchen</li>
+                    <li class="task" id="task127" onclick="addToNow(this)">Help with Planning Meals</li>
+                    <li class="task" id="task128" onclick="addToNow(this)">Help with Family Recipes</li>
+                    <li class="task" id="task129" onclick="addToNow(this)">Help with Kitchen Safety</li>
+                    <li class="task" id="task130" onclick="addToNow(this)">Help with Food Storage</li>
+                </ul>
+            </div>
+
+            <div class="task-group" id="physicalTasks" style="display: none;">
+                <ul>
+                    <li class="task" id="task131" onclick="addToNow(this)">Go for a Walk</li>
+                    <li class="task" id="task132" onclick="addToNow(this)">Do a Workout</li>
+                    <li class="task" id="task133" onclick="addToNow(this)">Play a Sport</li>
+                    <li class="task" id="task134" onclick="addToNow(this)">Join a Dance Class</li>
+                    <li class="task" id="task135" onclick="addToNow(this)">Try Yoga</li>
+                    <li class="task" id="task136" onclick="addToNow(this)">Go Cycling</li>
+                    <li class="task" id="task137" onclick="addToNow(this)">Participate in a Fun Run</li>
+                    <li class="task" id="task138" onclick="addToNow(this)">Learn a Martial Art</li>
+                    <li class="task" id="task139" onclick="addToNow(this)">Make an Obstacle Course</li>
+                    <li class="task" id="task140" onclick="addToNow(this)">Join a Sports Team</li>
+                    <li class="task" id="task141" onclick="addToNow(this)">Go Swimming</li>
+                    <li class="task" id="task142" onclick="addToNow(this)">Do a Nature Walk</li>
+                    <li class="task" id="task143" onclick="addToNow(this)">Participate in a Family Sports Day</li>
+                    <li class="task" id="task144" onclick="addToNow(this)">Try a New Sport</li>
+                    <li class="task" id="task145" onclick="addToNow(this)">Create a Fitness Challenge</li>
+                </ul>
+            </div>
+
+            <div class="task-group" id="helpMumTasks" style="display: none;">
+                <ul>
+                    <li class="task" id="task146" onclick="addToNow(this)">Help with Grocery Shopping</li>
+                    <li class="task" id="task147" onclick="addToNow(this)">Help with Cooking</li>
+                    <li class="task" id="task148" onclick="addToNow(this)">Organise the Living Room</li>
+                    <li class="task" id="task149" onclick="addToNow(this)">Help with Laundry</li>
+                    <li class="task" id="task150" onclick="addToNow(this)">Help with Gardening</li>
+                    <li class="task" id="task151" onclick="addToNow(this)">Help with Cleaning</li>
+                    <li class="task" id="task152" onclick="addToNow(this)">Help with Pet Care</li>
+                    <li class="task" id="task153" onclick="addToNow(this)">Help with Homework</li>
+                    <li class="task" id="task154" onclick="addToNow(this)">Help with Organising</li>
+                    <li class="task" id="task155" onclick="addToNow(this)">Help with Planning Family Events</li>
+                    <li class="task" id="task156" onclick="addToNow(this)">Help with DIY Projects</li>
+                    <li class="task" id="task157" onclick="addToNow(this)">Help with Shopping Lists</li>
+                    <li class="task" id="task158" onclick="addToNow(this)">Help with Meal Prep</li>
+                    <li class="task" id="task159" onclick="addToNow(this)">Help with Family Budgets</li>
+                    <li class="task" id="task160" onclick="addToNow(this)">Help with Family Chores</li>
+                </ul>
+            </div>
+
+            <div class="task-group" id="helpDadTasks" style="display: none;">
+                <ul>
+                    <li class="task" id="task161" onclick="addToNow(this)">Help with Outside Work</li>
+                    <li class="task" id="task162" onclick="addToNow(this)">Help with Car Maintenance</li>
+                    <li class="task" id="task163" onclick="addToNow(this)">Help with DIY Projects</li>
+                    <li class="task" id="task164" onclick="addToNow(this)">Help with Home Repairs</li>
+                    <li class="task" id="task165" onclick="addToNow(this)">Help with Organising Tools</li>
+                    <li class="task" id="task166" onclick="addToNow(this)">Help with Gardening</li>
+                    <li class="task" id="task167" onclick="addToNow(this)">Help with Planning Family Events</li>
+                    <li class="task" id="task168" onclick="addToNow(this)">Help with Shopping Lists</li>
+                    <li class="task" id="task169" onclick="addToNow(this)">Help with Family Budgets</li>
+                    <li class="task" id="task170" onclick="addToNow(this)">Help with Family Chores</li>
+                    <li class="task" id="task171" onclick="addToNow(this)">Help with Cooking</li>
+                    <li class="task" id="task172" onclick="addToNow(this)">Help with Cleaning</li>
+                    <li class="task" id="task173" onclick="addToNow(this)">Help with Pet Care</li>
+                    <li class="task" id="task174" onclick="addToNow(this)">Help with Homework</li>
+                    <li class="task" id="task175" onclick="addToNow(this)">Help with Organising</li>
+                </ul>
+            </div>
+        </div>
+        <div class="task-area" id="nowArea" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <div class="header" style="color: #007BFF; display: flex; align-items: center;">
+                Now
+            </div>
+            <div class="how-to-description">
+                <p>To manage your tasks, click on a task to add it to the "Now" area. You can also drag and drop tasks between the "Now" and "Next" areas.</p>
+            </div>
+        </div>
+        <div class="separator"></div>
+        <div class="task-area" id="nextArea" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <div class="header" style="color: #007BFF; display: flex; align-items: center;">
+                Next
+            </div>
+            <div class="how-to-description">
+                <p>Tasks in the "Next" area are those you plan to do later. Click on a task to move it back to the "Now" area when you're ready.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="taskModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 20px; border-radius: 5px; text-align: center;">
+            <h3 id="modalTaskTitle">Select an Action</h3>
+            <p>What would you like to do with this task?</p>
+            <button id="moveToNextBtn">Move to Next</button>
+            <button id="deleteTaskBtn">Delete</button>
+            <button onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+
+    <div class="how-to" style="display: none;">
+        <h2>How To</h2>
+        <p>
+            Effectively manage your tasks with these simple steps:
+        </p>
+        <ul>
+            <li><strong>View Tasks:</strong> Click on a category button (e.g., Chores, Crafting) to see a list of available tasks.</li>
+            <li><strong>Add Tasks:</strong> Click on a task to add it to the "Now" area.</li>
+            <li><strong>Manage Tasks:</strong> Click on a task in the "Now" or "Next" area to move it or delete it.</li>
+            <li><strong>Drag and Drop:</strong> Move tasks between "Now" and "Next" areas as needed.</li>
+        </ul>
+        <p>
+            Remember, you can only have a maximum of 5 tasks in each area.
+        </p>
+    </div>
+
+    <script>
+        function goHome() {
+            window.location.href = 'Index.html'; // Change this to your main page URL
+        }
+
+        function refreshPage() {
+            location.reload(); // Refresh the current page
+        }
+
+        function toggleTasks(taskGroupId) {
+            const taskGroups = document.querySelectorAll('.task-group');
+            taskGroups.forEach(group => {
+                if (group.id !== taskGroupId) {
+                    group.style.display = 'none'; // Collapse other groups
+                }
+            });
+            const taskGroup = document.getElementById(taskGroupId);
+            if (taskGroup.style.display === "none") {
+                taskGroup.style.display = "block"; // Show the selected task group
+            } else {
+                taskGroup.style.display = "none"; // Hide the selected task group
+            }
+        }
+
+        function allowDrop(event) {
+            event.preventDefault(); // Prevent default behavior to allow drop
+        }
+
+        function drag(event) {
+            event.dataTransfer.setData("text", event.target.id); // Store the id of the dragged element
+        }
+
+        function drop(event) {
+            event.preventDefault(); // Prevent default behavior
+            const data = event.dataTransfer.getData("text"); // Get the id of the dragged element
+            const task = document.getElementById(data); // Get the dragged element
+            const targetArea = event.target.id === 'nowArea' ? nowArea : nextArea; // Determine target area
+            if (targetArea.children.length < 5) { // Check if target area has space
+                targetArea.appendChild(task); // Append the dragged element to the drop target
+            } else {
+                alert("You can only have a maximum of 5 tasks in this area."); // Alert if limit is reached
+            }
+        }
+
+        function deleteTask(event, button) {
+            event.stopPropagation(); // Prevent the click event from bubbling up
+            const task = button.parentElement; // Get the task element
+            const taskText = task.firstChild.nodeValue; // Get the task text to find the original task
+            task.parentElement.removeChild(task); // Remove the task from the DOM
+            
+            // Refresh the original task in the group
+            const taskGroups = document.querySelectorAll('.task-group');
+            taskGroups.forEach(group => {
+                const tasks = group.querySelectorAll('.task');
+                tasks.forEach(originalTask => {
+                    if (originalTask.textContent === taskText) {
+                        originalTask.style.display = 'block'; // Show the task back in the group
+                    }
+                });
+            });
+        }
+
+        function addToNow(taskElement) {
+            const nowArea = document.getElementById('nowArea');
+            if (nowArea.children.length >= 7) {
+                alert("I think that is enough just now, we can edit later.");
+                return;
+            }
+            const newTask = taskElement.cloneNode(true); // Clone the task element
+            newTask.onclick = function() {
+                showTaskOptions(newTask, taskElement); // Show options when task is clicked
+            };
+            nowArea.appendChild(newTask); // Add the new task to the Now area
+            taskElement.style.display = 'none'; // Hide the task in the group
+        }
+
+        function showTaskOptions(task, originalTask) {
+            const taskModal = document.getElementById('taskModal');
+            const modalTaskTitle = document.getElementById('modalTaskTitle');
+            modalTaskTitle.innerText = task.firstChild.nodeValue; // Set the task title in the modal
+            taskModal.style.display = 'flex'; // Show the modal
+
+            // Determine if the task is in the Now or Next area
+            const isInNowArea = task.parentElement.id === 'nowArea';
+
+            // Update button actions based on the area
+            if (isInNowArea) {
+                document.getElementById('moveToNextBtn').innerText = 'Move to Next';
+                document.getElementById('moveToNextBtn').onclick = function() {
+                    moveToNext(task, originalTask);
+                    closeModal();
+                };
+            } else {
+                document.getElementById('moveToNextBtn').innerText = 'Move to Now';
+                document.getElementById('moveToNextBtn').onclick = function() {
+                    moveToNow(task, originalTask);
+                    closeModal();
+                };
+            }
+
+            document.getElementById('deleteTaskBtn').onclick = function() {
+                deleteTask(event, task.lastChild); // Use the delete function
+                closeModal();
+            };
+        }
+
+        function moveToNext(task, originalTask) {
+            const nextArea = document.getElementById('nextArea');
+            if (nextArea.children.length < 7) {
+                const newTask = task.cloneNode(true); // Clone the task element
+                newTask.onclick = function() {
+                    showTaskOptions(newTask, originalTask); // Show options when task is clicked
+                };
+                nextArea.appendChild(newTask); // Add the new task to the Next area
+                task.parentElement.removeChild(task); // Remove the task from Now area
+            } else {
+                alert("I think that is enough just now, we can edit later.");
+            }
+        }
+
+        function moveToNow(task, originalTask) {
+            const nowArea = document.getElementById('nowArea');
+            if (nowArea.children.length < 7) {
+                const newTask = task.cloneNode(true); // Clone the task element
+                newTask.onclick = function() {
+                    showTaskOptions(newTask, originalTask); // Show options when task is clicked
+                };
+                nowArea.appendChild(newTask); // Add the new task to the Now area
+                task.parentElement.removeChild(task); // Remove the task from Next area
+            } else {
+                alert("I think that is enough just now, we can edit later.");
+            }
+        }
+
+        function closeModal() {
+            const taskModal = document.getElementById('taskModal');
+            taskModal.style.display = 'none'; // Hide the modal
+        }
+
+        function toggleHowTo() {
+            const howToSection = document.querySelector('.how-to-description');
+            if (howToSection.style.display === "none" || howToSection.style.display === "") {
+                howToSection.style.display = "block"; // Show the How to section
+            } else {
+                howToSection.style.display = "none"; // Hide the How to section
+            }
+        }
+
+        function addCustomTask() {
+            const newTaskInput = document.getElementById('newTaskInput');
+            const taskText = newTaskInput.value.trim();
+            if (taskText === "") {
+                alert("Please enter a task.");
+                return;
+            }
+            const nowArea = document.getElementById('nowArea');
+            if (nowArea.children.length >= 5) {
+                alert("You can only have a maximum of 5 tasks in the 'Now' area.");
+                return; // Prevent adding more tasks if limit is reached
+            }
+            const newTask = document.createElement('li');
+            newTask.className = 'task';
+            newTask.onclick = function() {
+                showTaskOptions(newTask, newTask); // Show options when task is clicked
+            };
+            newTask.textContent = taskText;
+            nowArea.appendChild(newTask); // Add the new task to the Now area
+            newTaskInput.value = ""; // Clear the input field
+        }
+
+        // Add this function to handle keypress events
+        document.getElementById('newTaskInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') { // Check if the pressed key is "Enter"
+                addCustomTask(); // Call the function to add the task
+            }
+        });
+
+        function toggleFullScreen() {
+            const fullScreenDiv = document.createElement('div');
+            fullScreenDiv.className = 'full-screen';
+            fullScreenDiv.innerHTML = `
+                <h2 style="color: white;">Now Tasks</h2>
+                <div id="nowAreaFullScreen">
+                    <h3>Now Tasks</h3>
+                    <ul>
+                        ${Array.from(document.querySelectorAll('#nowArea .task')).map(task => `<li>${task.textContent}</li>`).join('')}
+                    </ul>
+                </div>
+                <h2 style="color: white;">Next Tasks</h2>
+                <div id="nextAreaFullScreen">
+                    <h3>Next Tasks</h3>
+                    <ul>
+                        ${Array.from(document.querySelectorAll('#nextArea .task')).map(task => `<li>${task.textContent}</li>`).join('')}
+                    </ul>
+                </div>
+                <button onclick="closeFullScreen()">Close</button>
+            `;
+            document.body.appendChild(fullScreenDiv);
+            fullScreenDiv.style.display = 'flex';
+            fullScreenDiv.style.flexDirection = 'column';
+            fullScreenDiv.style.alignItems = 'center';
+            fullScreenDiv.style.justifyContent = 'center';
+            fullScreenDiv.style.color = 'white';
+            fullScreenDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            fullScreenDiv.style.position = 'fixed';
+            fullScreenDiv.style.top = '0';
+            fullScreenDiv.style.left = '0';
+            fullScreenDiv.style.width = '100%';
+            fullScreenDiv.style.height = '100%';
+            fullScreenDiv.style.zIndex = '1000';
+        }
+
+        function closeFullScreen() {
+            const fullScreenDiv = document.querySelector('.full-screen');
+            if (fullScreenDiv) {
+                document.body.removeChild(fullScreenDiv);
+            }
+        }
+    </script>
+
+    <footer style="background-color: rgba(0, 123, 255, 0.8); color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; text-align: center;">
+        ZenZac™
+    </footer>
+</body>
+</html> 

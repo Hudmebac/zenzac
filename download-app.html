@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Minecraft Apps</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Minecraft', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-image: url('images/Minecraft_2024_cover_art.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            color: #ffffff;
+            cursor: url('images/minecraft-cursor.png'), auto;
+        }
+        h1, h2 {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+        #appList {
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .app-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 10px;
+            padding: 20px;
+            background-color: #8B4513;
+            color: #ffffff;
+            border: 2px solid #654321;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 150px;
+            height: 100px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .app-button:hover {
+            background-color: #A0522D;
+            transform: scale(1.05);
+        }
+        .app-button i {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        #loadingContainer {
+            display: none;
+            margin-top: 20px;
+        }
+        #progressBar {
+            width: 0;
+            height: 30px;
+            background-color: #4CAF50;
+            transition: width 0.1s;
+        }
+        #progressWrapper {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        #openButton, #tryAgainButton {
+            display: none;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: transform 0.2s;
+        }
+        #openButton:hover, #tryAgainButton:hover {
+            transform: scale(1.1);
+        }
+        .app-group {
+            display: none;
+            margin-bottom: 20px;
+        }
+        .clicked {
+            animation: clickEffect 0.3s ease;
+        }
+
+        @keyframes clickEffect {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Remove or comment out the header -->
+    <!-- <h1>Select a Minecraft App</h1> -->
+    
+    <div id="groupAll" onclick="toggleGroup('groupAllApps')">
+        <h2>Worlds</h2>
+    </div>
+    <div id="groupAllApps" class="app-group">
+        <div id="appList">
+            <button class="app-button" onclick="selectApp('Minecraft Classic', this)">
+                <i class="fas fa-gamepad"></i> Minecraft Classic
+            </button>
+            <button class="app-button" onclick="selectApp('Minecraft Dungeons', this)">
+                <i class="fas fa-dungeon"></i> Minecraft Dungeons
+            </button>
+            <button class="app-button" onclick="selectApp('Minecraft Earth', this)">
+                <i class="fas fa-globe"></i> Minecraft Earth
+            </button>
+            <button class="app-button" onclick="selectApp('Minecraft Story Mode', this)">
+                <i class="fas fa-book-open"></i> Minecraft Story Mode
+            </button>
+            <button class="app-button" onclick="selectApp('Minecraft Legends', this)">
+                <i class="fas fa-star"></i> Minecraft Legends
+            </button>
+            <button class="app-button" onclick="selectApp('Minecraft Bedrock', this)">
+                <i class="fas fa-cube"></i> Minecraft Bedrock
+            </button>
+            <button class="app-button" onclick="selectApp('Minecraft Java', this)">
+                <i class="fas fa-code"></i> Minecraft Java
+            </button>
+            <button class="app-button" onclick="selectApp('Minecraft Education', this)">
+                <i class="fas fa-graduation-cap"></i> Minecraft Education
+            </button>
+            <button class="app-button" onclick="selectApp('Minecraft Earth 2', this)">
+                <i class="fas fa-globe"></i> Minecraft Earth 2
+            </button>
+            <button class="app-button" onclick="selectApp('Minecraft Dungeon 2', this)">
+                <i class="fas fa-dungeon"></i> Minecraft Dungeon 2
+            </button>
+        </div>
+    </div>
+
+    <div id="groupAddOns" onclick="toggleGroup('groupAddOnsApps')">
+        <h2>Add-Ons</h2>
+    </div>
+    <div id="groupAddOnsApps" class="app-group">
+        <div id="appList">
+            <button class="app-button" onclick="selectApp('Skin Packs', this)">
+                <i class="fas fa-tshirt"></i> Skin Packs
+            </button>
+            <button class="app-button" onclick="selectApp('Texture Packs', this)">
+                <i class="fas fa-paint-brush"></i> Texture Packs
+            </button>
+            <button class="app-button" onclick="selectApp('Adventure Add-Ons', this)">
+                <i class="fas fa-map"></i> Adventure Add-Ons
+            </button>
+            <button class="app-button" onclick="selectApp('Survival Add-Ons', this)">
+                <i class="fas fa-shield-alt"></i> Survival Add-Ons
+            </button>
+            <button class="app-button" onclick="selectApp('Mini Game Add-Ons', this)">
+                <i class="fas fa-gamepad"></i> Mini Game Add-Ons
+            </button>
+            <button class="app-button" onclick="selectApp('Creative Add-Ons', this)">
+                <i class="fas fa-paint-brush"></i> Creative Add-Ons
+            </button>
+            <button class="app-button" onclick="selectApp('Exploration Add-Ons', this)">
+                <i class="fas fa-binoculars"></i> Exploration Add-Ons
+            </button>
+            <button class="app-button" onclick="selectApp('Building Add-Ons', this)">
+                <i class="fas fa-tools"></i> Building Add-Ons
+            </button>
+            <button class="app-button" onclick="selectApp('Combat Add-Ons', this)">
+                <i class="fas fa-crosshairs"></i> Combat Add-Ons
+            </button>
+            <button class="app-button" onclick="selectApp('Puzzle Add-Ons', this)">
+                <i class="fas fa-puzzle-piece"></i> Puzzle Add-Ons
+            </button>
+        </div>
+    </div>
+
+    <div id="groupMashUp" onclick="toggleGroup('groupMashUpApps')">
+        <h2>MASH-UP PACKS</h2>
+    </div>
+    <div id="groupMashUpApps" class="app-group">
+        <div id="appList">
+            <button class="app-button" onclick="selectApp('Mash-Up Packs', this)">
+                <i class="fas fa-th"></i> Get Mash-Up Packs
+            </button>
+            <button class="app-button" onclick="selectApp('Fantasy Mash-Up', this)">
+                <i class="fas fa-dragon"></i> Fantasy Mash-Up
+            </button>
+            <button class="app-button" onclick="selectApp('Sci-Fi Mash-Up', this)">
+                <i class="fas fa-rocket"></i> Sci-Fi Mash-Up
+            </button>
+            <button class="app-button" onclick="selectApp('Adventure Mash-Up', this)">
+                <i class="fas fa-map-signs"></i> Adventure Mash-Up
+            </button>
+            <button class="app-button" onclick="selectApp('Mystery Mash-Up', this)">
+                <i class="fas fa-question-circle"></i> Mystery Mash-Up
+            </button>
+            <button class="app-button" onclick="selectApp('Horror Mash-Up', this)">
+                <i class="fas fa-ghost"></i> Horror Mash-Up
+            </button>
+            <button class="app-button" onclick="selectApp('Historical Mash-Up', this)">
+                <i class="fas fa-history"></i> Historical Mash-Up
+            </button>
+            <button class="app-button" onclick="selectApp('Superhero Mash-Up', this)">
+                <i class="fas fa-user-superhero"></i> Superhero Mash-Up
+            </button>
+            <button class="app-button" onclick="selectApp('Underwater Mash-Up', this)">
+                <i class="fas fa-water"></i> Underwater Mash-Up
+            </button>
+            <button class="app-button" onclick="selectApp('Space Mash-Up', this)">
+                <i class="fas fa-space-shuttle"></i> Space Mash-Up
+            </button>
+        </div>
+    </div>
+
+    <div id="groupAdventureMaps" onclick="toggleGroup('groupAdventureMapsApps')">
+        <h2>Adventure Maps</h2>
+    </div>
+    <div id="groupAdventureMapsApps" class="app-group">
+        <div id="appList">
+            <button class="app-button" onclick="selectApp('Adventure Maps', this)">
+                <i class="fas fa-map"></i> Get Adventure Maps
+            </button>
+            <button class="app-button" onclick="selectApp('Quest Adventure', this)">
+                <i class="fas fa-scroll"></i> Quest Adventure
+            </button>
+            <button class="app-button" onclick="selectApp('Mystery Adventure', this)">
+                <i class="fas fa-question"></i> Mystery Adventure
+            </button>
+            <button class="app-button" onclick="selectApp('Survival Adventure', this)">
+                <i class="fas fa-hiking"></i> Survival Adventure
+            </button>
+            <button class="app-button" onclick="selectApp('Fantasy Adventure', this)">
+                <i class="fas fa-magic"></i> Fantasy Adventure
+            </button>
+            <button class="app-button" onclick="selectApp('Horror Adventure', this)">
+                <i class="fas fa-skull-crossbones"></i> Horror Adventure
+            </button>
+            <button class="app-button" onclick="selectApp('Historical Adventure', this)">
+                <i class="fas fa-landmark"></i> Historical Adventure
+            </button>
+            <button class="app-button" onclick="selectApp('Sci-Fi Adventure', this)">
+                <i class="fas fa-robot"></i> Sci-Fi Adventure
+            </button>
+            <button class="app-button" onclick="selectApp('Exploration Adventure', this)">
+                <i class="fas fa-compass"></i> Exploration Adventure
+            </button>
+            <button class="app-button" onclick="selectApp('Puzzle Adventure', this)">
+                <i class="fas fa-puzzle-piece"></i> Puzzle Adventure
+            </button>
+        </div>
+    </div>
+
+    <div id="groupMiniGames" onclick="toggleGroup('groupMiniGamesApps')">
+        <h2>Mini Games</h2>
+    </div>
+    <div id="groupMiniGamesApps" class="app-group">
+        <div id="appList">
+            <button class="app-button" onclick="selectApp('Mini Games', this)">
+                <i class="fas fa-gamepad"></i> Get Mini Games
+            </button>
+            <button class="app-button" onclick="selectApp('Race Mini Game', this)">
+                <i class="fas fa-car"></i> Race Mini Game
+            </button>
+            <button class="app-button" onclick="selectApp('Battle Mini Game', this)">
+                <i class="fas fa-fist-raised"></i> Battle Mini Game
+            </button>
+            <button class="app-button" onclick="selectApp('Puzzle Mini Game', this)">
+                <i class="fas fa-puzzle-piece"></i> Puzzle Mini Game
+            </button>
+            <button class="app-button" onclick="selectApp('Team Mini Game', this)">
+                <i class="fas fa-users"></i> Team Mini Game
+            </button>
+            <button class="app-button" onclick="selectApp('Hide and Seek Mini Game', this)">
+                <i class="fas fa-eye-slash"></i> Hide and Seek Mini Game
+            </button>
+            <button class="app-button" onclick="selectApp('Treasure Hunt Mini Game', this)">
+                <i class="fas fa-chest"></i> Treasure Hunt Mini Game
+            </button>
+            <button class="app-button" onclick="selectApp('Survival Mini Game', this)">
+                <i class="fas fa-user-shield"></i> Survival Mini Game
+            </button>
+            <button class="app-button" onclick="selectApp('Creative Mini Game', this)">
+                <i class="fas fa-paint-brush"></i> Creative Mini Game
+            </button>
+            <button class="app-button" onclick="selectApp('Adventure Mini Game', this)">
+                <i class="fas fa-map"></i> Adventure Mini Game
+            </button>
+        </div>
+    </div>
+
+    <div id="groupSurvivalSpawns" onclick="toggleGroup('groupSurvivalSpawnsApps')">
+        <h2>Survival Spawns</h2>
+    </div>
+    <div id="groupSurvivalSpawnsApps" class="app-group">
+        <div id="appList">
+            <button class="app-button" onclick="selectApp('Survival Spawns', this)">
+                <i class="fas fa-tree"></i> Get Survival Spawns
+            </button>
+            <button class="app-button" onclick="selectApp('Forest Survival Spawn', this)">
+                <i class="fas fa-tree"></i> Forest Survival Spawn
+            </button>
+            <button class="app-button" onclick="selectApp('Desert Survival Spawn', this)">
+                <i class="fas fa-sun"></i> Desert Survival Spawn
+            </button>
+            <button class="app-button" onclick="selectApp('Mountain Survival Spawn', this)">
+                <i class="fas fa-mountain"></i> Mountain Survival Spawn
+            </button>
+            <button class="app-button" onclick="selectApp('Island Survival Spawn', this)">
+                <i class="fas fa-island-tropical"></i> Island Survival Spawn
+            </button>
+            <button class="app-button" onclick="selectApp('Cave Survival Spawn', this)">
+                <i class="fas fa-cave"></i> Cave Survival Spawn
+            </button>
+            <button class="app-button" onclick="selectApp('Village Survival Spawn', this)">
+                <i class="fas fa-home"></i> Village Survival Spawn
+            </button>
+            <button class="app-button" onclick="selectApp('City Survival Spawn', this)">
+                <i class="fas fa-city"></i> City Survival Spawn
+            </button>
+            <button class="app-button" onclick="selectApp('Swamp Survival Spawn', this)">
+                <i class="fas fa-water"></i> Swamp Survival Spawn
+            </button>
+            <button class="app-button" onclick="selectApp('Snow Survival Spawn', this)">
+                <i class="fas fa-snowflake"></i> Snow Survival Spawn
+            </button>
+        </div>
+    </div>
+
+    <div id="selectedApp" style="display: none; margin-top: 20px; font-size: 24px;"></div>
+
+    <div id="loadingContainer" style="display: none;">
+        <h2>Loading...</h2>
+        <div id="progressWrapper">
+            <div id="progressBar"></div>
+        </div>
+    </div>
+
+    <button id="openButton" onclick="openApp()">Open</button>
+    <button id="tryAgainButton" style="display: none;" onclick="tryAgain()">Try Again</button>
+
+    <div id="errorMessage" style="display: none; color: red; margin-top: 20px; text-align: center;" onclick="tryAgain()">
+        <img id="errorImage" src="images/error-message.png" alt="Error" style="width: 500px; margin-top: 10px;">
+    </div>
+
+    <button id="mainPageButton" onclick="goToMainPage()" style="position: absolute; top: 20px; right: 20px;">
+        <i class="fas fa-home"></i>
+    </button>
+
+    <footer style="background-color: rgba(0, 123, 255, 0.8); color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; text-align: center;">
+        ZenZac™
+    </footer>
+
+    <script>
+        function toggleGroup(groupId) {
+            const groups = document.querySelectorAll('.app-group');
+            groups.forEach(group => {
+                if (group.id === groupId) {
+                    group.style.display = 'block';
+                } else {
+                    group.style.display = 'none';
+                }
+            });
+            document.getElementById('groupAll').style.display = 'none';
+            document.getElementById('groupAddOns').style.display = 'none';
+            document.getElementById('groupMashUp').style.display = 'none';
+            document.getElementById('groupAdventureMaps').style.display = 'none';
+            document.getElementById('groupMiniGames').style.display = 'none';
+            document.getElementById('groupSurvivalSpawns').style.display = 'none';
+        }
+
+        function selectApp(appName, button) {
+            const buttons = button.parentNode.querySelectorAll('.app-button');
+            buttons.forEach(btn => {
+                btn.style.backgroundColor = '';
+            });
+            button.style.backgroundColor = '#0056b3';
+            downloadApp(appName);
+        }
+
+        function downloadApp(appName) {
+            document.getElementById('selectedApp').innerText = `Selected App: ${appName}`;
+            document.getElementById('selectedApp').style.display = 'block';
+            const groups = document.querySelectorAll('.app-group');
+            groups.forEach(group => {
+                group.style.display = 'none';
+            });
+            document.getElementById('loadingContainer').style.display = 'block';
+            document.getElementById('openButton').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+            let progressBar = document.getElementById('progressBar');
+            let width = 0;
+
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    document.getElementById('openButton').style.display = 'block';
+                } else {
+                    width++;
+                    progressBar.style.width = width + '%';
+                }
+            }, 100);
+        }
+
+        function tryAgain() {
+            const tryAgainButton = document.getElementById('tryAgainButton');
+            tryAgainButton.classList.add('clicked');
+            setTimeout(() => {
+                tryAgainButton.classList.remove('clicked');
+            }, 300);
+
+            const groups = document.querySelectorAll('.app-group');
+            groups.forEach(group => {
+                group.style.display = 'none';
+            });
+            document.getElementById('groupAll').style.display = 'block';
+            document.getElementById('groupAddOns').style.display = 'block';
+            document.getElementById('groupMashUp').style.display = 'block';
+            document.getElementById('groupAdventureMaps').style.display = 'block';
+            document.getElementById('groupMiniGames').style.display = 'block';
+            document.getElementById('groupSurvivalSpawns').style.display = 'block';
+            document.getElementById('loadingContainer').style.display = 'none';
+            document.getElementById('openButton').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('tryAgainButton').style.display = 'none';
+            document.getElementById('progressBar').style.width = '0';
+            document.getElementById('selectedApp').style.display = 'none';
+
+            const allButtons = document.querySelectorAll('.app-button');
+            allButtons.forEach(btn => {
+                btn.style.backgroundColor = '';
+            });
+        }
+
+        function openApp() {
+            const openButton = document.getElementById('openButton');
+            openButton.classList.add('clicked');
+            setTimeout(() => {
+                openButton.classList.remove('clicked');
+            }, 300);
+
+            document.getElementById('errorMessage').style.display = 'block';
+            document.getElementById('errorImage').style.display = 'block';
+            document.getElementById('tryAgainButton').style.display = 'block';
+        }
+
+        function goToMainPage() {
+            // Redirect to the main page (update the URL as needed)
+            window.location.href = 'index.html'; // Change this to your main page URL
+        }
+    </script>
+</body>
+</html> 

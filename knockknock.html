@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knock Knock Jokes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-image: url('images/wall.jpg'); /* Set the background image */
+            background-size: cover; /* Cover the entire background */
+            background-repeat: no-repeat; /* Prevent the image from repeating */
+            font-family: Arial, sans-serif;
+            position: relative; /* Allow positioning of the home icon */
+        }
+        #homeIcon {
+            position: fixed; /* Change to fixed positioning */
+            top: 0; /* Set to the top of the screen */
+            right: 20px; /* Distance from the right */
+            width: 40px; /* Width of the icon */
+            height: 30px; /* Reduced height by 25% */
+            cursor: pointer; /* Change cursor to pointer on hover */
+        }
+        #backIcon {
+            position: fixed; /* Fixed positioning */
+            top: 10px; /* Distance from the top */
+            right: 20px; /* Distance from the right */
+            width: 40px; /* Width of the icon */
+            height: 30px; /* Height of the icon */
+            cursor: pointer; /* Change cursor to pointer on hover */
+        }
+        #door {
+            width: 300px;
+            height: 500px;
+            background-image: url('images/knockknock.jpg'); /* Updated to use knockknock.jpg in images folder */
+            background-size: 100% 100%; /* Stretches the image to fit the element */
+            background-color: #ccc; /* Fallback color if image fails to load */
+            position: relative;
+            animation: shake 0.5s ease-in-out;
+            border: 10px solid #ccc; /* Chrome-style border */
+            border-radius: 15px; /* Rounded corners for the border */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Shadow for a 3D effect */
+        }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+        #knockButton {
+            position: absolute; /* Positioning the button absolutely */
+            top: 50%; /* Center vertically */
+            left: 50%; /* Center horizontally */
+            transform: translate(-50%, -50%); /* Adjust for the width and height of the button */
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            z-index: 1; /* Ensure the button is above the image */
+            background-color: rgba(0, 123, 255, 0.7); /* Set a transparent blue background */
+            color: white; /* White text */
+            border: none; /* No border */
+            border-radius: 5px; /* Rounded corners */
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+        #knockButton:hover {
+            background-color: rgba(0, 86, 179, 0.7); /* Darker transparent blue on hover */
+        }
+        #jokeContainer {
+            margin-top: 20px;
+            display: none;
+            text-align: center;
+        }
+        #jokeText {
+            font-size: 36px; /* Larger text for the joke setup */
+            color: #FFFFFF; /* White text for better readability */
+            font-weight: bold; /* Bold text */
+        }
+        #whoIsThereButton {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #007BFF; /* Blue background */
+            color: white; /* White text */
+            border: none; /* No border */
+            border-radius: 5px; /* Rounded corners */
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+        #whoIsThereButton:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        #whoIsThereText {
+            font-size: 24px; /* Larger text for "Who's There?" */
+            color: #FFFFFF; /* White text for better readability */
+            font-weight: bold; /* Bold text */
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" style="position: fixed; top: 10px; right: 20px; cursor: pointer;">
+        <i class="fas fa-home" style="font-size: 30px; color: white;"></i> <!-- Font Awesome home icon -->
+    </a>
+    <p id="instructions" style="font-size: 24px; color: white; text-align: center; margin-bottom: 20px;">Click the "Knock Knock" button to hear a joke!</p>
+    <div id="door"></div>
+    <button id="knockButton">Knock Knock</button>
+    <p id="whoIsThereText" style="display:none;">Who's There?</p>
+    <div id="jokeContainer">
+        <p id="jokeText"></p>
+        <button id="whoIsThereButton" style="display:none;">Joke Text</button>
+    </div>
+
+    <script>
+        const jokes = [
+            { setup: "Lettuce", punchline: "Lettuce in, it's cold out here!" },
+            { setup: "Cow says", punchline: "Cow says who? No silly, cow says moooo!" },
+            { setup: "Atch", punchline: "Bless you!" },
+            { setup: "Tank", punchline: "You're welcome!" },
+            { setup: "Olive", punchline: "Olive you and I miss you!" },
+            // Add more jokes here (total 200)
+            { setup: "Boo", punchline: "Boo who? Don't cry, it's just a joke!" },
+            { setup: "Dishes", punchline: "Dishes the police! Open up!" },
+            { setup: "Harry", punchline: "Harry up and answer the door!" },
+            { setup: "Nobel", punchline: "No bell, that's why I knocked!" },
+            { setup: "Orange", punchline: "Orange you glad I didn't say banana?" },
+            { setup: "Cows go", punchline: "Cows go who? No silly, cows go moo!" },
+            { setup: "Lettuce", punchline: "Lettuce in, it's freezing out here!" },
+            { setup: "Olive", punchline: "Olive you and I miss you!" },
+            { setup: "Annie", punchline: "Annie thing you can do, I can do better!" },
+            { setup: "Alpaca", punchline: "Alpaca the suitcase, you load up the car!" },
+            { setup: "Cereal", punchline: "Cereal-ously, who is it?" },
+            { setup: "Ice cream", punchline: "Ice cream every time I see a scary movie!" },
+            { setup: "Wendy", punchline: "Wendy, you want to go outside?" },
+            { setup: "Butter", punchline: "Butter let me in or I'll freeze!" },
+            { setup: "Ketchup", punchline: "Ketchup with me and I'll tell you!" },
+            // Previous child-friendly jokes
+            { setup: "Lettuce", punchline: "Lettuce play a game!" },
+            { setup: "Boo who?", punchline: "Don't cry, it's just a joke!" },
+            { setup: "Olive", punchline: "Olive you so much!" },
+            { setup: "Tank", punchline: "You're welcome!" },
+            { setup: "Dishes", punchline: "Dishes the police! Open up!" },
+            { setup: "Harry", punchline: "Harry up and answer the door!" },
+            { setup: "Nobel", punchline: "No bell, that's why I knocked!" },
+            { setup: "Orange", punchline: "Orange you glad I didn't say banana?" },
+            // New jokes added
+            { setup: "Honeydew", punchline: "Honeydew you know how much I miss you?" },
+            { setup: "Dwayne", punchline: "Dwayne the bathtub, I'm drowning!" },
+            { setup: "Nobel", punchline: "Nobel... that's why I knocked!" },
+            { setup: "Tennis", punchline: "Tennis five plus five." },
+            { setup: "Luke", punchline: "Luke through the peephole and find out!" },
+            { setup: "Turnip", punchline: "Turnip the volume, I can't hear you!" },
+            { setup: "Yukon", punchline: "Yukon say that again?" },
+            { setup: "Butter", punchline: "Butter let me in!" },
+            { setup: "Tooth", punchline: "Tooth who? Tooth be told, I miss you!" },
+            { setup: "Alpaca", punchline: "Alpaca the suitcase, we're going on an adventure!" },
+            { setup: "Ice cream", punchline: "Ice cream if you don't let me in!" },
+            { setup: "Scold", punchline: "Scold outside, let me in!" },
+            // Additional jokes
+            { setup: "Annie", punchline: "Annie body home?" },
+            { setup: "Justin", punchline: "Justin time for a joke!" },
+            { setup: "Adore", punchline: "Adore is between us, open up!" },
+            { setup: "Lettuce", punchline: "Lettuce in, it's freezing out here!" },
+            { setup: "Cheese", punchline: "Cheese a really nice person!" },
+            { setup: "Snow", punchline: "Snow use, the joke's already told!" },
+            { setup: "Leaf", punchline: "Leaf me alone!" },
+            { setup: "Gorilla", punchline: "Gorilla me a burger, I'm starving!" },
+            { setup: "Icy", punchline: "Icy you! Open the door!" },
+            { setup: "Jamaica", punchline: "Jamaica mistake, or are you just having fun?" },
+            { setup: "Wood", punchline: "Wood you be my friend?" },
+            { setup: "Grape", punchline: "Grape job answering the door!" },
+            { setup: "Dozen", punchline: "Dozen anyone want to let me in?" },
+            { setup: "Alec", punchline: "Alec your face every time I see it!" },
+            { setup: "Candice", punchline: "Candice joke get any worse?" },
+            { setup: "Beets", punchline: "Beets me who's there!" },
+            { setup: "Donut", punchline: "Donut ask me, I forgot!" },
+            { setup: "Goliath", punchline: "Goliath down, you look tired!" },
+            { setup: "Howard", punchline: "Howard I know?" },
+            { setup: "Ivan", punchline: "Ivan it your way." },
+            { setup: "Mustache", punchline: "Mustache you a question, but I'll shave it for later." },
+            { setup: "Olive", punchline: "Olive my jokes, don't you?" },
+            { setup: "Wendy", punchline: "Wendy you think they'll answer?" },
+            { setup: "Eddie", punchline: "Eddie body home?" },
+            { setup: "Avenue", punchline: "Avenue been waiting for me to knock?" },
+            { setup: "Cargo", punchline: "Cargo beep beep!" },
+            { setup: "Kanga", punchline: "Kanga who? Actually, it's kangaroo!" },
+            { setup: "Teddy", punchline: "Teddy 's another knock-knock joke!" },
+            { setup: "Butter", punchline: "Butter let me in!" },
+            { setup: "Cereal", punchline: "Cereal pleasure to meet you!" },
+            { setup: "Harry", punchline: "Harry up, it's cold out here!" },
+            { setup: "Ken", punchline: "Ken I come in?" },
+            { setup: "Yvonne", punchline: "Yvonne to open the door?" },
+            { setup: "Igloo", punchline: "Igloo my fingers to the doorbell." },
+            { setup: "Kenya", punchline: "Kenya believe it's me?" },
+        ];
+
+        document.getElementById('knockButton').addEventListener('click', function() {
+            const door = document.getElementById('door');
+            door.style.animation = 'shake 0.5s ease-in-out';
+            // Reset the animation
+            door.addEventListener('animationend', () => {
+                door.style.animation = ''; // Clear the animation
+            }, { once: true }); // Ensure this runs only once per click
+
+            // Show the joke after the animation
+            setTimeout(() => {
+                const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
+                document.getElementById('jokeText').innerText = randomJoke.setup;
+                document.getElementById('whoIsThereButton').innerText = `${randomJoke.setup} Who`;
+                document.getElementById('jokeContainer').style.display = 'block'; // Show the joke container
+                document.getElementById('whoIsThereButton').style.display = 'inline'; // Show the "Who" button
+                document.getElementById('whoIsThereText').style.display = 'block'; // Show "Who's There?" text
+            }, 500); // Delay the joke display to allow the shake animation to complete
+        });
+
+        document.getElementById('whoIsThereButton').addEventListener('click', function() {
+            const randomJoke = jokes.find(joke => joke.setup === document.getElementById('jokeText').innerText);
+            document.getElementById('jokeText').innerText = randomJoke.punchline; // Display the punchline
+            
+            // Hide the "Who's There?" text and button after displaying the punchline
+            document.getElementById('whoIsThereText').style.display = 'none';
+            document.getElementById('whoIsThereButton').style.display = 'none';
+        });
+    </script>
+
+    <footer style="background-color: rgba(0, 123, 255, 0.8); color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; text-align: center;">
+        ZenZac™
+    </footer>
+</body>
+</html>

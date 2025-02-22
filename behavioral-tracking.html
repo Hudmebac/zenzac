@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Behavioural Tracking</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="script.js" defer></script>
+    <style>
+        body {
+            background-color: #e0f7fa; /* Light blue background for a calming effect */
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex; /* Use flexbox for centering */
+            justify-content: center; /* Center horizontally */
+            align-items: flex-start; /* Align items to the top */
+            min-height: 100vh; /* Full viewport height */
+            overflow-y: auto; /* Allow vertical scrolling */
+        }
+        .container {
+            display: flex;
+            flex-direction: column; /* Stack columns vertically */
+            margin: 20px;
+            padding: 30px; /* Add padding for better spacing */
+            background: rgba(255, 255, 255, 0.9); /* Slightly transparent white for containers */
+            border-radius: 15px; /* Rounded corners */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
+            max-width: 400px; /* Limit the width of the container */
+            width: 100%; /* Full width for smaller screens */
+            max-height: 90vh; /* Limit height to 90% of viewport */
+            overflow-y: auto; /* Allow vertical scrolling */
+        }
+        h1 {
+            color: #0077b3; /* Frost blue for headings */
+            font-size: 2em; /* Larger heading size */
+            text-align: center; /* Center align headings */
+            margin: 20px 0; /* Margin for spacing */
+        }
+        h2 {
+            color: #005f8d; /* Slightly darker blue for subheadings */
+            font-size: 1.5em; /* Subheading size */
+            margin: 15px 0; /* Margin for spacing */
+        }
+        h3 {
+            color: #0077b3; /* Frost blue for section headings */
+            font-size: 1.2em; /* Section heading size */
+            margin: 10px 0; /* Margin for spacing */
+        }
+        p {
+            color: #333; /* Darker text for better readability */
+            font-size: 0.9em; /* Smaller font size for description */
+            line-height: 1.5; /* Improved line height for readability */
+            margin: 10px 0; /* Margin for spacing */
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold; /* Bold labels */
+            color: #0077b3; /* Frost blue for labels */
+        }
+        input[type="text"],
+        input[type="email"],
+        select {
+            width: 100%; /* Full width for inputs */
+            padding: 10px; /* Padding for inputs */
+            margin-top: 5px; /* Space above inputs */
+            border: 1px solid #0077b3; /* Frost blue border color */
+            border-radius: 5px; /* Rounded corners */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            transition: border-color 0.3s; /* Smooth transition for border color */
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        select:focus {
+            border-color: #005f8d; /* Darker blue border on focus */
+            outline: none; /* Remove default outline */
+        }
+        button {
+            background-color: #0077b3; /* Frost blue button color */
+            color: white; /* Button text color */
+            border: none; /* Remove border */
+            border-radius: 5px; /* Rounded corners */
+            padding: 10px; /* Padding for buttons */
+            cursor: pointer; /* Pointer cursor on hover */
+            margin-top: 10px; /* Space above buttons */
+            width: 100%; /* Full width for buttons */
+            font-size: 1em; /* Font size for buttons */
+            transition: background-color 0.3s; /* Smooth transition for background color */
+        }
+        button:hover {
+            background-color: #005f8d; /* Darker shade on hover */
+        }
+        #responseMessage {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #0077b3; /* Frost blue for response message */
+            text-align: center; /* Center align response message */
+        }
+        #emailInputContainer {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: calc(100% - 40px); /* Full width minus padding */
+            max-width: 300px; /* Limit max width */
+            background: white;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            border-radius: 5px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px; /* Reduce padding on smaller screens */
+            }
+            h1 {
+                font-size: 1.5em; /* Smaller heading size */
+            }
+            h2 {
+                font-size: 1.2em; /* Smaller subheading size */
+            }
+            button {
+                font-size: 0.9em; /* Smaller button font size */
+            }
+        }
+        /* Add styles for the home icon */
+        .home-icon {
+            position: fixed; /* Fixed position */
+            top: 20px; /* Distance from the top */
+            right: 20px; /* Distance from the right */
+            font-size: 24px; /* Icon size */
+            color: #0077b3; /* Frost blue color */
+            cursor: pointer; /* Pointer cursor on hover */
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="home-icon" title="Go to Home">
+        <i class="fas fa-home"></i> <!-- Font Awesome home icon -->
+    </a>
+    <div class="container">
+        <h1>Behavioural Tracking</h1>
+        <p>This is a simple event tracker designed to help you quickly log details about behavioural incidents. You can use this tool to track antecedents, behaviours, and consequences, which can assist in identifying patterns and developing strategies for managing behaviours.</p>
+        
+        <h2>Create Event</h2>
+        <button id="createEventButton" onclick="showEventForm()">Create Event</button>
+        
+        <form id="eventForm" style="display:none;">
+            <label for="eventTime" title="Event Time: The time when the event occurred.">Event Time:</label>
+            <input type="datetime-local" id="eventTime" required style="margin-bottom: 15px;">
+
+            <label for="antecedent" title="Antecedents (A): what happened directly before the behaviour occurred.">Select Antecedent:</label>
+            <select id="antecedent" onchange="toggleOtherInput()" style="margin-bottom: 15px;">
+                <option value="">Select an option</option>
+                <option value="boredom">Boredom</option>
+                <option value="hunger">Hunger</option>
+                <option value="tiredness">Tiredness</option>
+                <option value="frustration">Frustration</option>
+                <option value="overstimulation">Overstimulation</option>
+                <option value="lack_of_attention">Lack of Attention</option>
+                <option value="change_in_routine">Change in Routine</option>
+                <option value="peer_conflict">Peer Conflict</option>
+                <option value="unmet_needs">Unmet Needs</option>
+                <option value="environmental_distractions">Environmental Distractions</option>
+                <option value="transitioning">Transitioning between activities</option>
+                <option value="lack_of_structure">Lack of Structure</option>
+                <option value="excessive_noise">Excessive Noise</option>
+                <option value="physical_discomfort">Physical Discomfort</option>
+                <option value="social_exclusion">Social Exclusion</option>
+                <option value="unfamiliar_people">Unfamiliar People</option>
+                <option value="time_pressure">Time Pressure</option>
+                <option value="unmet_expectations">Unmet Expectations</option>
+                <option value="confusing_instructions">Confusing Instructions</option>
+                <option value="lack_of_choice">Lack of Choice</option>
+                <option value="other">Other (please specify)</option>
+            </select>
+            <input type="text" id="otherAntecedent" placeholder="Specify if 'Other'" style="display:none; margin-bottom: 15px;">
+
+            <label for="behaviour" title="Behaviour (B): the specific action(s) or behaviour of interest.">Select Behaviour:</label>
+            <select id="behaviour" onchange="toggleBehaviourInput()" style="margin-bottom: 15px;">
+                <option value="">Select an option</option>
+                <option value="tantrum">Tantrum</option>
+                <option value="aggression">Aggression</option>
+                <option value="withdrawal">Withdrawal</option>
+                <option value="screaming">Screaming</option>
+                <option value="noncompliance">Noncompliance</option>
+                <option value="crying">Crying</option>
+                <option value="hitting">Hitting</option>
+                <option value="kicking">Kicking</option>
+                <option value="throwing_objects">Throwing Objects</option>
+                <option value="yelling">Yelling</option>
+                <option value="running_away">Running Away</option>
+                <option value="refusing_tasks">Refusing Tasks</option>
+                <option value="talking_back">Talking Back</option>
+                <option value="daydreaming">Daydreaming</option>
+                <option value="interrupting">Interrupting</option>
+                <option value="making_noises">Making Noises</option>
+                <option value="not_listening">Not Listening</option>
+                <option value="defiance">Defiance</option>
+                <option value="excessive_talking">Excessive Talking</option>
+                <option value="self_harm">Self-Harm</option>
+                <option value="disrespect">Disrespect</option>
+                <option value="inappropriate_language">Inappropriate Language</option>
+                <option value="spitting">Spitting</option>
+                <option value="giggling">Giggling</option>
+                <option value="staring">Staring</option>
+                <option value="fidgeting">Fidgeting</option>
+                <option value="not_following_rules">Not Following Rules</option>
+                <option value="excessive_movement">Excessive Movement</option>
+                <option value="clinging">Clinging</option>
+                <option value="sulking">Sulking</option>
+                <option value="whining">Whining</option>
+                <option value="sneaking">Sneaking</option>
+                <option value="other">Other (please specify)</option>
+            </select>
+            <input type="text" id="otherBehaviour" placeholder="Specify if 'Other'" style="display:none; margin-bottom: 15px;">
+
+            <label for="consequence" title="Consequences (C): what happened directly after the behaviour occurred.">Select Consequence:</label>
+            <select id="consequence" onchange="toggleConsequenceInput()" style="margin-bottom: 15px;">
+                <option value="">Select an option</option>
+                <option value="attention">Attention from adults</option>
+                <option value="removal">Removal from situation</option>
+                <option value="reward">Reward (e.g., treat)</option>
+                <option value="timeout">Timeout</option>
+                <option value="no_response">No response</option>
+                <option value="extra_recess">Extra Recess</option>
+                <option value="loss_of_privileges">Loss of Privileges</option>
+                <option value="verbal_reprimand">Verbal Reprimand</option>
+                <option value="written_warning">Written Warning</option>
+                <option value="parent_contact">Parent Contact</option>
+                <option value="positive_reinforcement">Positive Reinforcement</option>
+                <option value="peer_attention">Peer Attention</option>
+                <option value="increased_supervision">Increased Supervision</option>
+                <option value="extra_homework">Extra Homework</option>
+                <option value="praise">Praise</option>
+                <option value="consequences_for_others">Consequences for Others</option>
+                <option value="loss_of_recess">Loss of Recess</option>
+                <option value="detention">Detention</option>
+                <option value="suspension">Suspension</option>
+                <option value="referral_to_counselor">Referral to Counselor</option>
+                <option value="mediation">Mediation</option>
+                <option value="other">Other (please specify)</option>
+            </select>
+            <input type="text" id="otherConsequence" placeholder="Specify if 'Other'" style="display:none; margin-bottom: 15px;">
+            
+            <button id="saveEventButton" type="button" onclick="saveEvent()" style="margin-top: 20px;">Save Event</button>
+        </form>
+
+        <div id="responseMessage" style="display:none;"></div>
+        
+        <button onclick="window.location.href='abc-chart-history.html'" style="position: absolute; bottom: 20px; left: 20px;">View ABC Chart History</button>
+    </div>
+
+    <div id="responseModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h2>Event Saved!</h2>
+            <div id="responseMessage"></div>
+            <p style="font-weight: bold;">Enter your email to receive event details:</p>
+            <input type="email" id="emailInputModal" placeholder="Enter your email">
+            <button id="emailButton" onclick="sendEmail()" style="margin-top: 20px;">Email Event Details</button>
+            <button id="doneButton" onclick="done()" style="margin-top: 20px;">Done</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const now = new Date();
+            const formattedDate = now.toISOString().slice(0, 16); // Format to YYYY-MM-DDTHH:MM
+            document.getElementById('eventTime').setAttribute('max', formattedDate); // Set max date to now
+            document.getElementById('eventTime').value = formattedDate; // Set the event time to now
+        });
+
+        function showEventForm() {
+            document.getElementById('createEventButton').style.display = 'none'; // Hide the button
+            document.getElementById('eventForm').style.display = 'block'; // Show the event form
+        }
+
+        function toggleOtherInput() {
+            const antecedentSelect = document.getElementById('antecedent');
+            const otherInput = document.getElementById('otherAntecedent');
+            otherInput.style.display = antecedentSelect.value === 'other' ? 'block' : 'none';
+        }
+
+        function toggleBehaviourInput() {
+            const behaviourSelect = document.getElementById('behaviour');
+            const otherInput = document.getElementById('otherBehaviour');
+            otherInput.style.display = behaviourSelect.value === 'other' ? 'block' : 'none';
+        }
+
+        function toggleConsequenceInput() {
+            const consequenceSelect = document.getElementById('consequence');
+            const otherInput = document.getElementById('otherConsequence');
+            otherInput.style.display = consequenceSelect.value === 'other' ? 'block' : 'none';
+        }
+
+        let eventHistory = []; // Array to store event history
+
+        function saveEvent() {
+            const eventTime = document.getElementById('eventTime').value;
+            const antecedent = document.getElementById('antecedent').value;
+            const otherAntecedent = document.getElementById('otherAntecedent').value;
+            const behaviour = document.getElementById('behaviour').value;
+            const otherBehaviour = document.getElementById('otherBehaviour').value;
+            const consequence = document.getElementById('consequence').value;
+            const otherConsequence = document.getElementById('otherConsequence').value;
+
+            // Validate inputs
+            if (!eventTime || !antecedent && !otherAntecedent || !behaviour && !otherBehaviour || !consequence && !otherConsequence) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+
+            // Prepare the response message
+            const responseMessage = `
+                <strong>Event Time:</strong> ${eventTime}<br>
+                <strong>Antecedent:</strong> ${antecedent || otherAntecedent}<br>
+                <strong>Behaviour:</strong> ${behaviour || otherBehaviour}<br>
+                <strong>Consequence:</strong> ${consequence || otherConsequence}
+            `;
+
+            // Add event to history
+            eventHistory.push({
+                time: eventTime,
+                antecedent: antecedent || otherAntecedent,
+                behaviour: behaviour || otherBehaviour,
+                consequence: consequence || otherConsequence
+            });
+
+            // Display the response message in the modal
+            document.getElementById('responseMessage').innerHTML = responseMessage;
+            document.getElementById('responseModal').style.display = 'block'; // Show the modal
+
+            // Clear the email input field in the modal
+            document.getElementById('emailInputModal').value = '';
+        }
+
+        function closeModal() {
+            document.getElementById('responseModal').style.display = 'none'; // Hide the modal
+        }
+
+        function sendEmail() {
+            const email = document.getElementById('emailInputModal').value;
+            if (!email) {
+                alert("Please enter a valid email address.");
+                return;
+            }
+
+            // Get the most recent event details
+            const latestEvent = eventHistory[eventHistory.length - 1];
+
+            // Format the email body
+            const emailBody = `
+                ZENZAC Buddy\n\n
+                Time: ${latestEvent.time.split('T')[1]}  \n
+                Event Day: ${latestEvent.time.split('T')[0].split('-').reverse().join('/')}  \n\n
+                Antecedents (A): (what happened directly before the behaviour occurred)\n
+                ${latestEvent.antecedent.replace(/_/g, ' ')}.\n\n
+                Behaviour (B): (the specific action(s) or behaviour of interest)\n
+                ${latestEvent.behaviour.replace(/_/g, ' ')}.\n\n
+                Consequences (C): (what happened directly after the behaviour occurred)\n
+                ${latestEvent.consequence.replace(/_/g, ' ')}.\n\n
+                Thank you for using ZenZac! We hope this tool helps you track and manage behavioural incidents effectively.\n
+                If you have any questions or need further assistance, feel free to reach out.\n
+                This message was sent using ZenZac.
+            `;
+
+            // Include populated text if "Other" is selected
+            if (antecedent === "other") {
+                emailBody += `\nOther Antecedent: ${otherAntecedent}\n`;
+            }
+            if (behaviour === "other") {
+                emailBody += `\nOther Behaviour: ${otherBehaviour}\n`;
+            }
+            if (consequence === "other") {
+                emailBody += `\nOther Consequence: ${otherConsequence}\n`;
+            }
+
+            // Create a mailto link with the formatted email body
+            const mailtoLink = `mailto:${email}?subject=Behavioural Events&body=${encodeURIComponent(emailBody)}`;
+
+            // Open the mail client
+            window.open(mailtoLink, '_blank'); // Open in a new tab/window
+
+            // Show success message
+            const emailResponseMessage = document.getElementById('emailResponseMessage');
+            emailResponseMessage.innerText = "Email sent successfully!";
+            emailResponseMessage.style.display = 'block';
+
+            // Refresh the page after sending the email
+            setTimeout(() => {
+                location.reload(); // Refresh the page
+            }, 1000); // Delay for 1 second before refreshing
+        }
+
+        function done() {
+            location.reload(); // Refresh the page to create a new event
+        }
+
+        function showInfo(type) {
+            let message = '';
+            switch (type) {
+                case 'antecedent':
+                    message = 'Antecedents (A): what happened directly before the behaviour occurred.';
+                    break;
+                case 'behaviour':
+                    message = 'Behaviour (B): the specific action(s) or behaviour of interest.';
+                    break;
+                case 'consequence':
+                    message = 'Consequences (C): what happened directly after the behaviour occurred.';
+                    break;
+            }
+            alert(message); // Display the information in an alert
+        }
+    </script>
+
+    <footer style="background-color: rgba(0, 123, 255, 0.8); color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; text-align: center;">
+        ZenZac™
+    </footer>
+</body>
+</html> 

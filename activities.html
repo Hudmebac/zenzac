@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activities for Children</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="path/to/frost-aura.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: url('activitiesbg.png') no-repeat center center fixed; /* Set background image */
+            background-size: cover; /* Cover the entire background */
+            display: flex; /* Use flexbox for centering */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            flex-direction: column; /* Stack elements vertically */
+            min-height: 100vh; /* Minimum height to allow scrolling */
+        }
+        h1 {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9); /* Ice white color */
+            font-size: 2.5em; /* Responsive font size */
+            font-family: 'Press Start 2P', cursive; /* Retro font */
+            margin: 20px 0; /* Add margin for spacing */
+            width: 100%; /* Full width */
+        }
+        h2 {
+            color: #2980b9; /* Health theme color */
+            font-size: 1.5em; /* Responsive font size */
+            text-align: center; /* Center the age range header */
+        }
+        .activity-group {
+            margin-bottom: 30px;
+        }
+        .activity {
+            border: 1px solid #2980b9; /* Matching border color */
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            background-color: #ffffff; /* White background for activities */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        }
+        .activity h3 {
+            margin: 0;
+            color: #2980b9; /* Consistent color for headings */
+            font-size: 1.2em; /* Responsive font size */
+        }
+        .activity p {
+            margin: 5px 0;
+            color: #34495e; /* Darker text for better readability */
+            font-size: 1em; /* Responsive font size */
+        }
+        .icon {
+            margin-right: 10px;
+            color: #2980b9; /* Consistent icon color */
+        }
+        .activity-list {
+            display: none; /* Initially hidden */
+            margin-top: 20px;
+        }
+        .activity-button {
+            margin: 5px;
+            padding: 10px;
+            background-color: #2980b9; /* Health theme button color */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em; /* Responsive font size */
+            width: 100%; /* Full width for mobile */
+        }
+        .activity-button:hover {
+            background-color: #1a5276; /* Darker shade on hover */
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5em; /* Smaller font size for mobile */
+            }
+            h2 {
+                font-size: 1.3em; /* Smaller font size for mobile */
+            }
+            .activity h3 {
+                font-size: 1.1em; /* Smaller font size for mobile */
+            }
+            .activity p {
+                font-size: 0.9em; /* Smaller font size for mobile */
+            }
+            .activity-button {
+                padding: 15px; /* Increased padding for better touch targets */
+            }
+        }
+        .home-icon {
+            position: fixed; /* Fixed position */
+            top: 20px; /* Distance from the top */
+            right: 20px; /* Distance from the right */
+            font-size: 1.5em; /* Size of the icon */
+            color: rgba(255, 255, 255, 0.9); /* Ice white color */
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: color 0.3s; /* Smooth color transition */
+        }
+        .home-icon:hover {
+            color: #2980b9; /* Change color on hover */
+        }
+        /* Add a frosty aura effect */
+        .frosty-aura {
+            background: rgba(255, 255, 255, 0.8); /* White with transparency for the aura effect */
+            border-radius: 15px; /* Rounded corners for a softer look */
+            padding: 20px; /* Padding for inner content */
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5); /* Frosty shadow effect */
+            max-width: 600px; /* Limit width for mobile */
+            width: 100%; /* Full width for mobile */
+            display: flex; /* Use flexbox for centering */
+            flex-direction: column; /* Stack elements vertically */
+            align-items: center; /* Center items horizontally */
+            justify-content: center; /* Center items vertically */
+        }
+        /* Update styles for the animated background wave */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1); /* More transparent wave */
+            animation: wave 300s infinite linear; /* Slower wave effect (10 times slower) */
+            z-index: -1; /* Ensure it stays behind other content */
+        }
+        @keyframes wave {
+            0% {
+                transform: translateX(-100%);
+            }
+            25% {
+                transform: translateX(100%);
+            }
+            50% {
+                transform: translateY(-100%);
+            }
+            75% {
+                transform: translateY(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+        .activity-icon {
+            position: absolute;
+            opacity: 0.3; /* More transparent icons */
+            transition: opacity 0.5s ease; /* Smooth transition for appearing/disappearing */
+            font-size: 8em; /* Increased size for icons (double the previous size) */
+            color: rgba(255, 255, 255, 0.3); /* White color with more transparency */
+        }
+        .age-range-container {
+            display: flex; /* Use flexbox for centering */
+            flex-direction: column; /* Stack elements vertically */
+            align-items: center; /* Center items horizontally */
+            justify-content: center; /* Center items vertically */
+            width: 100%; /* Full width */
+            margin-top: 20px; /* Space from the top */
+        }
+        .return-to-top {
+            position: fixed; /* Fixed position */
+            bottom: 20px; /* Distance from the bottom */
+            right: 20px; /* Distance from the right */
+            font-size: 2em; /* Size of the icon */
+            color: rgba(255, 255, 255, 0.9); /* Ice white color */
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            border-radius: 50%; /* Circular shape */
+            padding: 10px; /* Padding around the icon */
+            cursor: pointer; /* Pointer cursor on hover */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+            transition: background-color 0.3s; /* Smooth background transition */
+        }
+        .return-to-top:hover {
+            background-color: rgba(0, 0, 0, 0.7); /* Darker background on hover */
+        }
+    </style>
+    <script>
+        function showActivities(range) {
+            const activityLists = document.querySelectorAll('.activity-list');
+            activityLists.forEach(list => list.style.display = 'none'); // Hide all lists
+            document.getElementById(range).style.display = 'block'; // Show selected list
+        }
+        // Function to randomly show and hide activity icons
+        function randomIcons() {
+            const icons = document.querySelectorAll('.activity-icon');
+            icons.forEach(icon => {
+                icon.style.display = 'none'; // Initially hide all icons
+            });
+            setInterval(() => {
+                const randomIndex = Math.floor(Math.random() * icons.length);
+                icons[randomIndex].style.display = 'block'; // Show a random icon
+                setTimeout(() => {
+                    icons[randomIndex].style.display = 'none'; // Hide it after a short delay
+                }, 1000); // Icon stays visible for 1 second
+            }, 2000); // New icon every 2 seconds
+        }
+        // Call the randomIcons function on page load
+        window.onload = randomIcons;
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // Smooth scroll to top
+        }
+    </script>
+</head>
+<body>
+    <i class="fas fa-home home-icon" onclick="window.location.href='Index.html'"></i> <!-- Home Icon -->
+    <div class="frosty-aura"> <!-- Wrap content in frosty aura div -->
+        <h1>Activities for Children</h1> <!-- Keep only one header -->
+        <div class="age-range-container"> <!-- Container for age range buttons -->
+            <h2>Select Age Range</h2>
+            <button class="activity-button" onclick="showActivities('infants')">Infants (0-1 year)</button>
+            <button class="activity-button" onclick="showActivities('toddlers')">Toddlers (1-5 years)</button>
+            <button class="activity-button" onclick="showActivities('earlyChildhood')">Early Childhood (3-8 years)</button>
+            <button class="activity-button" onclick="showActivities('middleChildhood')">Middle Childhood (9-11 years)</button>
+            <button class="activity-button" onclick="showActivities('adolescence')">Adolescence (12-18 years)</button>
+        </div>
+
+        <div id="infants" class="activity-list">
+            <h2>Activities for Infants</h2>
+            <div class="activity">
+                <h3><i class="fas fa-baby icon"></i> Tummy Time</h3>
+                <p><strong>Description:</strong> Tummy time is a delightful activity that encourages infants to spend time on their stomachs while awake. This position helps strengthen their neck, shoulder, and back muscles, which are essential for future milestones like rolling over, sitting up, and crawling. You can make tummy time more engaging by placing colorful toys just out of reach or lying down next to your baby to encourage interaction.</p>
+                <p><strong>Cost:</strong> Free</p>
+                <p><strong>Special Clothing:</strong> Comfortable onesie</p>
+                <p><strong>Duration:</strong> 10-15 minutes</p>
+                <p><strong>Local Communities:</strong> Parent support groups often organize sessions to share tips on tummy time.</p>
+                <p><strong>Health Considerations:</strong> Always supervise the infant during tummy time to ensure their safety.</p>
+                <p><strong>History:</strong> Pediatricians have recommended tummy time since the 1990s as a preventive measure against flat head syndrome, emphasizing its importance in developing motor skills.</p>
+            </div>
+            <div class="activity">
+                <h3><i class="fas fa-hand-holding-heart icon"></i> Sensory Play</h3>
+                <p><strong>Description:</strong> Sensory play involves engaging infants with various textures, sounds, and visual stimuli. This can include playing with soft fabrics, rattles, or even water play. Sensory experiences are crucial for cognitive development, helping babies learn about the world around them through their senses.</p>
+                <p><strong>Cost:</strong> Free</p>
+                <p><strong>Special Clothing:</strong> Comfortable clothing</p>
+                <p><strong>Duration:</strong> 15-20 minutes</p>
+                <p><strong>Local Communities:</strong> Parent groups often host sensory play sessions.</p>
+                <p><strong>Health Considerations:</strong> Ensure that all materials used are safe and non-toxic.</p>
+                <p><strong>History:</strong> Sensory play has been recognized as a vital part of early childhood development, with roots in educational theories that emphasize hands-on learning.</p>
+            </div>
+            <div class="activity">
+                <h3><i class="fas fa-hands icon"></i> Baby Massage</h3>
+                <p><strong>Description:</strong> Baby massage is a soothing practice that promotes bonding between parent and child. Gentle strokes can help relax the baby, improve circulation, and aid digestion. It's a wonderful way to communicate love and care through touch.</p>
+                <p><strong>Cost:</strong> Free</p>
+                <p><strong>Special Clothing:</strong> Comfortable clothing</p>
+                <p><strong>Duration:</strong> 10-15 minutes</p>
+                <p><strong>Local Communities:</strong> Parent workshops often teach baby massage techniques.</p>
+                <p><strong>Health Considerations:</strong> Ensure proper techniques are used to avoid discomfort.</p>
+                <p><strong>History:</strong> Baby massage has been practiced in various cultures for centuries, often passed down through generations as a way to nurture infants.</p>
+            </div>
+            <div class="activity">
+                <h3><i class="fas fa-book icon"></i> Reading Time</h3>
+                <p><strong>Description:</strong> Reading to infants is a wonderful way to introduce them to language and storytelling. Choose colorful board books with simple text and engaging pictures. This activity not only fosters a love for reading but also enhances vocabulary and listening skills.</p>
+                <p><strong>Cost:</strong> Free</p>
+                <p><strong>Special Clothing:</strong> Comfortable clothing</p>
+                <p><strong>Duration:</strong> 15-30 minutes</p>
+                <p><strong>Local Communities:</strong> Libraries often host storytime sessions for infants and toddlers.</p>
+                <p><strong>Health Considerations:</strong> Choose age-appropriate books to ensure safety.</p>
+                <p><strong>History:</strong> Reading to children has been encouraged for generations, with studies showing that early exposure to books significantly impacts literacy development.</p>
+            </div>
+            <div class="activity">
+                <h3><i class="fas fa-music icon"></i> Music and Movement</h3>
+                <p><strong>Description:</strong> Music and movement activities involve singing simple songs and encouraging infants to move their bodies. This can include clapping hands, wiggling toes, or gentle swaying. These activities stimulate auditory and motor skills, making them essential for early development.</p>
+                <p><strong>Cost:</strong> Free</p>
+                <p><strong>Special Clothing:</strong> Comfortable clothing</p>
+                <p><strong>Duration:</strong> 10-20 minutes</p>
+                <p><strong>Local Communities:</strong> Parent groups often organize music and movement sessions.</p>
+                <p><strong>Health Considerations:</strong> Ensure safety during movement activities.</p>
+                <p><strong>History:</strong> Music has been a part of human culture for ages, with studies showing its positive effects on child development.</p>
+            </div>
+        </div>
+
+        <div id="toddlers" class="activity-list">
+            <h2>Activities for Toddlers</h2>
+            <div class="activity">
+                <h3><i class="fas fa-play-doh icon"></i> Playdough Fun</h3>
+                <p><strong>Description:</strong> Playdough fun allows toddlers to explore their creativity by molding and shaping dough into various forms. This activity enhances fine motor skills and encourages imaginative play. You can add tools like cookie cutters or rolling pins to make it even more engaging.</p>
+                <p><strong>Cost:</strong> £5 for materials</p>
+                <p><strong>Special Clothing:</strong> Old clothes (it can get messy)</p>
+                <p><strong>Duration:</strong> 30-60 minutes</p>
+                <p><strong>Local Communities:</strong> Local playgroups often organize playdough sessions.</p>
+                <p><strong>Health Considerations:</strong> Ensure no allergies to ingredients used.</p>
+                <p><strong>History:</strong> Playdough was invented in the 1950s as a wallpaper cleaner and has since become a staple in early childhood education for its versatility and ease of use.</p>
+            </div>
+            <div class="activity">
+                <h3><i class="fas fa-tree icon"></i> Nature Walks</h3>
+                <p><strong>Description:</strong> Nature walks provide toddlers with the opportunity to explore the outdoors. Collecting leaves, stones, or flowers can enhance their observational skills and foster a love for nature. Encourage them to describe what they see and hear during the walk.</p>
+                <p><strong>Cost:</strong> Free</p>
+                <p><strong>Special Clothing:</strong> Comfortable shoes</p>
+                <p><strong>Duration:</strong> 30-45 minutes</p>
+                <p><strong>Local Communities:</strong> Nature groups often organize family-friendly walks.</p>
+                <p><strong>Health Considerations:</strong> Ensure safety in outdoor areas and supervise closely.</p>
+                <p><strong>History:</strong> Nature walks have been a traditional activity, promoting physical health and environmental awareness among children.</p>
+            </div>
+            <div class="activity">
+                <h3><i class="fas fa-utensils icon"></i> Simple Cooking</h3>
+                <p><strong>Description:</strong> Simple cooking activities, like making fruit salad or sandwiches, allow toddlers to learn about healthy eating while developing basic cooking skills. This hands-on experience can be both fun and educational, teaching them about different ingredients and flavors.</p>
+                <p><strong>Cost:</strong> £5 for ingredients</p>
+                <p><strong>Special Clothing:</strong> Apron</p>
+                <p><strong>Duration:</strong> 30-45 minutes</p>
+                <p><strong>Local Communities:</strong> Cooking classes for kids often include simple recipes.</p>
+                <p><strong>Health Considerations:</strong> Supervise closely with sharp objects and hot surfaces.</p>
+                <p><strong>History:</strong> Cooking has been a fundamental skill for ages, with many cultures passing down recipes and techniques through generations.</p>
+            </div>
+            <div class="activity">
+                <h3><i class="fas fa-music icon"></i> Dance Party</h3>
+                <p><strong>Description:</strong> A dance party is a lively way for toddlers to express themselves through movement. Playing their favorite songs and encouraging them to dance freely helps develop coordination and rhythm while providing a fun outlet for energy.</p>
+                <p><strong>Cost:</strong> Free</p>
+                <p><strong>Special Clothing:</strong> Comfortable clothing</p>
+                <p><strong>Duration:</strong> 20-30 minutes</p>
+                <p><strong>Local Communities:</strong> Dance classes often welcome toddlers to join in.</p>
+                <p><strong>Health Considerations:</strong> Ensure a safe space for dancing to prevent falls.</p>
+                <p><strong>History:</strong> Dance has been a form of expression for centuries, with various cultures incorporating music and movement into their traditions.</p>
+            </div>
+            <div class="activity">
+                <h3><i class="fas fa-book icon"></i> Story Time</h3>
+                <p><strong>Description:</strong> Story time is a cherished activity that enhances language skills and imagination. Reading aloud to toddlers introduces them to new vocabulary and concepts while fostering a love for books. Choose engaging stories with colorful illustrations to capture their attention.</p>
+                <p><strong>Cost:</strong> Free</p>
+                <p><strong>Special Clothing:</strong> Comfortable clothing</p>
+                <p><strong>Duration:</strong> 20-30 minutes</p>
+                <p><strong>Local Communities:</strong> Libraries often host storytime sessions for toddlers.</p>
+                <p><strong>Health Considerations:</strong> Choose age-appropriate books to ensure safety.</p>
+                <p><strong>History:</strong> Storytelling is an ancient tradition, with oral histories being passed down through generations before the advent of written language.</p>
+            </div>
+        </div>
+
+        <div id="earlyChildhood" class="activity-list">
+            <h2>Activities for Early Childhood</h2>
+            <div class="activity">
+                <h3><i class="fas fa-paint-brush icon"></i> Arts and Crafts</h3>
+                <p><strong>Description:</strong> Arts and crafts activities allow children to express their creativity through various mediums, such as painting, drawing, and collage-making. These activities not only enhance fine motor skills but also encourage imaginative thinking and self-expression.</p>
+                <p><strong>Cost:</strong> £10 for supplies</p>
+                <p><strong>Special Clothing:</strong> Apron or old clothes</p>
+                <p><strong>Duration:</strong> 1-2 hours</p>
+                <p><strong>Local Communities:</strong> Art classes for kids often provide structured activities.</p>
+                <p><strong>Health Considerations:</strong> Use non-toxic materials to ensure safety.</p>
+                <p><strong>History:</strong> Arts and crafts have been a part of childhood for centuries, with many cultures using creative expression as a means of storytelling and communication.</p>
+            </div>
+            <div class="activity">
+                <h3><i class="fas fa-seedling icon"></i> Gardening</h3>
+                <p><strong>Description:</strong> Gardening is a hands-on activity that teaches children about nature, responsibility, and the importance of caring for living things. Planting seeds, watering plants, and watching them grow can be incredibly rewarding and educational.</p>
+                <p><strong>Cost:</strong> £5 for seeds</p>
+                <p><strong>Special Clothing:</strong> Old clothes</p>
+                <p><strong>Duration:</strong> 1-2 hours</p>
+                <p><strong>Local Communities:</strong> Community gardens often welcome children to participate.</p>
+                <p><strong>Health Considerations:</strong> Use gloves for safety when handling soil and plants.</p>
+                <p><strong>History:</strong> Gardening has been a part of human culture for centuries, with ancient civilizations cultivating plants for food, medicine, and beauty.</p>
+            </div>
+            <div class="activity">
+                <h3><i class="fas fa-flask icon"></i> Science Experiments</h3>
+                <p><strong>Description:</strong> Simple science experiments can spark curiosity and a love for learning in young children. Activities like making a volcano with baking soda and vinegar or creating slime can be both fun and educational, teaching basic scientific principles.</p>
+                <p><strong>Cost:</strong> £5 for materials</p>
+                <p><strong>Special Clothing:</strong> Old clothes</p>
+                <p><strong>Duration:</strong> 30-60 minutes</p>
+                <p><strong>Local Communities:</strong> Science clubs often host engaging experiments for kids.</p>
+                <p><strong>Health Considerations:</strong> Supervise closely with materials to ensure safety.</p>
+                <p><strong>History:</strong> Science has been a field of exploration for centuries, with hands-on experiments being a key part of learning since ancient times.</p>
+            </div>
+            <div class="activity">
+                <h3><i class="fas fa-theater-masks icon"></i> Puppet Show</h3>
+                <p><strong>Description:</strong> Creating puppets and putting on a show allows children to explore storytelling and performance. This activity encourages creativity, communication skills, and teamwork as they collaborate to create characters and narratives.</p>
+                <p><strong>Cost:</strong> £5 for materials</p>
+                <p><strong>Special Clothing:</strong> Comfortable clothing</p>
+                <p><strong>Duration:</strong> 1-2 hours</p>
+                <p><strong>Local Communities:</strong> Theater groups often provide workshops for children.</p>
+                <p><strong>Health Considerations:</strong> Ensure safety with materials used for puppets.</p>
+                <p><strong>History:</strong> Puppetry has been a form of entertainment for centuries, with roots in various cultures around the world.</p>
+            </div>
+            <div class="activity">
+                <h3><i class="fas fa-utensils icon"></i> Cooking Classes</h3>
+                <p><strong>Description:</strong> Cooking classes for children introduce them to the joys of preparing food. Learning to cook simple meals fosters independence and teaches valuable life skills, such as measuring ingredients and following instructions.</p>
+                <p><strong>Cost:</strong> £10 for ingredients</p>
+                <p><strong>Special Clothing:</strong> Apron</p>
+                <p><strong>Duration:</strong> 1-2 hours</p>
+                <p><strong>Local Communities:</strong> Cooking schools often offer classes tailored for kids.</p>
+                <p><strong>Health Considerations:</strong> Supervise closely with sharp objects and hot surfaces.</p>
+                <p><strong>History:</strong> Cooking has been a fundamental skill for ages, with many cultures passing down recipes and techniques through generations.</p>
+            </div>
+        </div>
+
+        <div id="middleChildhood" class="activity-list">
+            <h2>Activities for Middle Childhood</h2>
+            <div class="activity">
+                <h3><i class="fas fa-bicycle icon"></i> Biking</h3>
+                <p><strong>Description:</strong> Biking is a fun and healthy way for children to explore their surroundings. Riding bikes helps develop coordination and balance while providing an excellent cardiovascular workout. Encourage children to ride in safe areas, such as parks or bike paths.</p>
+                <p><strong>Cost:</strong> Free if you have a bike</p>
+                <p><strong>Special Clothing:</strong> Helmet and comfortable clothing</p>
+                <p><strong>Duration:</strong> 1-2 hours</p>
+                <p><strong>Local Communities:</strong> Biking clubs often organize group rides for children.</p>
+                <p><strong>Health Considerations:</strong> Always wear a helmet and ensure the bike is in good condition.</p>
+                <p><strong>History:</strong> Biking has been a popular activity since the invention of the bicycle in the 19th century, evolving into a beloved pastime and mode of transportation.</p>
+            </div>
+            <div class="activity">
+                <h3><i class="fas fa-futbol icon"></i> Team Sports</h3>
+                <p><strong>Description:</strong> Participating in team sports, such as soccer or basketball, teaches children the importance of teamwork, communication, and physical fitness. These activities promote social skills and help children develop a sense of belonging within a team.</p>
+                <p><strong>Cost:</strong> Free if you have equipment</p>
+                <p><strong>Special Clothing:</strong> Sportswear</p>
+                <p><strong>Duration:</strong> 1-2 hours</p>
+                <p><strong>Local Communities:</strong> Local sports clubs often offer programs for children.</p>
+                <p><strong>Health Considerations:</strong> Ensure proper warm-up and hydration before and after activities.</p>
+                <p><strong>History:</strong> Team sports have been played for centuries, with organized leagues and competitions becoming popular in the 19th and 20th centuries.</p>
+            </div>
+            <div class="activity">
+                <h3><i class="fas fa-swimmer icon"></i> Swimming</h3>
+                <p><strong>Description:</strong> Swimming is not only a fun activity but also a vital life skill. It promotes physical fitness, builds endurance, and enhances coordination. Swimming lessons can help children learn safety skills while enjoying the water.</p>
+                <p><strong>Cost:</strong> Varies, typically £5-£10 for pool entry</p>
+                <p><strong>Special Clothing:</strong> Swimsuit</p>
+                <p><strong>Duration:</strong> 1-2 hours</p>
+                <p><strong>Local Communities:</strong> Local swimming pools often offer classes for children.</p>
+                <p><strong>Health Considerations:</strong> Always supervise children in water and ensure they are comfortable swimming.</p>
+                <p><strong>History:</strong> Swimming has been a vital skill for survival throughout history, with ancient civilizations using it for recreation and competition.</p>
+            </div>
+            <div class="activity">
+                <h3><i class="fas fa-hiking icon"></i> Hiking</h3>
+                <p><strong>Description:</strong> Hiking is a wonderful way for children to connect with nature while getting exercise. Exploring trails and parks allows them to discover wildlife and learn about the environment. It also promotes physical fitness and mental well-being.</p>
+                <p><strong>Cost:</strong> Free</p>
+                <p><strong>Special Clothing:</strong> Comfortable shoes</p>
+                <p><strong>Duration:</strong> 1-3 hours</p>
+                <p><strong>Local Communities:</strong> Hiking clubs often organize family-friendly hikes.</p>
+                <p><strong>Health Considerations:</strong> Ensure safety on trails and supervise children closely.</p>
+                <p><strong>History:</strong> Hiking has been a popular outdoor activity, with roots in ancient travel and exploration.</p>
+            </div>
+            <div class="activity">
+                <h3><i class="fas fa-fist-raised icon"></i> Martial Arts</h3>
+                <p><strong>Description:</strong> Martial arts classes teach children self-defense, discipline, and respect. These activities promote physical fitness and mental focus while instilling confidence and self-esteem. Many martial arts also emphasize the importance of community and teamwork.</p>
+                <p><strong>Cost:</strong> Varies, typically £10-£20 per class</p>
+                <p><strong>Special Clothing:</strong> Gi or comfortable clothing</p>
+                <p><strong>Duration:</strong> 1 hour</p>
+                <p><strong>Local Communities:</strong> Martial arts studios often offer classes for children.</p>
+                <p><strong>Health Considerations:</strong> Ensure proper techniques are used to prevent injuries.</p>
+                <p><strong>History:</strong> Martial arts have a rich history in various cultures, often rooted in ancient combat techniques and philosophies.</p>
+            </div>
+        </div>
+
+        <div id="adolescence" class="activity-list">
+            <h2>Activities for Adolescence</h2>
+            <div class="activity">
+                <h3><i class="fas fa-music icon"></i> Music Lessons</h3>
+                <p><strong>Description:</strong> Music lessons provide adolescents with the opportunity to learn an instrument or improve their vocal skills. This activity fosters creativity, discipline, and self-expression while enhancing cognitive abilities and emotional well-being.</p>
+                <p><strong>Cost:</strong> Varies, typically £20-£50 per lesson</p>
+                <p><strong>Special Clothing:</strong> Comfortable clothing</p>
+                <p><strong>Duration:</strong> 30-60 minutes per lesson</p>
+                <p><strong>Local Communities:</strong> Music schools and community centers often offer lessons.</p>
+                <p><strong>Health Considerations:</strong> Ensure proper posture while playing instruments to prevent strain.</p>
+                <p><strong>History:</strong> Music education has been a vital part of cultural development for centuries, with many famous composers and musicians starting their training at a young age.</p>
+            </div>
+            <div class="activity">
+                <h3><i class="fas fa-theater-masks icon"></i> Drama Classes</h3>
+                <p><strong>Description:</strong> Drama classes allow adolescents to explore their creativity through acting and performance. These classes help develop communication skills, confidence, and empathy while providing a platform for self-expression.</p>
+                <p><strong>Cost:</strong> Varies, typically £10-£20 per class</p>
+                <p><strong>Special Clothing:</strong> Comfortable clothing</p>
+                <p><strong>Duration:</strong> 1 hour</p>
+                <p><strong>Local Communities:</strong> Local theater groups often offer classes for young actors.</p>
+                <p><strong>Health Considerations:</strong> Ensure a safe environment for performances to prevent injuries.</p>
+                <p><strong>History:</strong> Drama has been a form of storytelling for centuries, with theater traditions dating back to ancient Greece.</p>
+            </div>
+            <div class="activity">
+                <h3><i class="fas fa-hands-helping icon"></i> Volunteering</h3>
+                <p><strong>Description:</strong> Volunteering provides adolescents with the opportunity to give back to their communities while developing valuable life skills. Engaging in service projects fosters empathy, teamwork, and a sense of responsibility.</p>
+                <p><strong>Cost:</strong> Free</p>
+                <p><strong>Special Clothing:</strong> Comfortable clothing</p>
+                <p><strong>Duration:</strong> Varies</p>
+                <p><strong>Local Communities:</strong> Local charities often welcome volunteers.</p>
+                <p><strong>Health Considerations:</strong> Ensure safety during activities and follow guidelines.</p>
+                <p><strong>History:</strong> Volunteering has been a way to give back to the community for ages, with many cultures emphasizing the importance of helping others.</p>
+            </div>
+            <div class="activity">
+                <h3><i class="fas fa-futbol icon"></i> Sports Teams</h3>
+                <p><strong>Description:</strong> Joining a local sports team allows adolescents to engage in physical activity while developing teamwork and leadership skills. Participating in sports promotes a healthy lifestyle and can lead to lifelong friendships.</p>
+                <p><strong>Cost:</strong> Varies, typically £10-£30 for registration</p>
+                <p><strong>Special Clothing:</strong> Sportswear</p>
+                <p><strong>Duration:</strong> 1-2 hours</p>
+                <p><strong>Local Communities:</strong> Local sports clubs often offer programs for adolescents.</p>
+                <p><strong>Health Considerations:</strong> Ensure proper warm-up and hydration before and after activities.</p>
+                <p><strong>History:</strong> Team sports have been played for centuries, with organized leagues becoming popular in the 19th and 20th centuries.</p>
+            </div>
+            <div class="activity">
+                <h3><i class="fas fa-paint-brush icon"></i> Art Classes</h3>
+                <p><strong>Description:</strong> Art classes provide adolescents with the opportunity to explore various artistic techniques and styles. This creative outlet encourages self-expression and can lead to a deeper appreciation for the arts.</p>
+                <p><strong>Cost:</strong> Varies, typically £10-£20 per class</p>
+                <p><strong>Special Clothing:</strong> Old clothes</p>
+                <p><strong>Duration:</strong> 1-2 hours</p>
+                <p><strong>Local Communities:</strong> Art studios often offer classes for teens.</p>
+                <p><strong>Health Considerations:</strong> Use non-toxic materials to ensure safety.</p>
+                <p><strong>History:</strong> Art has been a form of expression for centuries, with many famous artists beginning their journeys in childhood.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add sports activity icons here -->
+    <i class="fas fa-futbol activity-icon" style="top: 10%; left: 10%;"></i> <!-- Soccer -->
+    <i class="fas fa-basketball-ball activity-icon" style="top: 20%; left: 30%;"></i> <!-- Basketball -->
+    <i class="fas fa-table-tennis activity-icon" style="top: 30%; left: 50%;"></i> <!-- Tennis -->
+    <i class="fas fa-baseball-ball activity-icon" style="top: 40%; left: 70%;"></i> <!-- Baseball -->
+    <i class="fas fa-swimmer activity-icon" style="top: 50%; left: 90%;"></i> <!-- Swimming -->
+    <i class="fas fa-bicycle activity-icon" style="top: 60%; left: 20%;"></i> <!-- Cycling -->
+    <i class="fas fa-volleyball-ball activity-icon" style="top: 70%; left: 80%;"></i> <!-- Volleyball -->
+    <!-- Add more icons as needed -->
+
+    <!-- Return to Top Icon -->
+    <i class="fas fa-arrow-up return-to-top" onclick="scrollToTop()"></i>
+
+    <footer style="background-color: rgba(0, 123, 255, 0.8); color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; text-align: center;">
+        ZenZac™
+    </footer>
+</body>
+</html> 

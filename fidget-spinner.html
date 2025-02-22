@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fidget Spinner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(270deg, #007BFF, #00CFFF, #007BFF);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .spinner {
+            width: 300px;
+            height: 300px;
+            border: 24px solid #f3f3f3;
+            border-top: 24px solid #3498db;
+            border-radius: 50%;
+            animation: spin 2s linear infinite;
+            margin: 20px auto;
+            position: relative;
+            transition: background 0.3s ease, border 0.3s ease;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px; /* Add padding for better touch targets */
+        }
+
+        .shape-controls, .color-controls, .size-speed-border-controls, .text-management {
+            display: flex;
+            align-items: center;
+            margin: 5px 0; /* Reduce margin for compactness */
+            flex-wrap: wrap; /* Allow wrapping for smaller screens */
+        }
+
+        .shape-controls button, .color-controls input, .size-speed-border-controls input, .text-management input {
+            margin-left: 5px; /* Reduce margin for compactness */
+            flex: 1; /* Allow inputs to grow */
+            min-width: 100px; /* Set a minimum width for inputs */
+        }
+
+        .size-speed-border-controls {
+            display: flex;
+            flex-direction: column; /* Arrange children vertically */
+            align-items: center; /* Center items */
+            width: 100%; /* Full width for the container */
+        }
+
+        .text-management {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(0, 123, 255, 0.8);
+            color: white;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            margin: 5px 0; /* Add margin for spacing */
+        }
+
+        .button:hover {
+            background-color: rgba(0, 56, 139, 0.8);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+        }
+
+        .text {
+            font-size: 36px;
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            white-space: nowrap;
+        }
+
+        /* Media Queries for Mobile Responsiveness */
+        @media (max-width: 600px) {
+            .spinner {
+                width: 80vw; /* Use viewport width for responsiveness */
+                height: 80vw; /* Maintain aspect ratio */
+            }
+
+            .controls {
+                width: 100%; /* Make controls take up full width */
+            }
+
+            .shape-controls, .color-controls, .size-speed-border-controls, .text-management {
+                flex-direction: column; /* Stack controls vertically */
+                align-items: flex-start; /* Align items to the start */
+                width: 100%; /* Full width for each control group */
+            }
+
+            .shape-controls button, .color-controls input, .size-speed-border-controls input, .text-management input {
+                width: 100%; /* Full width for inputs and buttons */
+                margin-left: 0; /* Remove left margin */
+                margin-bottom: 5px; /* Add bottom margin for spacing */
+            }
+
+            .button {
+                width: 100%; /* Make buttons full width */
+                font-size: 14px; /* Adjust font size for smaller screens */
+            }
+
+            .text {
+                font-size: 24px; /* Adjust text size for smaller screens */
+            }
+        }
+
+        /* Style for the color range input */
+        #colorRange {
+            -webkit-appearance: none; /* Remove default styling */
+            width: 100%; /* Full width */
+            height: 10px; /* Height of the slider */
+            border-radius: 5px; /* Rounded edges */
+            background: linear-gradient(to right, purple, blue, green, yellow, orange, red); /* Gradient background */
+            outline: none; /* Remove outline */
+        }
+
+        #colorRange::-webkit-slider-thumb {
+            -webkit-appearance: none; /* Remove default styling */
+            appearance: none; /* Remove default styling */
+            width: 20px; /* Width of the thumb */
+            height: 20px; /* Height of the thumb */
+            border-radius: 50%; /* Round thumb */
+            background: white; /* Thumb color */
+            cursor: pointer; /* Pointer cursor on hover */
+            box-shadow: 0 0 2px rgba(0, 0, 0, 0.5); /* Shadow for thumb */
+        }
+
+        #colorRange::-moz-range-thumb {
+            width: 20px; /* Width of the thumb */
+            height: 20px; /* Height of the thumb */
+            border-radius: 50%; /* Round thumb */
+            background: white; /* Thumb color */
+            cursor: pointer; /* Pointer cursor on hover */
+            box-shadow: 0 0 2px rgba(0, 0, 0, 0.5); /* Shadow for thumb */
+        }
+
+        .compact-controls {
+            display: flex;
+            align-items: center;
+            margin: 5px 0; /* Reduce margin for compactness */
+            width: 100%; /* Full width for each control */
+            max-width: 10vw; /* Limit width to 10% of the viewport width */
+        }
+
+        .compact-controls button {
+            margin-right: 5px; /* Space between button and input */
+        }
+
+        .compact-controls input {
+            flex: 1; /* Allow input to grow */
+        }
+
+        /* Frost Aura Theme */
+        .text-management input[type="text"],
+        .text-management input[type="range"],
+        .text-management select {
+            background-color: rgba(173, 216, 230, 0.5); /* Light blue background */
+            border: 1px solid rgba(0, 123, 255, 0.8); /* Blue border */
+            border-radius: 5px; /* Rounded corners */
+            color: #000; /* Text color */
+            padding: 5px; /* Padding for better touch targets */
+            font-size: 20px; /* Set font size */
+        }
+
+        .text-management input[type="text"]:focus,
+        .text-management input[type="range"]:focus,
+        .text-management select:focus {
+            outline: none; /* Remove outline on focus */
+            border-color: rgba(0, 56, 139, 0.8); /* Darker blue border on focus */
+        }
+
+        /* Font Selector Styles */
+        .text-management select {
+            background-color: transparent; /* Match the page background */
+            border: 1px solid rgba(0, 123, 255, 0.8); /* Blue border */
+            border-radius: 5px; /* Rounded corners */
+            color: white; /* White text color */
+            padding: 5px; /* Padding for better touch targets */
+            font-size: 20px; /* Set font size */
+        }
+
+        .text-management select:focus {
+            outline: none; /* Remove outline on focus */
+            border-color: rgba(0, 56, 139, 0.8); /* Darker blue border on focus */
+        }
+    </style>
+</head>
+<body>
+    <button id="homeButton" class="button" style="position: absolute; top: 20px; right: 20px; background-color: rgba(173, 216, 230, 0.5); border: 1px solid rgba(0, 123, 255, 0.8); border-radius: 5px; color: #000; padding: 10px; font-size: 16px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" class="bi bi-house" viewBox="0 0 16 16">
+            <path d="M8 3.293l-6 6V14h4v-4h4v4h4V9.293l-6-6z"/>
+            <path fill-rule="evenodd" d="M7.5 0a.5.5 0 0 1 .5.5v1.793l6 6V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8.293l6-6V.5a.5.5 0 0 1 .5-.5z"/>
+        </svg>
+    </button>
+    
+    <div class="controls">
+        <div class="shape-controls">
+            <button class="button" id="circleButton">Circle</button>
+            <button class="button" id="squareButton">Square</button>
+            <button class="button" id="toggleText" style="margin-left: 10px;">Show Text</button>
+            <input type="text" id="textInput" placeholder="Enter text" oninput="spinnerText.textContent = this.value || 'Spin Me!'" style="margin-left: 10px; display: none; font-size: 20px;" />
+            <input type="range" id="textSizeRange" min="12" max="72" value="20" style="margin-left: 10px; display: none;" />
+            <select id="fontSelector" style="margin-left: 10px; display: none;">
+                <option value="Arial" style="font-family: Arial;">Arial</option>
+                <option value="Courier New" style="font-family: 'Courier New';">Courier New</option>
+                <option value="Georgia" style="font-family: Georgia;">Georgia</option>
+                <option value="Times New Roman" style="font-family: 'Times New Roman';">Times New Roman</option>
+                <option value="Verdana" style="font-family: Verdana;">Verdana</option>
+                <option value="Comic Sans MS" style="font-family: 'Comic Sans MS';">Comic Sans MS</option>
+                <option value="Impact" style="font-family: Impact;">Impact</option>
+                <option value="Lucida Console" style="font-family: 'Lucida Console';">Lucida Console</option>
+                <option value="Tahoma" style="font-family: Tahoma;">Tahoma</option>
+                <option value="Trebuchet MS" style="font-family: 'Trebuchet MS';">Trebuchet MS</option>
+                <option value="Palatino Linotype" style="font-family: 'Palatino Linotype';">Palatino Linotype</option>
+                <option value="Garamond" style="font-family: Garamond;">Garamond</option>
+                <option value="Bookman" style="font-family: Bookman;">Bookman</option>
+                <option value="Arial Black" style="font-family: 'Arial Black';">Arial Black</option>
+                <option value="Arial Narrow" style="font-family: 'Arial Narrow';">Arial Narrow</option>
+                <option value="Baskerville" style="font-family: Baskerville;">Baskerville</option>
+                <option value="Bodoni MT" style="font-family: 'Bodoni MT';">Bodoni MT</option>
+                <option value="Century Gothic" style="font-family: 'Century Gothic';">Century Gothic</option>
+                <option value="Frank Ruhl Libre" style="font-family: 'Frank Ruhl Libre';">Frank Ruhl Libre</option>
+                <option value="Futura" style="font-family: Futura;">Futura</option>
+                <option value="Gill Sans" style="font-family: 'Gill Sans';">Gill Sans</option>
+                <option value="Helvetica" style="font-family: Helvetica;">Helvetica</option>
+                <option value="Segoe UI" style="font-family: 'Segoe UI';">Segoe UI</option>
+                <option value="Rockwell" style="font-family: Rockwell;">Rockwell</option>
+                <option value="Optima" style="font-family: Optima;">Optima</option>
+                <option value="Miriam Libre" style="font-family: 'Miriam Libre';">Miriam Libre</option>
+                <option value="Noto Sans" style="font-family: 'Noto Sans';">Noto Sans</option>
+                <option value="Righteous" style="font-family: Righteous;">Righteous</option>
+                <option value="Source Sans Pro" style="font-family: 'Source Sans Pro';">Source Sans Pro</option>
+                <option value="Ubuntu" style="font-family: Ubuntu;">Ubuntu</option>
+                <option value="Zilla Slab" style="font-family: 'Zilla Slab';">Zilla Slab</option>
+                <option value="Arial Rounded MT Bold" style="font-family: 'Arial Rounded MT Bold';">Arial Rounded MT Bold</option>
+                <option value="Bodoni 72" style="font-family: 'Bodoni 72';">Bodoni 72</option>
+                <option value="Brush Script MT" style="font-family: 'Brush Script MT';">Brush Script MT</option>
+                <option value="Candara" style="font-family: Candara;">Candara</option>
+                <option value="Chalkboard SE" style="font-family: 'Chalkboard SE';">Chalkboard SE</option>
+                <option value="Comic Sans MS" style="font-family: 'Comic Sans MS';">Comic Sans MS</option>
+                <option value="Consolas" style="font-family: Consolas;">Consolas</option>
+                <option value="Copperplate" style="font-family: Copperplate;">Copperplate</option>
+                <option value="Didot" style="font-family: Didot;">Didot</option>
+                <option value="FangSong" style="font-family: FangSong;">FangSong</option>
+                <option value="Garamond" style="font-family: Garamond;">Garamond</option>
+                <option value="Georgia" style="font-family: Georgia;">Georgia</option>
+                <option value="Lucida Handwriting" style="font-family: 'Lucida Handwriting';">Lucida Handwriting</option>
+                <option value="Lucida Sans Unicode" style="font-family: 'Lucida Sans Unicode';">Lucida Sans Unicode</option>
+                <option value="Mongolian Baiti" style="font-family: 'Mongolian Baiti';">Mongolian Baiti</option>
+                <option value="Palatino Linotype" style="font-family: 'Palatino Linotype';">Palatino Linotype</option>
+                <option value="Segoe Print" style="font-family: 'Segoe Print';">Segoe Print</option>
+                <option value="Segoe Script" style="font-family: 'Segoe Script';">Segoe Script</option>
+                <option value="Tahoma" style="font-family: Tahoma;">Tahoma</option>
+                <option value="Times New Roman" style="font-family: 'Times New Roman';">Times New Roman</option>
+                <option value="Trebuchet MS" style="font-family: 'Trebuchet MS';">Trebuchet MS</option>
+                <option value="Verdana" style="font-family: Verdana;">Verdana</option>
+            </select>
+        </div>
+        
+        <div class="color-controls">
+            <button class="button" id="colourButton">Colour</button>
+            <input type="range" id="colorRange" min="0" max="100" value="0" style="background: linear-gradient(to right, purple, blue, green, yellow, orange, red);"/>
+        </div>
+
+        <div class="size-speed-border-controls">
+            <div class="compact-controls">
+                <button class="button" id="speedButton">Speed</button>
+                <input type="range" id="speedRange" min="0.0001" max="5" value="2" step="0.0001" />
+            </div>
+            <div class="compact-controls">
+                <button class="button" id="sizeButton">Size</button>
+                <input type="range" id="sizeRange" min="100" max="500" value="300" />
+            </div>
+            <div class="compact-controls">
+                <button class="button" id="borderButton">Border</button>
+                <input type="range" id="thicknessRange" min="1" max="100" value="24" />
+            </div>
+        </div>
+
+        <div class="text-management">
+            <input type="text" id="textInput" placeholder="Enter text" oninput="spinnerText.textContent = this.value || 'Spin Me!'" style="margin-left: 10px; display: none; font-size: 20px;" />
+            <input type="range" id="textSizeRange" min="12" max="72" value="20" style="margin-left: 10px; display: none;" />
+            <select id="fontSelector" style="margin-left: 10px; display: none;">
+                <option value="Arial" style="font-family: Arial;">Arial</option>
+                <option value="Courier New" style="font-family: 'Courier New';">Courier New</option>
+                <option value="Georgia" style="font-family: Georgia;">Georgia</option>
+                <option value="Times New Roman" style="font-family: 'Times New Roman';">Times New Roman</option>
+                <option value="Verdana" style="font-family: Verdana;">Verdana</option>
+                <option value="Comic Sans MS" style="font-family: 'Comic Sans MS';">Comic Sans MS</option>
+                <option value="Impact" style="font-family: Impact;">Impact</option>
+                <option value="Lucida Console" style="font-family: 'Lucida Console';">Lucida Console</option>
+                <option value="Tahoma" style="font-family: Tahoma;">Tahoma</option>
+                <option value="Trebuchet MS" style="font-family: 'Trebuchet MS';">Trebuchet MS</option>
+                <option value="Palatino Linotype" style="font-family: 'Palatino Linotype';">Palatino Linotype</option>
+                <option value="Garamond" style="font-family: Garamond;">Garamond</option>
+                <option value="Bookman" style="font-family: Bookman;">Bookman</option>
+                <option value="Arial Black" style="font-family: 'Arial Black';">Arial Black</option>
+                <option value="Arial Narrow" style="font-family: 'Arial Narrow';">Arial Narrow</option>
+                <option value="Baskerville" style="font-family: Baskerville;">Baskerville</option>
+                <option value="Bodoni MT" style="font-family: 'Bodoni MT';">Bodoni MT</option>
+                <option value="Century Gothic" style="font-family: 'Century Gothic';">Century Gothic</option>
+                <option value="Frank Ruhl Libre" style="font-family: 'Frank Ruhl Libre';">Frank Ruhl Libre</option>
+                <option value="Futura" style="font-family: Futura;">Futura</option>
+                <option value="Gill Sans" style="font-family: 'Gill Sans';">Gill Sans</option>
+                <option value="Helvetica" style="font-family: Helvetica;">Helvetica</option>
+                <option value="Segoe UI" style="font-family: 'Segoe UI';">Segoe UI</option>
+                <option value="Rockwell" style="font-family: Rockwell;">Rockwell</option>
+                <option value="Optima" style="font-family: Optima;">Optima</option>
+                <option value="Miriam Libre" style="font-family: 'Miriam Libre';">Miriam Libre</option>
+                <option value="Noto Sans" style="font-family: 'Noto Sans';">Noto Sans</option>
+                <option value="Righteous" style="font-family: Righteous;">Righteous</option>
+                <option value="Source Sans Pro" style="font-family: 'Source Sans Pro';">Source Sans Pro</option>
+                <option value="Ubuntu" style="font-family: Ubuntu;">Ubuntu</option>
+                <option value="Zilla Slab" style="font-family: 'Zilla Slab';">Zilla Slab</option>
+                <option value="Arial Rounded MT Bold" style="font-family: 'Arial Rounded MT Bold';">Arial Rounded MT Bold</option>
+                <option value="Bodoni 72" style="font-family: 'Bodoni 72';">Bodoni 72</option>
+                <option value="Brush Script MT" style="font-family: 'Brush Script MT';">Brush Script MT</option>
+                <option value="Candara" style="font-family: Candara;">Candara</option>
+                <option value="Chalkboard SE" style="font-family: 'Chalkboard SE';">Chalkboard SE</option>
+                <option value="Comic Sans MS" style="font-family: 'Comic Sans MS';">Comic Sans MS</option>
+                <option value="Consolas" style="font-family: Consolas;">Consolas</option>
+                <option value="Copperplate" style="font-family: Copperplate;">Copperplate</option>
+                <option value="Didot" style="font-family: Didot;">Didot</option>
+                <option value="FangSong" style="font-family: FangSong;">FangSong</option>
+                <option value="Garamond" style="font-family: Garamond;">Garamond</option>
+                <option value="Georgia" style="font-family: Georgia;">Georgia</option>
+                <option value="Lucida Handwriting" style="font-family: 'Lucida Handwriting';">Lucida Handwriting</option>
+                <option value="Lucida Sans Unicode" style="font-family: 'Lucida Sans Unicode';">Lucida Sans Unicode</option>
+                <option value="Mongolian Baiti" style="font-family: 'Mongolian Baiti';">Mongolian Baiti</option>
+                <option value="Palatino Linotype" style="font-family: 'Palatino Linotype';">Palatino Linotype</option>
+                <option value="Segoe Print" style="font-family: 'Segoe Print';">Segoe Print</option>
+                <option value="Segoe Script" style="font-family: 'Segoe Script';">Segoe Script</option>
+                <option value="Tahoma" style="font-family: Tahoma;">Tahoma</option>
+                <option value="Times New Roman" style="font-family: 'Times New Roman';">Times New Roman</option>
+                <option value="Trebuchet MS" style="font-family: 'Trebuchet MS';">Trebuchet MS</option>
+                <option value="Verdana" style="font-family: Verdana;">Verdana</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="spinner" id="spinner" style="animation: none;">
+        <div class="text" id="spinnerText">Spin Me!</div>
+    </div>
+
+    <script>
+        const spinner = document.getElementById('spinner');
+        const spinnerText = document.getElementById('spinnerText');
+        const textInput = document.getElementById('textInput');
+        const colorRange = document.getElementById('colorRange');
+        const speedRange = document.getElementById('speedRange');
+        const circleButton = document.getElementById('circleButton');
+        const squareButton = document.getElementById('squareButton');
+        const toggleText = document.getElementById('toggleText');
+        const sizeRange = document.getElementById('sizeRange');
+        const thicknessRange = document.getElementById('thicknessRange');
+        const textSizeRange = document.getElementById('textSizeRange');
+        const fontSelector = document.getElementById('fontSelector');
+
+        // Function to start the spinner
+        const startSpinner = () => {
+            const speed = (5 - speedRange.value) || 0.0001; // Get current speed
+            spinner.style.animation = `spin ${speed}s linear infinite`; // Start spinning
+        };
+
+        // Function to get color based on slider value
+        const getColor = (value) => {
+            const colors = [
+                'purple', // 0
+                'blue',   // 20
+                'green',  // 40
+                'yellow', // 60
+                'orange', // 80
+                'red'     // 100
+            ];
+            const index = Math.floor(value / 20); // Determine color index
+            return colors[index];
+        };
+
+        // Change spinner color based on slider value
+        colorRange.addEventListener('input', (event) => {
+            const colorValue = event.target.value;
+            const color = getColor(colorValue);
+            spinner.style.borderTopColor = color;
+            spinnerText.style.color = color;
+            startSpinner(); // Start spinner on color change
+        });
+
+        // Change spinner speed
+        speedRange.addEventListener('input', (event) => {
+            const speed = (5 - (event.target.value)) || 0.0001; // Convert to range 5.0 to 0.0001
+            spinner.style.animation = `spin ${speed}s linear infinite`;
+            startSpinner(); // Start spinner on speed change
+        });
+
+        // Change spinner size
+        sizeRange.addEventListener('input', (event) => {
+            const newSize = event.target.value;
+            spinner.style.width = `${newSize}px`;
+            spinner.style.height = `${newSize}px`;
+            startSpinner(); // Start spinner on size change
+        });
+
+        // Change spinner shape
+        circleButton.addEventListener('click', () => {
+            spinner.style.borderRadius = '50%'; // Set to circle
+            const size = sizeRange.value; // Get the current size from the size range
+            spinner.style.height = `${size}px`; // Ensure full height based on current size
+            spinner.style.width = `${size}px`; // Ensure full width based on current size
+            spinnerText.style.display = 'block'; // Ensure text is visible
+            circleButton.disabled = true; // Disable further shape selection
+            squareButton.disabled = false; // Enable square button for future selection
+            startSpinner(); // Start spinner on shape change
+        });
+
+        squareButton.addEventListener('click', () => {
+            spinner.style.borderRadius = '0'; // Set to square
+            const size = sizeRange.value; // Get the current size from the size range
+            spinner.style.height = `${size}px`; // Ensure full height based on current size
+            spinner.style.width = `${size}px`; // Ensure full width based on current size
+            spinnerText.style.display = 'block'; // Ensure text is visible
+            squareButton.disabled = true; // Disable further shape selection
+            circleButton.disabled = false; // Enable circle button for future selection
+            startSpinner(); // Start spinner on shape change
+        });
+
+        // Show text input and sliders when the button is clicked
+        toggleText.addEventListener('click', () => {
+            const isTextVisible = spinnerText.style.display === 'block';
+            if (isTextVisible) {
+                spinnerText.style.display = 'none'; // Hide text
+                textInput.style.display = 'none'; // Hide text input
+                textSizeRange.style.display = 'none'; // Hide text size slider
+                fontSelector.style.display = 'none'; // Hide font selector
+                toggleText.textContent = 'Show Text'; // Change button text back to "Show Text"
+            } else {
+                spinnerText.style.display = 'block'; // Show text
+                textInput.style.display = 'inline'; // Show text input
+                textSizeRange.style.display = 'inline'; // Show text size slider
+                fontSelector.style.display = 'inline'; // Show font selector
+                toggleText.textContent = 'Stop Text'; // Change button text to "Stop Text"
+            }
+        });
+
+        // Change text size
+        textSizeRange.addEventListener('input', (event) => {
+            const newSize = event.target.value;
+            spinnerText.style.fontSize = `${newSize}px`;
+        });
+
+        // Change font style
+        fontSelector.addEventListener('change', (event) => {
+            const selectedFont = event.target.value;
+            spinnerText.style.fontFamily = selectedFont;
+        });
+
+        // Change spinner border thickness
+        thicknessRange.addEventListener('input', (event) => {
+            const newThickness = event.target.value;
+            spinner.style.border = `${newThickness}px solid #f3f3f3`; // Set the border thickness
+            spinner.style.borderTop = `${newThickness}px solid #3498db`; // Set the top border thickness
+            const currentSize = sizeRange.value; // Get the current size of the spinner
+            spinner.style.width = `${currentSize}px`; // Maintain the width
+            spinner.style.height = `${currentSize}px`; // Maintain the height
+            startSpinner(); // Start spinner on border thickness change
+        });
+
+        // React to mouse movement over the spinner
+        spinner.addEventListener('mousemove', (event) => {
+            const y = event.clientY / window.innerHeight; // Normalize y position
+            const speed = 5 - (y * 4); // Calculate speed based on y position (range from 1 to 5)
+            spinner.style.animation = `spin ${speed}s linear infinite`; // Update spinner speed
+            const rotationX = (y - 0.5) * 20; // Calculate rotation based on y position
+            const rotationY = (event.clientX / window.innerWidth - 0.5) * -20; // Calculate rotation based on x position
+            spinner.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`; // Apply rotation
+        });
+
+        // React to device motion when the mouse is over the spinner
+        spinner.addEventListener('mouseenter', () => {
+            if (window.DeviceMotionEvent) {
+                window.addEventListener('devicemotion', (event) => {
+                    const { accelerationIncludingGravity } = event;
+                    const speed = 5 - (Math.abs(accelerationIncludingGravity.y) / 2); // Calculate speed based on y acceleration
+                    spinner.style.animation = `spin ${speed}s linear infinite`; // Update spinner speed
+                    const rotationX = accelerationIncludingGravity.x * 2; // Adjust sensitivity
+                    const rotationY = accelerationIncludingGravity.y * -2; // Adjust sensitivity
+                    spinner.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`; // Apply rotation
+                });
+            }
+        });
+
+        // Stop device motion event when mouse leaves the spinner
+        spinner.addEventListener('mouseleave', () => {
+            window.removeEventListener('devicemotion', () => {});
+        });
+
+        // Add event listener for the home button
+        document.getElementById('homeButton').addEventListener('click', () => {
+            window.location.href = 'Index.html'; // Redirect to Index.html
+        });
+    </script>
+
+    <footer style="background-color: rgba(0, 123, 255, 0.8); color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; text-align: center;">
+        ZenZac™
+    </footer>
+</body>
+</html> 

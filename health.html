@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Information</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(270deg, #007BFF, #00CFFF);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .menu {
+            margin: 10px auto;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            max-width: 600px;
+        }
+        .menu a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            transition: background-color 0.3s;
+        }
+        .menu a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .info-container {
+                text-align: left;
+            }
+        }
+        .info-container {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        .menu-button {
+            color: white;
+            background: none;
+            border: none;
+            text-align: left;
+            width: 100%;
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .menu-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        /* New styles for the back button */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .back-button:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        .home-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .home-button:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+    <script>
+        function toggleInfo(id) {
+            // Get all info containers
+            const containers = document.querySelectorAll('.info-container');
+            // Close all containers
+            containers.forEach(container => {
+                if (container.id !== id) {
+                    container.style.display = 'none';
+                }
+            });
+            // Toggle the selected container
+            const selectedContainer = document.getElementById(id);
+            selectedContainer.style.display = selectedContainer.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+</head>
+<body>
+    <button class="home-button" onclick="window.location.href='Index.html'"><i class="fas fa-home"></i></button>
+    <h1>Health Information</h1>
+    <div class="menu">
+        <button onclick="toggleInfo('baby-toddler-info')" class="menu-button"><i class="fas fa-baby"></i> Baby and Toddler</button>
+        <div id="baby-toddler-info" class="info-container">
+            <p><strong>Details about Baby and Toddler Health:</strong></p>
+            <p><strong>Regular Check-ups:</strong> Ensure regular pediatric check-ups to monitor growth and development.</p>
+            <p><strong>Developmental Milestones:</strong> Monitor milestones such as crawling, walking, and talking.</p>
+            <p><strong>Nutrition:</strong> Provide a balanced diet rich in nutrients, including fruits, vegetables, and whole grains.</p>
+            <p><strong>Diagnosis:</strong> Pediatricians assess growth patterns and developmental milestones during check-ups.</p>
+            <p><strong>Remedies:</strong> Consult a pediatrician for any concerns about growth or development.</p>
+            <p><strong>Best Actions:</strong> Engage in interactive play to stimulate development and encourage healthy eating habits.</p>
+            <p><strong>More Info:</strong> Visit <a href="https://patient.info/childrens-health" target="_blank"><i class="fas fa-globe"></i> Children's Health</a></p>
+        </div>
+        
+        <button onclick="toggleInfo('bedwetting-info')" class="menu-button"><i class="fas fa-bed"></i> Bedwetting</button>
+        <div id="bedwetting-info" class="info-container">
+            <p><strong>Understanding Bedwetting:</strong></p>
+            <p><strong>Commonality:</strong> Bedwetting is common in children and often resolves on its own.</p>
+            <p><strong>Prevention:</strong> Encourage regular bathroom visits before bed and limit fluid intake in the evening.</p>
+            <p><strong>Diagnosis:</strong> A pediatrician may conduct a physical exam and review the child's medical history.</p>
+            <p><strong>Remedies:</strong> Use bedwetting alarms and reward systems to encourage dry nights.</p>
+            <p><strong>Best Actions:</strong> Maintain a positive attitude and avoid punishment to reduce anxiety.</p>
+            <p><strong>More Info:</strong> Visit <a href="https://patient.info/childrens-health" target="_blank"><i class="fas fa-globe"></i> Children's Health</a></p>
+        </div>
+
+        <button onclick="toggleInfo('child-development-info')" class="menu-button"><i class="fas fa-child"></i> Child Development</button>
+        <div id="child-development-info" class="info-container">
+            <p><strong>Child Development Overview:</strong></p>
+            <p><strong>Physical Growth:</strong> Includes running, jumping, and fine motor skills like writing.</p>
+            <p><strong>Cognitive Development:</strong> Involves problem-solving, understanding concepts, and language acquisition.</p>
+            <p><strong>Social and Emotional Growth:</strong> Includes forming relationships and understanding emotions.</p>
+            <p><strong>Diagnosis:</strong> Developmental screenings can identify delays in milestones.</p>
+            <p><strong>Remedies:</strong> Early intervention programs can support children with developmental delays.</p>
+            <p><strong>Best Actions:</strong> Encourage playdates and group activities to foster social skills.</p>
+            <p><strong>More Info:</strong> Visit <a href="https://patient.info/childrens-health" target="_blank"><i class="fas fa-globe"></i> Children's Health</a></p>
+        </div>
+
+        <button onclick="toggleInfo('child-mental-health-info')" class="menu-button"><i class="fas fa-brain"></i> Child Mental Health and Behaviour</button>
+        <div id="child-mental-health-info" class="info-container">
+            <p><strong>Child Mental Health Awareness:</strong></p>
+            <p><strong>Signs to Watch:</strong> Look for changes in behavior, mood swings, or withdrawal from activities.</p>
+            <p><strong>Open Communication:</strong> Encourage children to express their feelings and concerns.</p>
+            <p><strong>Diagnosis:</strong> Mental health assessments by a psychologist or psychiatrist can help identify issues.</p>
+            <p><strong>Remedies:</strong> Therapy and counseling can provide coping strategies and support.</p>
+            <p><strong>Best Actions:</strong> Create a safe space for children to talk about their feelings.</p>
+            <p><strong>More Info:</strong> Visit <a href="https://patient.info/childrens-health" target="_blank"><i class="fas fa-globe"></i> Children's Health</a></p>
+        </div>
+
+        <button onclick="toggleInfo('childhood-infections-info')" class="menu-button"><i class="fas fa-virus"></i> Childhood Infections</button>
+        <div id="childhood-infections-info" class="info-container">
+            <p><strong>Common Childhood Infections:</strong></p>
+            <p><strong>Types:</strong> Includes ear infections, colds, and flu.</p>
+            <p><strong>Monitoring:</strong> Keep an eye on symptoms and consult a doctor when necessary.</p>
+            <p><strong>Diagnosis:</strong> A doctor may perform a physical exam and order tests if necessary.</p>
+            <p><strong>Remedies:</strong> Over-the-counter medications can relieve symptoms; antibiotics may be needed for bacterial infections.</p>
+            <p><strong>Best Actions:</strong> Encourage handwashing and good hygiene practices to prevent infections.</p>
+            <p><strong>More Info:</strong> Visit <a href="https://patient.info/childrens-health" target="_blank"><i class="fas fa-globe"></i> Children's Health</a></p>
+        </div>
+
+        <button onclick="toggleInfo('childhood-vaccinations-info')" class="menu-button"><i class="fas fa-syringe"></i> Childhood Vaccinations</button>
+        <div id="childhood-vaccinations-info" class="info-container">
+            <p><strong>Importance of Childhood Vaccinations:</strong></p>
+            <p><strong>Preventing Diseases:</strong> Vaccinations are crucial for preventing serious diseases.</p>
+            <p><strong>Schedule:</strong> Follow the recommended vaccination schedule and consult your pediatrician for updates.</p>
+            <p><strong>Diagnosis:</strong> Pediatricians track vaccination history during check-ups.</p>
+            <p><strong>Remedies:</strong> Vaccines are administered to prevent diseases.</p>
+            <p><strong>Best Actions:</strong> Keep a vaccination record and ensure timely vaccinations.</p>
+            <p><strong>More Info:</strong> Visit <a href="https://patient.info/childrens-health" target="_blank"><i class="fas fa-globe"></i> Children's Health</a></p>
+        </div>
+
+        <button onclick="toggleInfo('childrens-cancers-info')" class="menu-button"><i class="fas fa-ribbon"></i> Children's Cancers</button>
+        <div id="childrens-cancers-info" class="info-container">
+            <p><strong>Understanding Children's Cancers:</strong></p>
+            <p><strong>Common Types:</strong> Includes leukemia and brain tumors.</p>
+            <p><strong>Early Detection:</strong> Key for effective treatment.</p>
+            <p><strong>Diagnosis:</strong> Regular check-ups and awareness of symptoms can lead to early detection.</p>
+            <p><strong>Remedies:</strong> Treatment options include chemotherapy, radiation, and surgery.</p>
+            <p><strong>Best Actions:</strong> Stay informed about symptoms and advocate for your child's health.</p>
+            <p><strong>More Info:</strong> Visit <a href="https://patient.info/childrens-health" target="_blank"><i class="fas fa-globe"></i> Children's Health</a></p>
+        </div>
+
+        <button onclick="toggleInfo('digestive-problems-info')" class="menu-button"><i class="fas fa-stomach"></i> Digestive Problems</button>
+        <div id="digestive-problems-info" class="info-container">
+            <p><strong>Common Digestive Problems in Children:</strong></p>
+            <p><strong>Types:</strong> Includes constipation and diarrhea.</p>
+            <p><strong>Monitoring:</strong> Keep track of diet and hydration.</p>
+            <p><strong>Diagnosis:</strong> A doctor may review dietary habits and perform tests if necessary.</p>
+            <p><strong>Remedies:</strong> Dietary changes, hydration, and medications can help manage symptoms.</p>
+            <p><strong>Best Actions:</strong> Encourage a balanced diet rich in fiber and fluids.</p>
+            <p><strong>More Info:</strong> Visit <a href="https://patient.info/childrens-health" target="_blank"><i class="fas fa-globe"></i> Children's Health</a></p>
+        </div>
+
+        <button onclick="toggleInfo('ear-nose-throat-info')" class="menu-button"><i class="fas fa-user-md"></i> Ear, Nose and Throat</button>
+        <div id="ear-nose-throat-info" class="info-container">
+            <p><strong>Common Ear, Nose, and Throat Issues:</strong></p>
+            <p><strong>Types:</strong> Includes ear infections and sore throats.</p>
+            <p><strong>Prevention:</strong> Regular check-ups can help prevent problems.</p>
+            <p><strong>Diagnosis:</strong> A doctor may examine the ears, nose, and throat for signs of infection.</p>
+            <p><strong>Remedies:</strong> Antibiotics for bacterial infections; pain relievers for discomfort.</p>
+            <p><strong>Best Actions:</strong> Encourage good hygiene and avoid exposure to sick individuals.</p>
+            <p><strong>More Info:</strong> Visit <a href="https://patient.info/childrens-health" target="_blank"><i class="fas fa-globe"></i> Children's Health</a></p>
+        </div>
+
+        <button onclick="toggleInfo('fever-in-children-info')" class="menu-button"><i class="fas fa-thermometer-half"></i> Fever in Children</button>
+        <div id="fever-in-children-info" class="info-container">
+            <p><strong>Managing Fever in Children:</strong></p>
+            <p><strong>Monitoring:</strong> Regularly check the child's temperature.</p>
+            <p><strong>Consultation:</strong> Consult a doctor if fever persists.</p>
+            <p><strong>Diagnosis:</strong> A doctor may assess the cause of the fever through examination and tests.</p>
+            <p><strong>Remedies:</strong> Over-the-counter medications can reduce fever; ensure adequate fluid intake.</p>
+            <p><strong>Best Actions:</strong> Dress the child in light clothing and keep the room cool.</p>
+            <p><strong>More Info:</strong> Visit <a href="https://patient.info/childrens-health" target="_blank"><i class="fas fa-globe"></i> Children's Health</a></p>
+        </div>
+
+        <button onclick="toggleInfo('genetic-conditions-info')" class="menu-button"><i class="fas fa-dna"></i> Genetic Conditions</button>
+        <div id="genetic-conditions-info" class="info-container">
+            <p><strong>Understanding Genetic Conditions:</strong></p>
+            <p><strong>Common Conditions:</strong> Includes cystic fibrosis and sickle cell anemia.</p>
+            <p><strong>Support:</strong> Genetic counseling can provide support.</p>
+            <p><strong>Diagnosis:</strong> Genetic testing can confirm specific conditions.</p>
+            <p><strong>Remedies:</strong> Treatment varies by condition; may include medications and therapies.</p>
+            <p><strong>Best Actions:</strong> Stay informed about the condition and connect with support groups.</p>
+            <p><strong>More Info:</strong> Visit <a href="https://patient.info/childrens-health" target="_blank"><i class="fas fa-globe"></i> Children's Health</a></p>
+        </div>
+
+        <button onclick="toggleInfo('other-childhood-conditions-info')" class="menu-button"><i class="fas fa-notes-medical"></i> Other Childhood Conditions</button>
+        <div id="other-childhood-conditions-info" class="info-container">
+            <p><strong>Other Childhood Conditions:</strong></p>
+            <p><strong>Common Issues:</strong> Allergies and asthma are prevalent.</p>
+            <p><strong>Monitoring:</strong> Regular monitoring and management are essential.</p>
+            <p><strong>Diagnosis:</strong> Allergy tests and asthma assessments can help identify issues.</p>
+            <p><strong>Remedies:</strong> Medications and lifestyle changes can manage symptoms effectively.</p>
+            <p><strong>Best Actions:</strong> Create an action plan for asthma and avoid known allergens.</p>
+            <p><strong>More Info:</strong> Visit <a href="https://patient.info/childrens-health" target="_blank"><i class="fas fa-globe"></i> Children's Health</a></p>
+        </div>
+
+        <button onclick="toggleInfo('pre-teen-adolescent-info')" class="menu-button"><i class="fas fa-user-graduate"></i> Pre-Teen and Adolescent</button>
+        <div id="pre-teen-adolescent-info" class="info-container">
+            <p><strong>Health Considerations for Pre-Teens and Adolescents:</strong></p>
+            <p><strong>Healthy Choices:</strong> Encourage healthy lifestyle choices.</p>
+            <p><strong>Monitoring:</strong> Monitor mental health and social interactions.</p>
+            <p><strong>Diagnosis:</strong> Regular check-ups can help identify health issues early.</p>
+            <p><strong>Remedies:</strong> Promote physical activity and balanced nutrition.</p>
+            <p><strong>Best Actions:</strong> Foster open communication about health and well-being.</p>
+            <p><strong>More Info:</strong> Visit <a href="https://patient.info/childrens-health" target="_blank"><i class="fas fa-globe"></i> Children's Health</a></p>
+        </div>
+
+        <button onclick="toggleInfo('skin-rashes-info')" class="menu-button"><i class="fas fa-briefcase-medical"></i> Skin Rashes in Children</button>
+        <div id="skin-rashes-info" class="info-container">
+            <p><strong>Common Skin Rashes in Children:</strong></p>
+            <p><strong>Types:</strong> Includes diaper rash and eczema.</p>
+            <p><strong>Consultation:</strong> Consult a doctor for persistent or severe rashes.</p>
+            <p><strong>Diagnosis:</strong> A dermatologist may examine the rash and review medical history.</p>
+            <p><strong>Remedies:</strong> Topical treatments and lifestyle changes can alleviate symptoms.</p>
+            <p><strong>Best Actions:</strong> Keep the skin clean and moisturized, and avoid irritants.</p>
+            <p><strong>More Info:</strong> Visit <a href="https://patient.info/childrens-health" target="_blank"><i class="fas fa-globe"></i> Children's Health</a></p>
+        </div>
+        
+        <button onclick="toggleInfo('stomach-ache-info')" class="menu-button"><i class="fas fa-heartbeat"></i> Stomach Ache in Children</button>
+        <div id="stomach-ache-info" class="info-container">
+            <p><strong>Managing Stomach Aches:</strong></p>
+            <p><strong>Common Causes:</strong> Includes indigestion and stress.</p>
+            <p><strong>Monitoring:</strong> Monitor symptoms and consult a doctor if needed.</p>
+            <p><strong>Diagnosis:</strong> A doctor may perform a physical exam and ask about dietary habits.</p>
+            <p><strong>Remedies:</strong> Dietary adjustments and over-the-counter medications can help.</p>
+            <p><strong>Best Actions:</strong> Encourage a balanced diet and regular meal times.</p>
+            <p><strong>More Info:</strong> Visit <a href="https://patient.info/childrens-health" target="_blank"><i class="fas fa-globe"></i> Children's Health</a></p>
+        </div>
+    </div>
+    <footer style="background-color: rgba(0, 123, 255, 0.8); color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; text-align: center;">
+        ZenZac™
+    </footer>
+</body>
+</html> 

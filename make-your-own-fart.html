@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make Your Own Fart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome CDN -->
+    <style>
+        body {
+            background-image: url('images/toilet.jpg'); /* Set background image */
+            background-size: cover; /* Cover the entire background */
+            background-repeat: no-repeat; /* Do not repeat the image */
+            background-position: center; /* Center the image */
+            background-attachment: fixed; /* Keep the background fixed during scroll */
+            background-color: rgba(240, 230, 140, 0.8); /* Semi-transparent background color */
+            font-family: 'Comic Sans MS', cursive, sans-serif; /* Fun font */
+            color: #4b3d2e; /* Dark brown text */
+            overflow-y: scroll; /* Enable vertical scrolling */
+            padding: 10px; /* Reduced padding for compactness */
+            transition: background-color 0.5s; /* Smooth background transition */
+        }
+        h1 {
+            text-align: center;
+            color: #5a3e2b; /* Darker brown for the title */
+            animation: bounce 1s infinite; /* Bounce animation */
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+        .button {
+            background-color: #8b5a2b; /* Brown button */
+            color: white;
+            border: none;
+            border-radius: 15px; /* Softer edges for buttons */
+            margin: 5px;
+            padding: 8px; /* Reduced padding for compactness */
+            font-size: 14px; /* Smaller font size */
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s; /* Button hover effect */
+            flex: 1 1 30%; /* Allow buttons to grow and shrink, with a base width of 30% */
+        }
+        .button:hover {
+            background-color: #a0522d; /* Lighter brown on hover */
+            transform: scale(1.1); /* Slightly enlarge button on hover */
+        }
+        #frequency {
+            width: 80%; /* Smaller width for the slider */
+            margin: 10px 0;
+            height: 30px; /* Increase height for better visibility */
+        }
+        #sound-buttons, #user-farts {
+            display: flex;
+            flex-wrap: wrap; /* Allow buttons to wrap */
+            justify-content: space-between; /* Space buttons evenly */
+            margin: 10px 0;
+        }
+        #sound-selection {
+            margin: 20px 0;
+            text-align: center; /* Center the selection area */
+        }
+        p {
+            font-size: 16px; /* Smaller font size for instructions */
+            color: #5a3e2b; /* Darker brown for instructions */
+        }
+        .fade-in {
+            animation: fadeIn 0.5s; /* Fade-in animation */
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #4b3d2e; /* Dark brown border */
+            padding: 12px; /* Increased padding for better readability */
+            text-align: center;
+            font-size: 16px; /* Increased font size for better readability */
+        }
+        th {
+            background-color: #8b5a2b; /* Brown header */
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: rgba(139, 90, 43, 0.2); /* Light brown for even rows */
+        }
+        /* Style for the home icon */
+        .home-icon {
+            position: absolute; /* Position it absolutely */
+            top: 10px; /* Distance from the top */
+            right: 10px; /* Distance from the right */
+            width: 40px; /* Width of the icon */
+            height: auto; /* Maintain aspect ratio */
+            cursor: pointer; /* Change cursor to pointer */
+            z-index: 1000; /* Ensure it appears above other elements */
+        }
+    </style>
+</head>
+<body>
+    <i class="fas fa-arrow-left home-icon" onclick="window.location.href='Index.html'" title="Back to Main"></i> <!-- Back to Main icon -->
+    <h1>Fart Soundboard</h1>
+    <div id="sound-buttons"></div>
+    <div>
+        <label for="frequency" style="font-size: 18px;">Frequency (Shorter/Longer):</label>
+        <input type="range" id="frequency" min="1" max="10" value="5">
+    </div>
+    <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+        <button class="button" onclick="createCustomFart()">Create Your Own Fart</button>
+        <button class="button" onclick="stopAllSounds()">Stop All Sounds</button>
+        <button class="button" onclick="playRandomSound()">Play Random Fart</button>
+    </div>
+    <div id="user-farts"></div>
+    <table id="custom-fart-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="custom-fart-body"></tbody>
+    </table>
+    <script>
+        const sounds = [ 
+            'fart/Chilli.mp3',
+            'fart/Cloud.mp3',
+            'fart/Funny.mp3',
+            'fart/Happy Birthday.mp3',
+            'fart/Long Fart.mp3',
+            'fart/Long Fart II.mp3',
+            'fart/Proud.mp3',
+            'fart/Real Deal.mp3',
+            'fart/Small Fart.mp3',
+            'fart/Squeeze.mp3',
+            'fart/Triple Fart.mp3',
+            'fart/Trumpet.mp3',
+            'fart/Wet.mp3'
+        ];
+        
+        let currentAudio = null; // Variable to keep track of the currently playing audio
+
+        // Function to create buttons for each sound
+        function createSoundButtons() {
+            const soundButtonsDiv = document.getElementById('sound-buttons');
+            sounds.forEach(sound => {
+                const button = document.createElement('button');
+                button.className = 'button fade-in'; // Add fade-in class
+                button.innerText = sound.split('/').pop().replace('.mp3', ''); // Display the sound name without path and extension
+                button.onclick = () => playSound(sound);
+                soundButtonsDiv.appendChild(button);
+            });
+        }
+
+        createSoundButtons(); // Call the function to create buttons
+
+        function playSound(sound) {
+            if (currentAudio) {
+                currentAudio.pause(); // Stop currently playing audio
+            }
+            currentAudio = new Audio(sound);
+            const frequency = document.getElementById('frequency').value;
+            currentAudio.playbackRate = frequency / 5; // Adjust playback speed based on frequency
+            currentAudio.currentTime = 0; // Reset to start
+            currentAudio.play();
+        }
+
+        function stopAllSounds() {
+            if (currentAudio) {
+                currentAudio.pause(); // Stop the currently playing audio
+                currentAudio.currentTime = 0; // Reset to start
+                currentAudio = null; // Clear the reference
+            }
+        }
+
+        function playCombinedSounds(soundsArray) {
+            stopAllSounds(); // Stop any currently playing sounds before playing custom fart
+            let index = 0;
+
+            const playNextSound = () => {
+                if (index < soundsArray.length) {
+                    const audio = new Audio(soundsArray[index]);
+                    audio.play();
+                    audio.onended = () => {
+                        index++;
+                        playNextSound();
+                    };
+                }
+            };
+
+            playNextSound();
+        }
+
+        function createCustomFart() {
+            const selectedSounds = [];
+            let soundSelectionDiv = document.createElement('div');
+            soundSelectionDiv.id = 'sound-selection';
+            document.body.appendChild(soundSelectionDiv);
+
+            const selectSound = (step) => {
+                soundSelectionDiv.innerHTML = ''; // Clear previous buttons
+                if (step > 3) {
+                    const playButton = document.createElement('button');
+                    playButton.className = 'button fade-in'; // Add fade-in class
+                    playButton.innerText = 'Play Custom Fart';
+                    playButton.onclick = () => playCombinedSounds(selectedSounds);
+                    soundSelectionDiv.appendChild(playButton);
+
+                    const saveButton = document.createElement('button');
+                    saveButton.className = 'button fade-in'; // Add fade-in class
+                    saveButton.innerText = 'Save Custom Fart';
+                    saveButton.onclick = () => saveCustomFart(selectedSounds);
+                    soundSelectionDiv.appendChild(saveButton);
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.className = 'button fade-in'; // Add fade-in class
+                    deleteButton.innerText = 'Delete Custom Fart';
+                    deleteButton.onclick = () => {
+                        selectedSounds.length = 0; // Clear selected sounds
+                        alert('Custom fart cleared.');
+                        soundSelectionDiv.innerHTML = ''; // Clear the selection area
+                    };
+                    soundSelectionDiv.appendChild(deleteButton);
+                    return;
+                }
+
+                const stepText = document.createElement('p');
+                stepText.innerText = `Select Fart ${step}:`;
+                soundSelectionDiv.appendChild(stepText);
+
+                sounds.forEach(sound => {
+                    const button = document.createElement('button');
+                    button.className = 'button fade-in'; // Add fade-in class
+                    button.innerText = sound.split('/').pop().replace('.mp3', '');
+                    button.onclick = () => {
+                        selectedSounds.push(sound);
+                        playSound(sound);
+                        selectSound(step + 1); // Move to the next step
+                    };
+                    soundSelectionDiv.appendChild(button);
+                });
+            };
+
+            selectSound(1); // Start the selection process
+        }
+
+        function saveCustomFart(soundsArray) {
+            const customFartName = prompt('Enter a name for your custom fart:');
+            if (customFartName) {
+                const userFarts = JSON.parse(localStorage.getItem('userFarts')) || {};
+                const timestamp = new Date().toLocaleString(); // Get current date and time
+                userFarts[customFartName] = { sounds: soundsArray, date: timestamp };
+                localStorage.setItem('userFarts', JSON.stringify(userFarts));
+                alert('Custom fart saved!');
+                displayUserFarts();
+            }
+        }
+
+        function displayUserFarts() {
+            const userFartsDiv = document.getElementById('user-farts');
+            userFartsDiv.innerHTML = '<h2>Your Custom Farts:</h2>';
+            const userFarts = JSON.parse(localStorage.getItem('userFarts')) || {};
+            const customFartBody = document.getElementById('custom-fart-body');
+            customFartBody.innerHTML = ''; // Clear previous entries
+
+            for (const [name, { sounds, date }] of Object.entries(userFarts)) {
+                const row = document.createElement('tr');
+
+                const nameCell = document.createElement('td');
+                nameCell.innerText = name;
+                row.appendChild(nameCell);
+
+                const dateCell = document.createElement('td');
+                dateCell.innerText = date;
+                row.appendChild(dateCell);
+
+                const actionCell = document.createElement('td');
+                const playButton = document.createElement('button');
+                playButton.className = 'button fade-in'; // Add fade-in class
+                playButton.innerText = 'Play';
+                playButton.onclick = () => playCombinedSounds(sounds);
+                actionCell.appendChild(playButton);
+
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'button fade-in'; // Add fade-in class
+                deleteButton.innerText = 'Delete';
+                deleteButton.onclick = () => deleteCustomFart(name);
+                actionCell.appendChild(deleteButton);
+
+                row.appendChild(actionCell);
+                customFartBody.appendChild(row);
+            }
+        }
+
+        function deleteCustomFart(name) {
+            const userFarts = JSON.parse(localStorage.getItem('userFarts')) || {};
+            delete userFarts[name];
+            localStorage.setItem('userFarts', JSON.stringify(userFarts));
+            displayUserFarts(); // Refresh the displayed list
+            alert(`${name} has been deleted.`);
+        }
+
+        displayUserFarts(); // Display user-created farts on load
+
+        function playRandomSound() {
+            const randomSound = sounds[Math.floor(Math.random() * sounds.length)];
+            playSound(randomSound);
+        }
+    </script>
+    <footer style="background-color: rgba(0, 123, 255, 0.8); color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; text-align: center;">
+        ZenZac™
+    </footer>
+</body>
+</html>

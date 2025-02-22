@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WaCaZaC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Pacifico', cursive;
+            text-align: center;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+            height: 100vh; /* Full height of the viewport */
+        }
+        #gameArea {
+            position: relative;
+            width: 100%; /* Full width */
+            max-width: 600px; /* Maximum width */
+            height: 400px; /* Fixed height */
+            border: 2px solid #333;
+            overflow: hidden; /* Hide overflow */
+            background-size: cover; /* Ensure the background image covers the entire area */
+            background-position: center; /* Center the background image */
+            margin: 0 auto; /* Center the game area */
+        }
+        .mole {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: brown;
+            border-radius: 50%;
+            display: none; /* Initially hidden */
+        }
+        #timer {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        #leaderboard {
+            margin-top: 20px;
+            display: none; /* Initially hidden */
+        }
+        #leaderboard input {
+            margin: 5px;
+        }
+        #restartButton {
+            display: none; /* Initially hidden */
+            margin: 20px auto; /* Center the button */
+            padding: 15px 32px; /* Some padding */
+            background-color: #4CAF50; /* Green background */
+            border: none; /* Remove borders */
+            color: white; /* White text */
+            font-size: 16px; /* Large text */
+            cursor: pointer; /* Pointer cursor on hover */
+            border-radius: 5px; /* Rounded corners */
+            transition: background-color 0.3s; /* Smooth transition */
+            text-align: center; /* Centered text */
+            width: 200px; /* Set a fixed width for the button */
+        }
+        #restartButton:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
+        #toggleLeaderboard {
+            margin-top: 20px;
+        }
+        #backButton {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: #333;
+            cursor: pointer;
+        }
+        @keyframes flash {
+            0% { color: blue; }
+            50% { color: white; }
+            100% { color: blue; }
+        }
+        h1 {
+            animation: flash 1s infinite; /* Flashing effect */
+        }
+        button {
+            background-color: #4CAF50; /* Green background */
+            border: none; /* Remove borders */
+            color: white; /* White text */
+            padding: 15px 32px; /* Some padding */
+            text-align: center; /* Centered text */
+            text-decoration: none; /* No underline */
+            display: inline-block; /* Inline-block */
+            font-size: 16px; /* Large text */
+            margin: 4px 2px; /* Some margin */
+            cursor: pointer; /* Pointer cursor on hover */
+            border-radius: 5px; /* Rounded corners */
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+        button:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
+        @media (max-width: 600px) {
+            #gameArea {
+                height: 300px; /* Adjust height for smaller screens */
+            }
+            button {
+                width: 100%; /* Make buttons full width on mobile */
+                padding: 10px; /* Adjust padding for mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+    <i id="backButton" class="fas fa-home" onclick="goBack()" title="Back to Main Page"></i>
+    <h1>WaCaZaC Game</h1>
+    <div id="gameArea">
+        <button id="startButton" onclick="startGame()" style="display: none;">
+            <i class="fas fa-hammer"></i> START
+        </button>
+        <div id="instructions" style="display: none; max-height: 200px; overflow-y: auto; border: 1px solid #ccc; padding: 10px;">
+            <p>Welcome to the WaCaZaC Game! Your goal is to click on the Zacs to earn points!</p>
+            <p>Scoring: 
+                <ul style="list-style-type: none; padding: 0;">
+                    <li>Regular Zacs = 1 point</li>
+                    <li>Transparent Zacs = 5 points</li>
+                    <li>Moving Zacs = 2 points</li>
+                </ul>
+            </p>
+            <p>End Game Conditions: The game will end when you are overwhelmed by Zacs.</p>
+            <p>Watch out for the Exploding Zac! Not clicking on it will trigger an explosion effect and spawn 2 new more Zacs!</p>
+        </div>
+    </div>
+    <p id="message"></p>
+    <p id="missedMessage" style="color: red;"></p>
+    <button id="toggleLeaderboard" onclick="toggleLeaderboard()">Show Leaderboard</button>
+    <div id="leaderboard">
+        <h2>Leaderboard</h2>
+        <input type="text" id="initials" placeholder="Enter your initials" maxlength="3">
+        <button id="submitScore">Submit Score</button>
+        <table id="scoreTable" style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th style="border: 1px solid #ddd; padding: 8px;">Initials</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">Clicks</th>
+                </tr>
+            </thead>
+            <tbody id="scoreList"></tbody>
+        </table>
+        <button id="toggleExtendedLeaderboard" onclick="toggleExtendedLeaderboard()">Show More Scores</button>
+        <div id="extendedLeaderboard" style="display: none;">
+            <h3>More Scores (6-20)</h3>
+            <table id="extendedScoreTable" style="width: 100%; border-collapse: collapse;">
+                <tbody id="extendedScoreList"></tbody>
+            </table>
+        </div>
+    </div>
+    <button id="restartButton" onclick="restartGame()" style="display: none;">Restart Game</button>
+    <script>
+        const gameArea = document.getElementById('gameArea');
+        const message = document.getElementById('message');
+        const restartButton = document.getElementById('restartButton');
+        const leaderboard = document.getElementById('leaderboard');
+        const toggleLeaderboardButton = document.getElementById('toggleLeaderboard');
+        let moleCount = 0;
+        let gameInterval;
+        let moleTimeouts = [];
+        let clickedMoleCount = 0; // Variable to track clicked moles
+        const scoreList = document.getElementById('scoreList');
+        let scores = JSON.parse(localStorage.getItem('scores')) || []; // Load scores from localStorage
+        let spawnInterval = 2000; // Initial spawn interval in milliseconds
+        let speedIncreaseInterval; // Variable to hold the speed increase interval
+
+        function startGame() {
+            document.getElementById('startButton').style.display = 'none'; // Hide the start button
+            document.getElementById('instructions').style.display = 'none'; // Hide instructions when the game starts
+            restartButton.style.display = "none"; // Ensure restart button is hidden at the start
+            document.getElementById('submitScore').disabled = true; // Disable submit score button at the start
+            moleCount = 0;
+            clickedMoleCount = 0; // Reset clicked mole count
+            message.textContent = "Whack the Zacs!";
+            
+            // Array of background images
+            const backgrounds = [
+                'images/wcazacbg1.jpg',
+                'images/wcazacbg2.jpg',
+                'images/wcazacbg3.jpg',
+                'images/wcazacbg4.jpg'
+            ];
+            
+            // Select a random background image
+            const randomBackground = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+            gameArea.style.backgroundImage = `url(${randomBackground})`; // Set the background image
+            
+            gameInterval = setInterval(spawnMoles, spawnInterval); // Spawn moles every 2 seconds
+
+            // Introduce the transparent mole after 30 seconds and repeat every 10 seconds
+            setTimeout(() => {
+                createTransparentMole(); // Create the first transparent mole
+                setInterval(createTransparentMole, 10000); // Repeat every 10 seconds
+            }, 30000); // After 30 seconds
+
+            // Introduce the moving mole after 15 seconds and repeat every 15 seconds
+            setTimeout(() => {
+                createMovingMole(); // Create the first moving mole
+                setInterval(createMovingMole, 15000); // Repeat every 15 seconds
+            }, 15000); // After 15 seconds
+
+            // Start decreasing mole size after 30 seconds
+            setTimeout(() => {
+                decreaseMoleSize(0.9); // Decrease size by 10%
+            }, 30000); // After 30 seconds
+
+            // Start decreasing mole size again after another 30 seconds
+            setTimeout(() => {
+                decreaseMoleSize(0.81); // Decrease size by another 10%
+            }, 60000); // After 60 seconds
+
+            // Start increasing the speed every 10 seconds
+            speedIncreaseInterval = setInterval(() => {
+                spawnInterval *= 0.8; // Decrease the interval by 20%
+                clearInterval(gameInterval); // Clear the existing interval
+                gameInterval = setInterval(spawnMoles, spawnInterval); // Set a new interval
+            }, 10000); // Every 10 seconds
+        }
+
+        function spawnMoles() {
+            const moleCountToSpawn = Math.floor(Math.random() * 3) + 1; // Randomly choose 1 to 3 moles
+            for (let i = 0; i < moleCountToSpawn; i++) {
+                if (moleCount < 7) { // Ensure max mole count is 7
+                    createMole();
+                }
+            }
+        }
+
+        function createMole() {
+            const mole = document.createElement('img'); // Create an image element
+            mole.src = 'images/wacazac.png'; // Set the source to the mole image
+            mole.classList.add('mole');
+            mole.style.position = 'absolute'; // Ensure the image is positioned absolutely
+            mole.style.left = Math.random() * (gameArea.clientWidth - 50) + 'px';
+            mole.style.top = Math.random() * (gameArea.clientHeight - 50) + 'px';
+            mole.style.display = 'block';
+            gameArea.appendChild(mole);
+            moleCount++;
+
+            // Remove mole on click
+            mole.addEventListener('click', () => {
+                mole.remove();
+                moleCount--;
+                clickedMoleCount++; // Increment clicked mole count
+                message.textContent = `Zacs Clicked: ${clickedMoleCount}`; // Update message
+                clearTimeout(moleTimeouts[mole.dataset.index]); // Clear the timeout for this mole
+            });
+
+            // Remove the timeout for missed mole logic
+            // Commenting out the following lines
+            // moleTimeouts.push(setTimeout(() => {
+            //     endGame("You missed one! He is now buying a house down the street from you.", true); // End the game with a message
+            // }, 15000)); // 15 seconds
+
+            // Check for game over conditions
+            checkGameOver();
+        }
+
+        function createTransparentMole() {
+            const transparentMole = document.createElement('img'); // Create an image element
+            transparentMole.src = 'images/wacazac.png'; // Set the source to the mole image
+            transparentMole.classList.add('mole');
+            transparentMole.style.position = 'absolute'; // Ensure the image is positioned absolutely
+            transparentMole.style.left = Math.random() * (gameArea.clientWidth - 50) + 'px';
+            transparentMole.style.top = Math.random() * (gameArea.clientHeight - 50) + 'px';
+            transparentMole.style.display = 'block';
+            transparentMole.style.opacity = '0.5'; // Set transparency to 50%
+            transparentMole.style.border = '2px solid silver'; // Set silver border
+            gameArea.appendChild(transparentMole);
+
+            // Count as 5 points when clicked
+            transparentMole.addEventListener('click', () => {
+                transparentMole.remove();
+                clickedMoleCount += 5; // Increment clicked mole count by 5
+                message.textContent = `Zacs Clicked: ${clickedMoleCount}`; // Update message
+            });
+        }
+
+        function createMovingMole() {
+            const movingMole = document.createElement('img'); // Create an image element
+            movingMole.src = 'images/wacazac.png'; // Set the source to the mole image
+            movingMole.classList.add('mole');
+            movingMole.style.position = 'absolute'; // Ensure the image is positioned absolutely
+            movingMole.style.left = Math.random() * (gameArea.clientWidth - 50) + 'px';
+            movingMole.style.top = Math.random() * (gameArea.clientHeight - 50) + 'px'; // Start at a random position
+            movingMole.style.display = 'block';
+            gameArea.appendChild(movingMole);
+
+            // Flashing effect
+            movingMole.style.animation = 'flash 1s infinite'; // Add flashing animation
+
+            // Move the mole randomly within the game area
+            const moveInterval = setInterval(() => {
+                const currentLeft = parseInt(movingMole.style.left);
+                const currentTop = parseInt(movingMole.style.top);
+                const newLeft = currentLeft + (Math.random() * 10 - 5); // Randomly move left or right
+                const newTop = currentTop + (Math.random() * 10 - 5); // Randomly move up or down
+
+                // Ensure the mole stays within the game area
+                if (newLeft >= 0 && newLeft <= gameArea.clientWidth - 50) {
+                    movingMole.style.left = newLeft + 'px';
+                }
+                if (newTop >= 0 && newTop <= gameArea.clientHeight - 50) {
+                    movingMole.style.top = newTop + 'px';
+                }
+            }, 100); // Move every 100 milliseconds
+
+            // Set a timeout for the explosion
+            const explosionTimeout = setTimeout(() => {
+                explodeMole(movingMole); // Call the explosion function
+            }, 5000); // 5 seconds
+
+            // Count as 2 points when clicked
+            movingMole.addEventListener('click', () => {
+                clearInterval(moveInterval); // Stop moving when clicked
+                clearTimeout(explosionTimeout); // Clear the explosion timeout
+                movingMole.remove();
+                clickedMoleCount += 2; // Increment clicked mole count by 2
+                message.textContent = `Zacs Clicked: ${clickedMoleCount}`; // Update message
+            });
+        }
+
+        function explodeMole(mole) {
+            // Create an explosion effect (you can customize this)
+            mole.src = 'images/explosion.png'; // Change to an explosion image
+            mole.style.width = '100px'; // Increase size for explosion effect
+            mole.style.height = '100px'; // Increase size for explosion effect
+            mole.style.transition = 'transform 0.5s'; // Add transition for effect
+            mole.style.transform = 'scale(1.5)'; // Scale up for explosion effect
+
+            // Remove the mole after the explosion effect
+            setTimeout(() => {
+                mole.remove(); // Remove the mole after explosion
+                for (let i = 0; i < 2; i++) {
+                    createMole(); // Generate 2 new moles
+                }
+            }, 500); // Wait for half a second before removing
+        }
+
+        function checkGameOver() {
+            if (moleCount >= 7) { // End game when mole count reaches 7
+                endGame("Game Over! Too many Zacs!"); // Update the message here
+            }
+        }
+
+        function endGame(msg) {
+            clearInterval(gameInterval); // Stop the mole generation interval
+            clearInterval(speedIncreaseInterval); // Stop the speed increase interval
+            message.textContent = `Game Over! Zacs Everywhere!! Zacs clicked: ${clickedMoleCount}`; // Update message
+            
+            // Clear any remaining moles
+            const moles = document.querySelectorAll('.mole');
+            moles.forEach(mole => mole.remove()); // Remove all moles
+
+            // Collapse the game area
+            gameArea.style.display = 'none'; // Hide the game area
+
+            restartButton.style.display = "block"; // Show restart button
+            leaderboard.style.display = "block"; // Show leaderboard section
+            document.getElementById('submitScore').disabled = false; // Enable submit score button
+            document.getElementById('initials').disabled = false; // Enable initials input
+            
+            // Show the initials input and submit button
+            document.getElementById('initials').style.display = 'block'; // Show initials input
+            document.getElementById('submitScore').style.display = 'block'; // Show submit score button
+            
+            // Reset mole count and other game variables
+            moleCount = 0; // Reset mole count
+            // clickedMoleCount is already set to 0 at the start of the game
+            spawnInterval = 2000; // Reset spawn interval to initial value
+            
+            displayScores(); // Update the score display
+        }
+
+        function restartGame() {
+            const moles = document.querySelectorAll('.mole');
+            moles.forEach(mole => mole.remove()); // Remove all moles
+            moleCount = 0; // Reset mole count
+            clickedMoleCount = 0; // Reset clicked mole count
+            spawnInterval = 2000; // Reset spawn interval to initial value
+            document.getElementById('initials').value = ''; // Clear initials input
+            document.getElementById('initials').disabled = false; // Enable initials input
+            document.getElementById('submitScore').disabled = false; // Enable submit score button for new game
+            
+            // Show the initials input and submit button
+            document.getElementById('initials').style.display = 'block'; // Show initials input
+            document.getElementById('submitScore').style.display = 'block'; // Show submit score button
+            
+            document.getElementById('missedMessage').textContent = ''; // Clear missed message
+            clearInterval(gameInterval); // Clear any existing game intervals
+            clearInterval(speedIncreaseInterval); // Clear speed increase interval
+
+            // Show the game area again
+            gameArea.style.display = 'block'; // Show the game area
+            document.getElementById('instructions').style.display = 'block'; // Show instructions
+            startGame(); // Restart the game
+        }
+
+        function toggleLeaderboard() {
+            if (leaderboard.style.display === "none") {
+                leaderboard.style.display = "block"; // Show leaderboard
+                toggleLeaderboardButton.textContent = "Hide Leaderboard"; // Change button text
+            } else {
+                leaderboard.style.display = "none"; // Hide leaderboard
+                toggleLeaderboardButton.textContent = "Show Leaderboard"; // Change button text
+            }
+        }
+
+        function goBack() {
+            window.location.href = 'Index.html'; // Change this to your main page URL
+        }
+
+        document.getElementById('submitScore').addEventListener('click', submitScore);
+
+        function submitScore() {
+            const initials = document.getElementById('initials').value.trim();
+            if (initials.length === 0) {
+                alert("Please enter your initials.");
+                return;
+            }
+
+            // Create a score object with clicks only
+            const score = {
+                initials: initials,
+                clicks: clickedMoleCount, // Number of clicks (moles clicked)
+            };
+
+            // Add score to the scores array
+            scores.push(score);
+            // Sort scores in descending order by clicks
+            scores.sort((a, b) => b.clicks - a.clicks); // Sort by clicks (most clicks first)
+
+            // Check if the score is less than the lowest score in the top 10
+            if (scores.length > 10 && score.clicks < scores[9].clicks) {
+                alert("Your score did not make it into the top 10. Keep trying!"); // Notify the user
+            }
+
+            // Keep only the top 10 scores
+            scores = scores.slice(0, 10);
+            localStorage.setItem('scores', JSON.stringify(scores)); // Save scores to localStorage
+            displayScores(); // Update the score display
+
+            // Clear the initials input after submission
+            document.getElementById('initials').value = ''; // Clear initials input
+            document.getElementById('initials').disabled = true; // Disable initials input
+            document.getElementById('submitScore').disabled = true; // Disable submit score button after submission
+        }
+
+        function displayScores() {
+            const scoreList = document.getElementById('scoreList');
+            const extendedScoreList = document.getElementById('extendedScoreList');
+            scoreList.innerHTML = ''; // Clear existing scores
+            extendedScoreList.innerHTML = ''; // Clear existing extended scores
+
+            // Display top 5 scores
+            scores.slice(0, 5).forEach(score => {
+                const row = document.createElement('tr'); // Create a new table row
+                row.innerHTML = `
+                    <td style="border: 1px solid #ddd; padding: 8px;">${score.initials}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${score.clicks}</td>
+                `;
+                scoreList.appendChild(row); // Append the row to the score list
+            });
+
+            // Display remaining scores in the top ten
+            scores.slice(5, 10).forEach(score => {
+                const row = document.createElement('tr'); // Create a new table row
+                row.innerHTML = `
+                    <td style="border: 1px solid #ddd; padding: 8px;">${score.initials}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${score.clicks}</td>
+                `;
+                extendedScoreList.appendChild(row); // Append the row to the extended score list
+            });
+        }
+
+        function decreaseMoleSize(scaleFactor) {
+            const moles = document.querySelectorAll('.mole');
+            moles.forEach(mole => {
+                mole.style.transform = `scale(${scaleFactor})`; // Apply scaling to the mole
+            });
+        }
+
+        // Start the game on page load
+        window.onload = function() {
+            document.getElementById('startButton').style.display = 'block'; // Show the start button
+            document.getElementById('instructions').style.display = 'block'; // Show instructions when the game is not in progress
+            displayScores(); // Display scores on load
+        };
+
+        function toggleExtendedLeaderboard() {
+            const extendedLeaderboard = document.getElementById('extendedLeaderboard');
+            if (extendedLeaderboard.style.display === "none") {
+                extendedLeaderboard.style.display = "block"; // Show extended leaderboard
+                document.getElementById('toggleExtendedLeaderboard').textContent = "Show Less Scores"; // Change button text
+            } else {
+                extendedLeaderboard.style.display = "none"; // Hide extended leaderboard
+                document.getElementById('toggleExtendedLeaderboard').textContent = "Show More Scores"; // Change button text
+            }
+        }
+    </script>
+    <footer style="background-color: rgba(0, 123, 255, 0.8); color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; text-align: center;">
+        ZenZac™
+    </footer>
+</body>
+</html> 
