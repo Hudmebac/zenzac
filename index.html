@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZenZac Tools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            height: 100vh; /* Keep this for full viewport height */
+            overflow-y: auto; /* Allow vertical scrolling */
+            background: linear-gradient(270deg, #007BFF, #00CFFF, #007BFF);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column; /* Ensure vertical layout */
+            align-items: center; /* Center items horizontally */
+            justify-content: flex-start; /* Align items to the top */
+            padding: 20px; /* Add padding for better spacing */
+            height: auto; /* Allow height to adjust based on content */
+            max-height: 100vh; /* Prevent the container from exceeding viewport height */
+            overflow-y: auto; /* Allow scrolling within the container if needed */
+        }
+
+        .arrow {
+            font-size: 36px; /* Increased size for prominence */
+            color: white;
+            cursor: pointer;
+            margin: 10px;
+            transition: color 0.3s;
+            padding: 10px; /* Added padding for better click area */
+            border-radius: 50%; /* Rounded shape */
+            background-color: rgba(0, 123, 255, 0.5); /* Background color */
+        }
+
+        .arrow:hover {
+            color: rgba(255, 255, 255, 1); /* Change color on hover */
+            background-color: rgba(0, 56, 139, 0.8); /* Darker background on hover */
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column; /* Keep buttons in a column */
+            overflow-y: auto; /* Enable vertical scrolling */
+            max-height: 400px; /* Set a max height for the scrollable area */
+            width: 90%; /* Use a percentage width for better responsiveness */
+            max-width: 400px; /* Set a max width for larger screens */
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            scrollbar-width: thin; /* For Firefox */
+            margin: 0 auto; /* Center the button container */
+        }
+
+        /* WebKit scrollbar styles */
+        .button-container::-webkit-scrollbar {
+            width: 8px; /* Width of the scrollbar */
+        }
+
+        .button-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.2); /* Track color */
+            border-radius: 10px;
+        }
+
+        .button-container::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 123, 255, 0.8); /* Scrollbar color */
+            border-radius: 10px;
+        }
+
+        .button-container::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(0, 56, 139, 0.8); /* Scrollbar color on hover */
+        }
+
+        .button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0; /* Add vertical margin for spacing */
+            padding: 15px 20px;
+            font-size: 16px; /* Adjust font size for readability */
+            color: white;
+            background-color: rgba(0, 123, 255, 0.8);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%; /* Full width for buttons */
+        }
+
+        .button:hover {
+            background-color: rgba(0, 56, 139, 0.8);
+        }
+
+        .button i {
+            margin-right: 8px; /* Space between icon and text */
+        }
+
+        .description-container {
+            margin-left: 20px; /* Space between button list and description */
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            width: 300px; /* Fixed width for description box */
+            max-height: 400px; /* Set a max height for the description area */
+            overflow-y: auto; /* Enable vertical scrolling if needed */
+        }
+
+        @media (min-width: 600px) {
+            .button {
+                width: auto; /* Reset width for larger screens */
+            }
+        }
+
+        @media (orientation: landscape) {
+            .button-container {
+                width: 80%; /* Adjust width for landscape mode */
+            }
+
+            .button {
+                font-size: 18px; /* Increase font size for better readability */
+                padding: 20px; /* Increase padding for larger touch area */
+            }
+        }
+
+        /* New styles for the title */
+        #title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 48px;
+            text-align: center;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 1), 0 0 30px rgba(0, 191, 255, 0.6);
+            animation: shimmer 1.5s infinite;
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+
+        .letter {
+            display: inline-block;
+            transition: opacity 0.3s;
+        }
+
+        /* Scale effect on hover */
+        #title:hover {
+            transform: scale(1.1);
+        }
+
+        @keyframes shimmer {
+            0% { text-shadow: 0 0 20px rgba(255, 255, 255, 1), 0 0 30px rgba(0, 191, 255, 0.6); }
+            50% { text-shadow: 0 0 30px rgba(255, 255, 255, 1), 0 0 40px rgba(0, 191, 255, 0.8); }
+            100% { text-shadow: 0 0 20px rgba(255, 255, 255, 1), 0 0 30px rgba(0, 191, 255, 0.6); }
+        }
+
+        /* New rotation animation */
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Apply rotation to all letters with slower animation */
+        .letter {
+            animation: rotate 8s linear infinite; /* Rotate every 8 seconds */
+            opacity: 1; /* Ensure opacity remains at 1 */
+        }
+
+        /* Specific styles for counter-clockwise rotation can be removed */
+        /* .letter.Z, .letter.n, .letter.c { ... } */
+
+        /* New flashing animation */
+        @keyframes flash {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; color: yellow; } /* Flash effect */
+            100% { opacity: 1; }
+        }
+
+        /* Apply flashing effect when at 0 degrees */
+        #title {
+            animation: rotate 8s linear infinite, flash 1s infinite; /* Flashing effect */
+        }
+
+        /* New reverse rotation animation */
+        @keyframes rotate-reverse {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(-360deg); } /* Rotate in the opposite direction */
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="title" onclick="resetTitle()">
+            <!-- Split title into individual letters -->
+            <span class="letter">Z</span>
+            <span class="letter e">e</span>
+            <span class="letter">n</span>
+            <span class="letter Z">Z</span>
+            <span class="letter a">a</span>
+            <span class="letter">c</span>
+        </h1>
+        
+        <i class="fas fa-chevron-up arrow" onclick="scrollUp()"></i>
+        <div class="button-container" id="buttonContainer">
+            <button class="button" onclick="navigateTo('nutrition')" title="Learn about healthy eating habits for your children." onmouseover="showDescription('Learn about healthy eating habits for your children.')" onmouseout="hideDescription()">
+                <i class="fas fa-apple-alt"></i> Nutrition
+            </button>
+            <button class="button" onclick="navigateTo('fidget-spinner')" title="Explore fidget spinner resources and tips." onmouseover="showDescription('Explore fidget spinner resources and tips.')" onmouseout="hideDescription()">
+                <i class="fas fa-spinner"></i> Fidget Spinner
+            </button>
+            <button class="button" onclick="navigateTo('health')" title="Find information on children's health and wellness." onmouseover="showDescription('Find information on children\'s health and wellness.')" onmouseout="hideDescription()">
+                <i class="fas fa-heart"></i> Health
+            </button>
+            <button class="button" onclick="navigateTo('activities')" title="Discover fun activities to do with your kids." onmouseover="showDescription('Discover fun activities to do with your kids.')" onmouseout="hideDescription()">
+                <i class="fas fa-futbol"></i> Activities
+            </button>
+            <button class="button" onclick="navigateTo('behavioral-tracking')" title="Log and track your child's behavior to identify patterns." onmouseover="showDescription('Log and track your child\'s behavior to identify patterns.')" onmouseout="hideDescription()">
+                <i class="fas fa-chart-line"></i> Behavioral Tracking
+            </button>
+            <button class="button" onclick="navigateTo('now-and-next')" title="Manage daily routines, chores, and homework effectively." onmouseover="showDescription('Manage daily routines, chores, and homework effectively.')" onmouseout="hideDescription()">
+                <i class="fas fa-tasks"></i> Now and Next
+            </button>
+            <button class="button" onclick="navigateTo('calming-techniques')" title="Access guided meditations and calming exercises." onmouseover="showDescription('Access guided meditations and calming exercises.')" onmouseout="hideDescription()">
+                <i class="fas fa-spa"></i> Calming Techniques
+            </button>
+            <button class="button" onclick="navigateTo('rewards-motivation')" title="Implement a reward system to encourage positive behavior." onmouseover="showDescription('Implement a reward system to encourage positive behavior.')" onmouseout="hideDescription()">
+                <i class="fas fa-star"></i> Rewards and Motivation
+            </button>
+            <button class="button" onclick="navigateTo('knock-knock')" title="Enjoy a collection of knock-knock jokes." onmouseover="showDescription('Enjoy a collection of knock-knock jokes.')" onmouseout="hideDescription()">
+                <i class="fas fa-laugh"></i> Knock Knock
+            </button>
+            <button class="button" onclick="navigateTo('wacazac')" title="Play the Wac-A-Zac Game!" onmouseover="showDescription('Play the Wac-A-Zac Game!')" onmouseout="hideDescription()">
+                <i class="fas fa-hammer"></i> Wac-A-Zac Game!
+            </button>
+            <button class="button" onclick="navigateTo('make-your-own-fart')" title="Create your own fart sounds." onmouseover="showDescription('Create your own fart sounds.')" onmouseout="hideDescription()">
+                <i class="fas fa-toilet"></i> Make Your Own Fart
+            </button>
+            <button class="button" onclick="navigateTo('download-app')" title="Find apps to download for fun and learning." onmouseover="showDescription('Find apps to download for fun and learning.')" onmouseout="hideDescription()">
+                <i class="fas fa-download"></i> Download An App
+            </button>
+        </div>
+
+        <div class="description-container" id="descriptionContainer" style="display: none;">
+            <p id="descriptionText">Hover over a button to see the description here.</p>
+        </div>
+
+        <i class="fas fa-chevron-down arrow" onclick="scrollDown()"></i>
+    </div>
+
+    <div id="error-message" style="display: none;">
+        <img src="images/error message.png" alt="Error message" style="max-width: 100%; height: auto;">
+    </div>
+
+    <footer style="background-color: rgba(0, 123, 255, 0.8); color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; text-align: center;">
+        ZenZac™
+    </footer>
+
+    <script>
+        let isHolding = false; // Flag to check if the title is holding
+        let isReversing = false; // Flag to check if the title is reversing
+        let currentIndex = 0; // Track the current index of the selected app
+        const buttons = document.querySelectorAll('.button'); // Get all buttons
+
+        const navigationMap = {
+            home: 'index.html',
+            'now-and-next': 'nowandnext.html',
+            nutrition: 'nutrition.html',
+            'fidget-spinner': 'fidget-spinner.html',
+            health: 'health.html',
+            activities: 'activities.html',
+            'behavioral-tracking': 'behavioral-tracking.html',
+            'calming-techniques': 'calming-techniques.html',
+            wacazac: 'wacazac.html',
+            'make-your-own-fart': 'make-your-own-fart.html',
+            'download-app': 'download-app.html',
+            'rewards-motivation': 'rewards-motivation.html',
+            'knock-knock': 'knockknock.html'
+        };
+
+        function navigateTo(topic) {
+            const descriptions = {
+                nutrition: "Learn about healthy eating habits for your children.",
+                education: "Explore educational resources and tips for parents.",
+                health: "Find information on children's health and wellness.",
+                activities: "Discover fun activities to do with your kids.",
+                'behavioral-tracking': "Log and track your child's behavior to identify patterns.",
+                'now-and-next': "Manage daily routines, chores, and homework effectively.",
+                'calming-techniques': "Access guided meditations and calming exercises.",
+                'educational-resources': "Find articles and videos on understanding ADHD.",
+                'communication-tools': "Facilitate communication between parents and teachers.",
+                'rewards-motivation': "Implement a reward system to encourage positive behavior.",
+                'social-stories': "Help children navigate social situations with social stories.",
+                'expert-support': "Access professionals for personalized advice and support.",
+                'interactive-games': "Engage in games that improve focus and memory.",
+                'community-forum': "Connect with other parents for support and advice."
+            };
+
+            // Navigate to the correct HTML file based on the topic
+            const targetPage = navigationMap[topic] || `/${topic}.html`;
+            window.location.href = targetPage;
+        }
+
+        function resetTitle() {
+            const titleElement = document.getElementById('title');
+            titleElement.style.display = 'block'; // Show the title again
+            titleElement.style.animation = 'rotate 8s linear infinite'; // Restart the rotation animation
+
+            // Change the title style after 10 seconds
+            setTimeout(() => {
+                titleElement.style.display = 'none'; // Hide the title
+                titleElement.innerHTML = "ZenZac"; // Change to fixed text
+                titleElement.style.fontSize = "24px"; // Set smaller font size
+                titleElement.style.animation = "none"; // Remove rotation animation
+                titleElement.style.color = "white"; // Set color to white
+                titleElement.style.marginTop = "20px"; // Add margin for spacing
+
+                // Show the fixed text after 11 seconds
+                setTimeout(() => {
+                    titleElement.style.display = 'block'; // Show the title again
+                    const letters = titleElement.querySelectorAll('.letter');
+                    letters.forEach((letter, index) => {
+                        letter.style.animation = `bounce 0.5s ease ${index * 0.1}s infinite alternate`;
+                    });
+                }, 1000); // 1 second delay before showing the fixed text
+            }, 10000); // 10 seconds
+        }
+
+        function scrollUp() {
+            const container = document.getElementById('buttonContainer');
+            container.scrollBy({
+                top: -100, // Scroll up by 100 pixels
+                behavior: 'smooth' // Smooth scrolling
+            });
+        }
+
+        function scrollDown() {
+            const container = document.getElementById('buttonContainer');
+            container.scrollBy({
+                top: 100, // Scroll down by 100 pixels
+                behavior: 'smooth' // Smooth scrolling
+            });
+        }
+
+        function showDescription(text) {
+            const descriptionContainer = document.getElementById('descriptionContainer');
+            const descriptionText = document.getElementById('descriptionText');
+            descriptionText.textContent = text;
+            descriptionContainer.style.display = 'block'; // Show the description container
+        }
+
+        function hideDescription() {
+            const descriptionContainer = document.getElementById('descriptionContainer');
+            descriptionContainer.style.display = 'none'; // Hide the description container
+        }
+
+        // Function to make the title bounce
+        function bounceTitle() {
+            const titleElement = document.getElementById('title');
+            titleElement.style.transform = 'translateY(-10px)'; // Move up
+            setTimeout(() => {
+                titleElement.style.transform = 'translateY(0)'; // Move back down
+            }, 300);
+        }
+
+        // Function to change the title color randomly with a softer lightning effect
+        function changeTitleColor() {
+            const letters = document.querySelectorAll('.letter');
+            const colors = [
+                "rgba(255, 255, 255, 1)", // Sharp white
+                "rgba(255, 255, 255, 0.8)", // Dynamic white
+                "rgba(0, 191, 255, 0.6)", // Transparent blue
+                "rgba(0, 191, 255, 1)", // Solid blue
+                "rgba(255, 255, 255, 0.5)" // Soft white
+            ];
+
+            setInterval(() => {
+                letters.forEach((letter) => {
+                    const randomIndex = Math.floor(Math.random() * colors.length);
+                    letter.style.color = colors[randomIndex];
+
+                    // Randomize opacity for each letter
+                    letter.style.opacity = Math.random() > 0.9 ? 1 : 0.95; // Less drastic opacity change
+                });
+            }, 500); // Change color every 500 milliseconds for a softer effect
+        }
+
+        // Call the functions on page load
+        window.onload = function() {
+            bounceTitle(); // Bounce the title
+            changeTitleColor(); // Start changing colors
+        };
+
+        function checkRotation() {
+            const titleElement = document.getElementById('title');
+            const computedStyle = window.getComputedStyle(titleElement);
+            const transform = computedStyle.transform;
+
+            // Check if the title is at 0 degrees
+            if ((transform === 'none' || transform === 'matrix(1, 0, 0, 1, 0, 0)') && !isHolding) {
+                isHolding = true; // Set the flag to true
+                titleElement.classList.add('flashing');
+
+                // Hold for 2 seconds
+                setTimeout(() => {
+                    titleElement.classList.remove('flashing');
+                    isReversing = true; // Set the flag to indicate reversing
+                    titleElement.style.animation = 'rotate-reverse 8s linear infinite'; // Change to reverse rotation
+
+                    // Reset the flags after the reverse rotation
+                    setTimeout(() => {
+                        isHolding = false; // Reset the holding flag
+                        isReversing = false; // Reset the reversing flag
+                        titleElement.style.animation = 'rotate 8s linear infinite'; // Change back to normal rotation
+                    }, 8000); // Duration of the reverse rotation
+                }, 2000); // Hold for 2000 milliseconds (2 seconds)
+            } else {
+                titleElement.classList.remove('flashing');
+            }
+        }
+
+        // Call checkRotation periodically or on a specific event
+        setInterval(checkRotation, 100); // Check every 100ms
+    </script>
+</body>
+</html>
