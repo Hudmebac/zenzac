@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-            font-family: 'Pacifico', cursive;
+            font-family: 'Arial', sans-serif;
             text-align: center;
             background-color: #f0f8ff;
             margin: 0;
@@ -80,6 +80,7 @@
             100% { color: blue; }
         }
         h1 {
+            font-size: 2.5em;
             animation: flash 1s infinite; /* Flashing effect */
         }
         button {
@@ -108,11 +109,58 @@
                 padding: 10px; /* Adjust padding for mobile */
             }
         }
+        /* Add styles for the info icon and description container */
+        #infoButton {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            color: #333; /* Match the theme color */
+            cursor: pointer;
+        }
+        #descriptionContainer {
+            display: none; /* Initially hidden */
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+            border: 1px solid #ccc; /* Border for the container */
+            padding: 15px; /* Padding for the content */
+            margin-top: 20px; /* Space above the container */
+            max-width: 600px; /* Max width for the container */
+            margin-left: auto; /* Center the container */
+            margin-right: auto; /* Center the container */
+            text-align: left; /* Left align text */
+            border-radius: 5px; /* Rounded corners */
+        }
+        #descriptionContainer p {
+            margin: 0; /* Remove default margin */
+            font-size: 1.2em; /* Increase font size for better readability */
+        }
+        /* Add animation for the Z color change */
+        @keyframes colorChange {
+            0% { color: blue; }
+            20% { color: green; }
+            80% { color: green; }
+            100% { color: blue; }
+        }
+        .animatedZ {
+            animation: colorChange 7s infinite; /* 2 seconds green, 5 seconds blue */
+        }
     </style>
 </head>
 <body>
     <i id="backButton" class="fas fa-home" onclick="goBack()" title="Back to Main Page"></i>
-    <h1>WaCaZaC Game</h1>
+    <i id="infoButton" class="fas fa-info-circle" onclick="toggleDescription()" title="Info"></i>
+    <h1>Wac-A-Zac Game</h1>
+    <div id="descriptionContainer">
+        <h2>How to Navigate the Page</h2>
+        <p>Welcome to the WaCaZaC Game! Here are some tips:</p>
+        <ul>
+            <li>Click on the Zacs to earn points!</li>
+            <li>Use the "Show Leaderboard" button to view scores.</li>
+            <li>Press the "Restart Game" button to play again.</li>
+            <li>Click the "Back" button to return to the main page.</li>
+        </ul>
+        <button onclick="toggleDescription()">Close</button>
+    </div>
     <div id="gameArea">
         <button id="startButton" onclick="startGame()" style="display: none;">
             <i class="fas fa-hammer"></i> START
@@ -146,9 +194,9 @@
             </thead>
             <tbody id="scoreList"></tbody>
         </table>
-        <button id="toggleExtendedLeaderboard" onclick="toggleExtendedLeaderboard()">Show More Scores</button>
+        <button id="toggleExtendedLeaderboard" onclick="toggleExtendedLeaderboard()">More Scores (6-10)</button>
         <div id="extendedLeaderboard" style="display: none;">
-            <h3>More Scores (6-20)</h3>
+            <h3>More Scores (6-10)</h3>
             <table id="extendedScoreTable" style="width: 100%; border-collapse: collapse;">
                 <tbody id="extendedScoreList"></tbody>
             </table>
@@ -501,6 +549,15 @@
             } else {
                 extendedLeaderboard.style.display = "none"; // Hide extended leaderboard
                 document.getElementById('toggleExtendedLeaderboard').textContent = "Show More Scores"; // Change button text
+            }
+        }
+
+        function toggleDescription() {
+            const descriptionContainer = document.getElementById('descriptionContainer');
+            if (descriptionContainer.style.display === "none" || descriptionContainer.style.display === "") {
+                descriptionContainer.style.display = "block"; // Show the description
+            } else {
+                descriptionContainer.style.display = "none"; // Hide the description
             }
         }
     </script>

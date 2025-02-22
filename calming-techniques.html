@@ -187,17 +187,49 @@
             text-decoration: none;
             cursor: pointer;
         }
+
+        /* Add styles for the info container */
+        .info-container {
+            display: none; /* Initially hidden */
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            text-align: left; /* Align text to the left for readability */
+        }
+
+        .info-icon {
+            cursor: pointer;
+            margin-left: 10px;
+            color: #00796b; /* Match the theme color */
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <h1>
         Calming Techniques
+        <i class="fas fa-info-circle info-icon" onclick="toggleInfo()" title="How to Navigate"></i>
         <i class="fas fa-pause" onclick="toggleMusic()" style="cursor: pointer; margin-left: 10px;" title="Pause Music"></i>
         <a href="Index.html" style="position: absolute; top: 20px; right: 20px; text-decoration: none;">
             <i class="fas fa-home" title="Home"></i>
         </a>
     </h1>
+    
+    <!-- Collapsible Info Container -->
+    <div id="infoContainer" class="info-container">
+        <h2>Navigation Instructions</h2>
+        <p>Welcome to the Calming Techniques page! Here's how to navigate:</p>
+        <ul>
+            <li>Click on any technique to view its description.</li>
+            <li>Use the breathing visual to practice deep breathing.</li>
+            <li>Listen to relaxing music by clicking the buttons provided.</li>
+            <li>Share your feelings by selecting an emoticon.</li>
+            <li>Feel free to explore and try different techniques!</li>
+        </ul>
+        <button onclick="toggleInfo()">Collapse</button>
+    </div>
     
     <div class="technique" onclick="toggleDescription('breathing')">
         <h2>Breathing Exercises</h2>
@@ -611,6 +643,11 @@
             if (event.target === modal) {
                 closeModal();
             }
+        }
+
+        function toggleInfo() {
+            const infoContainer = document.getElementById('infoContainer');
+            infoContainer.style.display = infoContainer.style.display === 'block' ? 'none' : 'block'; // Toggle visibility
         }
     </script>
 

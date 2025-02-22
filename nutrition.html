@@ -176,6 +176,74 @@
             top: 20px;
             right: 20px;
         }
+
+        /* Add styles for the modal */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+            justify-content: center; /* Center modal content */
+            align-items: center; /* Center modal content */
+        }
+
+        .modal-content {
+            background-color: white; /* White background */
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            border-radius: 10px; /* Rounded corners */
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Add styles for the collapsible info section */
+        .info-container {
+            display: none; /* Hidden by default */
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            max-width: 600px;
+            width: 100%; /* Full width for mobile */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            overflow-y: auto; /* Enable vertical scrolling */
+            max-height: 300px; /* Limit height for scrolling */
+        }
+
+        .info-header {
+            cursor: pointer; /* Pointer cursor for the header */
+            font-size: 1.2em; /* Slightly larger font */
+            color: #007BFF; /* Blue color for the header */
+            margin-bottom: 10px;
+        }
+
+        .info-icon {
+            font-size: 24px; /* Size of the icon */
+            color: #007BFF; /* Color of the icon matching the theme */
+            cursor: pointer; /* Pointer cursor on hover */
+            position: absolute; /* Positioning the icon */
+            top: 20px; /* Distance from the top */
+            left: 20px; /* Distance from the left */
+        }
     </style>
 </head>
 <body>
@@ -184,6 +252,24 @@
             <i class="fas fa-home"></i>
         </button>
         <h1 id="nutrition-header">Nutrition</h1>
+        
+        <!-- Add Info Icon -->
+        <i class="fas fa-info-circle info-icon" onclick="toggleInfo()"></i>
+        
+        <!-- Collapsible Info Section -->
+        <div id="infoContainer" class="info-container">
+            <div class="info-header" onclick="toggleInfoContent()">How to Navigate</div>
+            <div id="infoContent" style="display: none;">
+                <p>Welcome to the Nutrition Resource Page! Here's how to use it:</p>
+                <ul>
+                    <li>Click on any food group to see details about it.</li>
+                    <li>Hover over food groups to see a brief description.</li>
+                    <li>Check out the "Kids' Favorites" section for popular choices.</li>
+                    <li>Use the home button to return to the main page.</li>
+                </ul>
+            </div>
+        </div>
+
         <div class="food-groups-container">
             <div class="food-group" onclick="showDetails('fruits')">
                 <i class="fas fa-apple-alt food-icon default-icon"></i>
@@ -261,6 +347,21 @@
                 <li><i class="fas fa-glass-whiskey"></i> Milk</li>
                 <li><i class="fas fa-candy-cane"></i> Candy</li>
             </ul>
+        </div>
+
+        <!-- Modal for How to Navigate -->
+        <div id="infoModal" class="modal">
+            <div class="modal-content">
+                <span class="close-button" onclick="closeModal()">&times;</span>
+                <h2>How to Navigate</h2>
+                <p>Welcome to the Nutrition Resource Page! Here's how to use it:</p>
+                <ul>
+                    <li>Click on any food group to see details about it.</li>
+                    <li>Hover over food groups to see a brief description.</li>
+                    <li>Check out the "Kids' Favorites" section for popular choices.</li>
+                    <li>Use the home button to return to the main page.</li>
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -441,6 +542,32 @@
 
             detailsContainer.style.display = 'block';
             kidsFavorites.style.display = 'block';
+        }
+
+        function toggleInfo() {
+            const infoContainer = document.getElementById('infoContainer');
+            infoContainer.style.display = infoContainer.style.display === 'none' ? 'block' : 'none'; // Toggle visibility
+        }
+
+        function toggleInfoContent() {
+            const infoContent = document.getElementById('infoContent');
+            infoContent.style.display = infoContent.style.display === 'none' ? 'block' : 'none'; // Toggle content visibility
+        }
+
+        function openModal() {
+            document.getElementById('infoModal').style.display = 'flex'; // Show the modal
+        }
+
+        function closeModal() {
+            document.getElementById('infoModal').style.display = 'none'; // Hide the modal
+        }
+
+        // Close the modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('infoModal');
+            if (event.target === modal) {
+                closeModal();
+            }
         }
     </script>
 

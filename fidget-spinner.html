@@ -7,20 +7,82 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
+            display: flex;
+            flex-direction: column; /* Stack elements vertically */
+            align-items: center; /* Center align items */
+            background-color: #2c3e50; /* Darker background for a more modern look */
+            font-family: 'Arial', sans-serif; /* Consistent font */
             margin: 0;
-            height: 100vh;
-            overflow: hidden;
-            background: linear-gradient(270deg, #007BFF, #00CFFF, #007BFF);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
+            padding: 20px; /* Padding around the body */
+            overflow-y: auto; /* Allow vertical scrolling */
+            max-height: 100vh; /* Limit height for mobile */
         }
 
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        .controls {
+            display: flex;
+            flex-direction: column; /* Stack controls vertically */
+            align-items: center; /* Center align controls */
+            width: 100%; /* Full width */
+            max-width: 600px; /* Limit max width */
+            margin-top: 20px; /* Space above controls */
+        }
+
+        .shape-controls, .size-speed-border-controls, .text-management {
+            width: 100%; /* Full width for each control group */
+            margin-bottom: 20px; /* Space below each control group */
+        }
+
+        .compact-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Space between items */
+            margin: 10px 0; /* Space above and below */
+        }
+
+        .button {
+            padding: 10px 15px; /* Padding for buttons */
+            font-size: 16px; /* Font size for buttons */
+            cursor: pointer; /* Pointer cursor on hover */
+            border: none; /* Remove border */
+            border-radius: 5px; /* Rounded corners */
+            background-color: rgba(0, 123, 255, 0.8); /* Button color */
+            color: white; /* Button text color */
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+
+        .button:hover {
+            background-color: rgba(0, 56, 139, 0.8); /* Darker shade on hover */
+        }
+
+        .slider-label {
+            font-size: 14px; /* Font size for labels */
+            color: white; /* Color for better readability */
+            text-align: center; /* Center align labels */
+            margin-top: 5px; /* Space above labels */
+        }
+
+        .description-container {
+            display: none; /* Initially hidden */
+            margin: 10px; /* Space around the description */
+            background-color: rgba(255, 255, 255, 0.9); /* Light background for readability */
+            padding: 15px; /* Padding for the description */
+            border-radius: 5px; /* Rounded corners */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+            max-width: 90%; /* Responsive width */
+            text-align: left; /* Align text to the left */
+            overflow-y: auto; /* Allow vertical scrolling if needed */
+            max-height: 300px; /* Set a max height for the description */
+        }
+
+        /* Media Queries for Mobile Responsiveness */
+        @media (max-width: 600px) {
+            .button {
+                width: 100%; /* Full width for buttons on small screens */
+            }
+
+            .controls {
+                padding: 10px; /* Reduce padding on smaller screens */
+            }
         }
 
         .spinner {
@@ -40,56 +102,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        .controls {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 10px; /* Add padding for better touch targets */
-        }
-
-        .shape-controls, .color-controls, .size-speed-border-controls, .text-management {
-            display: flex;
-            align-items: center;
-            margin: 5px 0; /* Reduce margin for compactness */
-            flex-wrap: wrap; /* Allow wrapping for smaller screens */
-        }
-
-        .shape-controls button, .color-controls input, .size-speed-border-controls input, .text-management input {
-            margin-left: 5px; /* Reduce margin for compactness */
-            flex: 1; /* Allow inputs to grow */
-            min-width: 100px; /* Set a minimum width for inputs */
-        }
-
-        .size-speed-border-controls {
-            display: flex;
-            flex-direction: column; /* Arrange children vertically */
-            align-items: center; /* Center items */
-            width: 100%; /* Full width for the container */
-        }
-
-        .text-management {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            background-color: rgba(0, 123, 255, 0.8);
-            color: white;
-            transition: background-color 0.3s, box-shadow 0.3s;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-            margin: 5px 0; /* Add margin for spacing */
-        }
-
-        .button:hover {
-            background-color: rgba(0, 56, 139, 0.8);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
-        }
-
         .text {
             font-size: 36px;
             color: white;
@@ -98,39 +110,6 @@
             left: 50%;
             transform: translate(-50%, -50%);
             white-space: nowrap;
-        }
-
-        /* Media Queries for Mobile Responsiveness */
-        @media (max-width: 600px) {
-            .spinner {
-                width: 80vw; /* Use viewport width for responsiveness */
-                height: 80vw; /* Maintain aspect ratio */
-            }
-
-            .controls {
-                width: 100%; /* Make controls take up full width */
-            }
-
-            .shape-controls, .color-controls, .size-speed-border-controls, .text-management {
-                flex-direction: column; /* Stack controls vertically */
-                align-items: flex-start; /* Align items to the start */
-                width: 100%; /* Full width for each control group */
-            }
-
-            .shape-controls button, .color-controls input, .size-speed-border-controls input, .text-management input {
-                width: 100%; /* Full width for inputs and buttons */
-                margin-left: 0; /* Remove left margin */
-                margin-bottom: 5px; /* Add bottom margin for spacing */
-            }
-
-            .button {
-                width: 100%; /* Make buttons full width */
-                font-size: 14px; /* Adjust font size for smaller screens */
-            }
-
-            .text {
-                font-size: 24px; /* Adjust text size for smaller screens */
-            }
         }
 
         /* Style for the color range input */
@@ -161,22 +140,6 @@
             background: white; /* Thumb color */
             cursor: pointer; /* Pointer cursor on hover */
             box-shadow: 0 0 2px rgba(0, 0, 0, 0.5); /* Shadow for thumb */
-        }
-
-        .compact-controls {
-            display: flex;
-            align-items: center;
-            margin: 5px 0; /* Reduce margin for compactness */
-            width: 100%; /* Full width for each control */
-            max-width: 10vw; /* Limit width to 10% of the viewport width */
-        }
-
-        .compact-controls button {
-            margin-right: 5px; /* Space between button and input */
-        }
-
-        .compact-controls input {
-            flex: 1; /* Allow input to grow */
         }
 
         /* Frost Aura Theme */
@@ -212,20 +175,105 @@
             outline: none; /* Remove outline on focus */
             border-color: rgba(0, 56, 139, 0.8); /* Darker blue border on focus */
         }
+
+        /* Original style for the info icon */
+        .info-icon {
+            cursor: pointer; /* Pointer cursor for the icon */
+            font-size: 40px; /* Increased size for better visibility */
+            color: white; /* Change to white */
+            margin: 20px; /* Space around the icon */
+            position: absolute; /* Positioning for better layout */
+            top: 20px; /* Align to top */
+            right: 20px; /* Position to the right */
+            background-color: rgba(0, 123, 255, 0.9); /* Slightly more opaque blue background */
+            border-radius: 50%; /* Circular background */
+            padding: 15px; /* Increased padding around the icon */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Increased shadow for depth */
+            transition: background-color 0.3s, transform 0.3s; /* Smooth transition for hover effects */
+        }
+
+        .info-icon:hover {
+            background-color: rgba(0, 150, 255, 1); /* Change background on hover */
+            transform: scale(1.1); /* Slightly enlarge the icon on hover */
+        }
+
+        /* Original style for the back icon */
+        .back-icon {
+            position: absolute; /* Positioning for better layout */
+            top: 20px; /* Align to top */
+            left: 20px; /* Align to left */
+            font-size: 40px; /* Increased size for better visibility */
+            color: white; /* Change to white */
+            cursor: pointer; /* Pointer cursor for the icon */
+            background-color: rgba(0, 123, 255, 0.9); /* Slightly more opaque blue background */
+            border-radius: 50%; /* Circular background */
+            padding: 15px; /* Increased padding around the icon */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Increased shadow for depth */
+            transition: background-color 0.3s, transform 0.3s; /* Smooth transition for hover effects */
+        }
+
+        .back-icon:hover {
+            background-color: rgba(0, 150, 255, 1); /* Change background on hover */
+            transform: scale(1.1); /* Slightly enlarge the icon on hover */
+        }
+
+        .shape-controls {
+            display: flex; /* Ensure flexbox is used */
+            justify-content: center; /* Center the buttons horizontally */
+            width: 100%; /* Full width for the control group */
+            margin-bottom: 20px; /* Space below each control group */
+        }
+
+        .shape-controls button {
+            background-color: white; /* Set background color to white */
+            color: #2c3e50; /* Set text color to match the theme */
+            border: 2px solid rgba(0, 123, 255, 0.8); /* Optional: Add a border for visibility */
+        }
+
+        .shape-controls button:hover {
+            background-color: rgba(0, 123, 255, 0.8); /* Change background on hover */
+            color: white; /* Change text color on hover */
+        }
+
+        /* Style for labels */
+        .icon-label {
+            text-align: center; /* Center align text */
+            color: white; /* White text color */
+            font-size: 16px; /* Font size for labels */
+            margin-top: 5px; /* Space above labels */
+        }
     </style>
 </head>
 <body>
-    <button id="homeButton" class="button" style="position: absolute; top: 20px; right: 20px; background-color: rgba(173, 216, 230, 0.5); border: 1px solid rgba(0, 123, 255, 0.8); border-radius: 5px; color: #000; padding: 10px; font-size: 16px;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" class="bi bi-house" viewBox="0 0 16 16">
-            <path d="M8 3.293l-6 6V14h4v-4h4v4h4V9.293l-6-6z"/>
-            <path fill-rule="evenodd" d="M7.5 0a.5.5 0 0 1 .5.5v1.793l6 6V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8.293l6-6V.5a.5.5 0 0 1 .5-.5z"/>
-        </svg>
-    </button>
+    <!-- Remove the home button -->
+    <!-- <button id="homeButton" class="button home-icon"> -->
+    <!--     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" class="bi bi-house" viewBox="0 0 16 16"> -->
+    <!--         <path d="M8 3.293l-6 6V14h4v-4h4v4h4V9.293l-6-6z"/> -->
+    <!--         <path fill-rule="evenodd" d="M7.5 0a.5.5 0 0 1 .5.5v1.793l6 6V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8.293l6-6V.5a.5.5 0 0 1 .5-.5z"/> -->
+    <!--     </svg> -->
+    <!-- </button> -->
     
+    <!-- Add Info Icon -->
+    <i class="fas fa-info-circle info-icon" id="infoIcon" title="Click for navigation help"></i>
+
+    <!-- Description Container -->
+    <div class="description-container" id="descriptionContainer">
+        <h3>How to Navigate</h3>
+        <p>Use the buttons to change the shape, color, and size of the spinner. You can also input text to display on the spinner.</p>
+        <p>Click the "Show Text" button to toggle the text input and font options.</p>
+        <p>Adjust the speed and thickness of the spinner using the sliders provided.</p>
+        <p>To return to the main menu, click the back icon at the top left.</p>
+        <button id="collapseButton" class="button" style="margin-top: 10px;">Collapse</button>
+    </div>
+
     <div class="controls">
         <div class="shape-controls">
-            <button class="button" id="circleButton">Circle</button>
-            <button class="button" id="squareButton">Square</button>
+            <svg id="circleButton" xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="blue" stroke="rgba(0, 123, 255, 0.8)" stroke-width="2" class="bi bi-circle" viewBox="0 0 16 16" style="cursor: pointer;">
+                <circle cx="8" cy="8" r="7" />
+            </svg>
+            <svg id="squareButton" xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="blue" stroke="rgba(0, 123, 255, 0.8)" stroke-width="2" class="bi bi-square" viewBox="0 0 16 16" style="cursor: pointer;">
+                <rect width="14" height="14" x="1" y="1" />
+            </svg>
             <button class="button" id="toggleText" style="margin-left: 10px;">Show Text</button>
             <input type="text" id="textInput" placeholder="Enter text" oninput="spinnerText.textContent = this.value || 'Spin Me!'" style="margin-left: 10px; display: none; font-size: 20px;" />
             <input type="range" id="textSizeRange" min="12" max="72" value="20" style="margin-left: 10px; display: none;" />
@@ -256,7 +304,7 @@
                 <option value="Rockwell" style="font-family: Rockwell;">Rockwell</option>
                 <option value="Optima" style="font-family: Optima;">Optima</option>
                 <option value="Miriam Libre" style="font-family: 'Miriam Libre';">Miriam Libre</option>
-                <option value="Noto Sans" style="font-family: 'Noto Sans';">Noto Sans</option>
+                <option value="Noto Sans" style="font-family: Noto Sans;">Noto Sans</option>
                 <option value="Righteous" style="font-family: Righteous;">Righteous</option>
                 <option value="Source Sans Pro" style="font-family: 'Source Sans Pro';">Source Sans Pro</option>
                 <option value="Ubuntu" style="font-family: Ubuntu;">Ubuntu</option>
@@ -287,22 +335,22 @@
         </div>
         
         <div class="color-controls">
-            <button class="button" id="colourButton">Colour</button>
+            <button class="button" id="colourButton" style="display: none;">Colour</button> <!-- Hidden Colour Button -->
             <input type="range" id="colorRange" min="0" max="100" value="0" style="background: linear-gradient(to right, purple, blue, green, yellow, orange, red);"/>
         </div>
 
         <div class="size-speed-border-controls">
             <div class="compact-controls">
-                <button class="button" id="speedButton">Speed</button>
                 <input type="range" id="speedRange" min="0.0001" max="5" value="2" step="0.0001" />
+                <div class="slider-label">Speed</div>
             </div>
             <div class="compact-controls">
-                <button class="button" id="sizeButton">Size</button>
                 <input type="range" id="sizeRange" min="100" max="500" value="300" />
+                <div class="slider-label">Size</div>
             </div>
             <div class="compact-controls">
-                <button class="button" id="borderButton">Border</button>
-                <input type="range" id="thicknessRange" min="1" max="100" value="24" />
+                <input type="range" id="thicknessRange" min="1" max="200" value="24" />
+                <div class="slider-label">Border</div>
             </div>
         </div>
 
@@ -336,7 +384,7 @@
                 <option value="Rockwell" style="font-family: Rockwell;">Rockwell</option>
                 <option value="Optima" style="font-family: Optima;">Optima</option>
                 <option value="Miriam Libre" style="font-family: 'Miriam Libre';">Miriam Libre</option>
-                <option value="Noto Sans" style="font-family: 'Noto Sans';">Noto Sans</option>
+                <option value="Noto Sans" style="font-family: Noto Sans;">Noto Sans</option>
                 <option value="Righteous" style="font-family: Righteous;">Righteous</option>
                 <option value="Source Sans Pro" style="font-family: 'Source Sans Pro';">Source Sans Pro</option>
                 <option value="Ubuntu" style="font-family: Ubuntu;">Ubuntu</option>
@@ -369,6 +417,11 @@
 
     <div class="spinner" id="spinner" style="animation: none;">
         <div class="text" id="spinnerText">Spin Me!</div>
+    </div>
+
+    <!-- Back to Main Icon -->
+    <div class="back-icon" id="backIcon" title="Back to Main">
+        <i class="fas fa-arrow-left"></i> <!-- Font Awesome left arrow icon -->
     </div>
 
     <script>
@@ -430,7 +483,7 @@
         });
 
         // Change spinner shape
-        circleButton.addEventListener('click', () => {
+        document.getElementById('circleButton').addEventListener('click', () => {
             spinner.style.borderRadius = '50%'; // Set to circle
             const size = sizeRange.value; // Get the current size from the size range
             spinner.style.height = `${size}px`; // Ensure full height based on current size
@@ -441,7 +494,7 @@
             startSpinner(); // Start spinner on shape change
         });
 
-        squareButton.addEventListener('click', () => {
+        document.getElementById('squareButton').addEventListener('click', () => {
             spinner.style.borderRadius = '0'; // Set to square
             const size = sizeRange.value; // Get the current size from the size range
             spinner.style.height = `${size}px`; // Ensure full height based on current size
@@ -522,9 +575,21 @@
             window.removeEventListener('devicemotion', () => {});
         });
 
-        // Add event listener for the home button
-        document.getElementById('homeButton').addEventListener('click', () => {
-            window.location.href = 'Index.html'; // Redirect to Index.html
+        // Toggle description container visibility
+        document.getElementById('infoIcon').addEventListener('click', () => {
+            const descriptionContainer = document.getElementById('descriptionContainer');
+            descriptionContainer.style.display = descriptionContainer.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Collapse button functionality
+        document.getElementById('collapseButton').addEventListener('click', () => {
+            const descriptionContainer = document.getElementById('descriptionContainer');
+            descriptionContainer.style.display = 'none'; // Hide the description
+        });
+
+        // Back to main icon functionality
+        document.querySelector('.back-icon').addEventListener('click', () => {
+            window.location.href = 'index.html'; // Redirect to main page
         });
     </script>
 

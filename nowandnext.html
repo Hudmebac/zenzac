@@ -11,10 +11,14 @@
     <style>
         body {
             font-family: 'Roboto Mono', monospace; /* Robotic style font */
-            margin: 20px;
+            margin: 0; /* Remove default margin */
+            padding: 20px; /* Add padding to the body */
             background: url('images/clockbg.png') no-repeat center center fixed; /* Background image */
             background-size: cover; /* Cover the entire background */
             overflow-x: hidden; /* Prevent horizontal scrolling */
+            overflow-y: auto; /* Allow vertical scrolling */
+            height: auto; /* Allow height to adjust based on content */
+            min-height: 100vh; /* Ensure minimum height is 100% of the viewport height */
         }
         h1 {
             text-align: center; /* Center the header */
@@ -53,6 +57,9 @@
             background-color: rgba(255, 255, 255, 0.9); /* Light background for clarity */
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
             flex: 1; /* Allow task areas to grow equally */
+            height: auto; /* Allow height to adjust based on content */
+            min-height: 50vh; /* Set minimum height to 50% of the viewport height */
+            overflow-y: auto; /* Enable vertical scrolling if content exceeds height */
         }
         .task {
             border: 1px solid #007BFF; /* Border for tasks */
@@ -61,7 +68,7 @@
             padding: 10px; /* Increase padding for better touch targets */
             cursor: pointer; /* Pointer cursor for tasks */
             transition: background-color 0.3s; /* Smooth background transition */
-            font-size: 16px; /* Increase font size for better readability */
+            font-size: 8px; /* Reduce font size by 50% */
             line-height: 1.5; /* Increase line height for better spacing */
             font-family: 'Roboto', sans-serif; /* Use a more readable font */
             display: flex; /* Use flexbox for task layout */
@@ -174,14 +181,31 @@
             width: 80%; /* Width for task area in full screen */
             margin: 10px; /* Margin for task area */
         }
+        /* Add styles for the collapsible description */
+        .info-description {
+            display: none; /* Initially hidden */
+            background-color: rgba(255, 255, 255, 0.9); /* Light background for clarity */
+            padding: 15px; /* Padding for the description */
+            border: 1px solid #ccc; /* Border for the description */
+            border-radius: 5px; /* Rounded corners */
+            margin-top: 10px; /* Space above the description */
+            max-width: 600px; /* Max width for readability */
+            margin: auto; /* Center the description */
+        }
+        .info-icon {
+            cursor: pointer; /* Pointer cursor for the icon */
+            font-size: 24px; /* Size of the icon */
+            color: #007BFF; /* Color of the icon */
+            margin-left: 10px; /* Space between header and icon */
+        }
     </style>
 </head>
 <body>
     <div style="position: absolute; top: 20px; right: 20px; z-index: 1000;">
-        <i class="fas fa-home" onclick="goHome()" style="cursor: pointer; font-size: 24px; margin-right: 15px;"></i>
-        <i class="fas fa-sync" onclick="refreshPage()" style="cursor: pointer; font-size: 24px; margin-right: 15px;"></i>
-        <i class="fas fa-search" onclick="toggleFullScreen()" style="cursor: pointer; font-size: 24px; margin-right: 15px;"></i>
-        <i class="fas fa-info-circle info-icon" onclick="toggleHowTo()" style="cursor: pointer; font-size: 24px;"></i>
+        <i class="fas fa-home" onclick="goHome()" style="cursor: pointer; font-size: 24px; margin-right: 15px; color: #007BFF;"></i>
+        <i class="fas fa-sync" onclick="refreshPage()" style="cursor: pointer; font-size: 24px; margin-right: 15px; color: #007BFF;"></i>
+        <i class="fas fa-search" onclick="toggleFullScreen()" style="cursor: pointer; font-size: 24px; margin-right: 15px; color: #007BFF;"></i>
+        <i class="fas fa-info-circle info-icon" onclick="toggleInfo()" style="cursor: pointer; font-size: 24px;"></i>
     </div>
     <div class="container">
         <div class="bucket" id="taskBucket">
@@ -446,7 +470,7 @@
                 </ul>
             </div>
         </div>
-        <div class="task-area" id="nowArea" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <div class="task-area" id="nowArea" ondrop="drop(event)" ondragover="allowDrop(event)" style="display: none;">
             <div class="header" style="color: #007BFF; display: flex; align-items: center;">
                 Now
             </div>
@@ -455,7 +479,7 @@
             </div>
         </div>
         <div class="separator"></div>
-        <div class="task-area" id="nextArea" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <div class="task-area" id="nextArea" ondrop="drop(event)" ondragover="allowDrop(event)" style="display: none;">
             <div class="header" style="color: #007BFF; display: flex; align-items: center;">
                 Next
             </div>
@@ -489,6 +513,14 @@
         <p>
             Remember, you can only have a maximum of 5 tasks in each area.
         </p>
+    </div>
+
+    <div class="info-description" id="infoDescription">
+        <h3>How to Navigate the Page</h3>
+        <p>To manage your tasks, click on a task to add it to the "Now" area. You can also drag and drop tasks between the "Now" and "Next" areas.</p>
+        <p>Use the buttons to toggle between different task categories. You can add custom tasks using the input field provided.</p>
+        <p>Remember, you can only have a maximum of 5 tasks in each area.</p>
+        <p><strong>Magnifying Glass Icon:</strong> Clicking this icon will expand the "Now" and "Next" tasks into a full-screen view, allowing you to see all tasks clearly and manage them more effectively.</p>
     </div>
 
     <script>
@@ -565,6 +597,9 @@
             };
             nowArea.appendChild(newTask); // Add the new task to the Now area
             taskElement.style.display = 'none'; // Hide the task in the group
+
+            // Show the Now area if it was hidden
+            nowArea.style.display = 'block'; // Ensure the Now area is displayed
         }
 
         function showTaskOptions(task, originalTask) {
@@ -606,6 +641,9 @@
                 };
                 nextArea.appendChild(newTask); // Add the new task to the Next area
                 task.parentElement.removeChild(task); // Remove the task from Now area
+
+                // Show the Next area if it was hidden
+                nextArea.style.display = 'block'; // Ensure the Next area is displayed
             } else {
                 alert("I think that is enough just now, we can edit later.");
             }
@@ -707,6 +745,15 @@
             const fullScreenDiv = document.querySelector('.full-screen');
             if (fullScreenDiv) {
                 document.body.removeChild(fullScreenDiv);
+            }
+        }
+
+        function toggleInfo() {
+            const infoDescription = document.getElementById('infoDescription');
+            if (infoDescription.style.display === "none" || infoDescription.style.display === "") {
+                infoDescription.style.display = "block"; // Show the info description
+            } else {
+                infoDescription.style.display = "none"; // Hide the info description
             }
         }
     </script>

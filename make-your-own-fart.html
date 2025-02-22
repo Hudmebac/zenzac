@@ -109,11 +109,54 @@
             cursor: pointer; /* Change cursor to pointer */
             z-index: 1000; /* Ensure it appears above other elements */
         }
+        .info-icon {
+            position: absolute; /* Position it absolutely */
+            top: 10px; /* Distance from the top */
+            left: 60px; /* Distance from the left */
+            width: 40px; /* Width of the icon */
+            height: auto; /* Maintain aspect ratio */
+            cursor: pointer; /* Change cursor to pointer */
+            z-index: 1000; /* Ensure it appears above other elements */
+            color: #5a3e2b; /* Match the theme color */
+        }
+        #description-container {
+            display: none; /* Initially hidden */
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+            border: 1px solid #4b3d2e; /* Dark brown border */
+            padding: 15px; /* Padding for the container */
+            margin-top: 10px; /* Space above the container */
+            border-radius: 10px; /* Rounded corners */
+            max-height: 300px; /* Limit height for better scrollability */
+            overflow-y: auto; /* Allow scrolling within the description container */
+        }
+        .collapsible {
+            cursor: pointer; /* Change cursor to pointer */
+            padding: 10px; /* Padding for the button */
+            background-color: #8b5a2b; /* Brown background */
+            color: white; /* White text */
+            border: none; /* No border */
+            border-radius: 5px; /* Rounded corners */
+            text-align: left; /* Align text to the left */
+            width: 100%; /* Full width */
+            font-size: 16px; /* Font size */
+        }
     </style>
 </head>
 <body>
     <i class="fas fa-arrow-left home-icon" onclick="window.location.href='Index.html'" title="Back to Main"></i> <!-- Back to Main icon -->
+    <i class="fas fa-info-circle info-icon" onclick="toggleDescription()" title="Info"></i> <!-- Info icon -->
     <h1>Fart Soundboard</h1>
+    
+    <!-- Move the description container here to display below the header -->
+    <div id="description-container">
+        <button class="collapsible">How to Navigate</button>
+        <div class="content" style="display: none;">
+            <p>Use the buttons to create, play, and manage your custom fart sounds. Adjust the frequency slider for different sound effects.</p>
+            <p>Click on the "Play Random Fart" button to hear a random sound.</p>
+            <p>Your custom farts will be saved and displayed in the table below.</p>
+        </div>
+    </div>
+
     <div id="sound-buttons"></div>
     <div>
         <label for="frequency" style="font-size: 18px;">Frequency (Shorter/Longer):</label>
@@ -320,6 +363,16 @@
             const randomSound = sounds[Math.floor(Math.random() * sounds.length)];
             playSound(randomSound);
         }
+
+        function toggleDescription() {
+            const container = document.getElementById('description-container');
+            container.style.display = container.style.display === 'none' ? 'block' : 'none';
+        }
+
+        document.querySelector('.collapsible').addEventListener('click', function() {
+            const content = this.nextElementSibling;
+            content.style.display = content.style.display === 'block' ? 'none' : 'block';
+        });
     </script>
     <footer style="background-color: rgba(0, 123, 255, 0.8); color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; text-align: center;">
         ZenZac™

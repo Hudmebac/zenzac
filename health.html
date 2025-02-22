@@ -99,6 +99,18 @@
         .home-button:hover {
             background-color: rgba(255, 255, 255, 0.3);
         }
+        /* Add styles for the info container */
+        .info-description {
+            display: none; /* Initially hidden */
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            max-width: 100%;
+            box-sizing: border-box;
+            text-align: left; /* Align text to the left for better readability */
+        }
     </style>
     <script>
         function toggleInfo(id) {
@@ -114,11 +126,33 @@
             const selectedContainer = document.getElementById(id);
             selectedContainer.style.display = selectedContainer.style.display === 'none' ? 'block' : 'none';
         }
+        // Function to toggle the info description
+        function toggleInfoDescription() {
+            const infoDescription = document.getElementById('info-description');
+            infoDescription.style.display = infoDescription.style.display === 'none' ? 'block' : 'none';
+        }
     </script>
 </head>
 <body>
     <button class="home-button" onclick="window.location.href='Index.html'"><i class="fas fa-home"></i></button>
     <h1>Health Information</h1>
+
+    <!-- Move the Info Description Container here -->
+    <div id="info-description" class="info-description">
+        <h2>Navigation Instructions</h2>
+        <p>Welcome to the Health Information page! Here's how to navigate:</p>
+        <ul>
+            <li>Click on the buttons to expand information about various health topics.</li>
+            <li>Use the <strong>Home</strong> button to return to the main page.</li>
+            <li>Scroll down to view all available topics.</li>
+            <li>For more information, click on the links provided in each section.</li>
+        </ul>
+        <p>Feel free to collapse this section by clicking the Info icon again.</p>
+    </div>
+
+    <button class="info-button" onclick="toggleInfoDescription()" style="position: fixed; top: 20px; left: 20px; background-color: rgba(255, 255, 255, 0.2); color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-size: 16px; transition: background-color 0.3s;">
+        <i class="fas fa-info-circle"></i>
+    </button>
     <div class="menu">
         <button onclick="toggleInfo('baby-toddler-info')" class="menu-button"><i class="fas fa-baby"></i> Baby and Toddler</button>
         <div id="baby-toddler-info" class="info-container">

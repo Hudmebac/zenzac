@@ -97,7 +97,7 @@
         .home-icon {
             position: fixed; /* Fixed position */
             top: 20px; /* Distance from the top */
-            right: 20px; /* Distance from the right */
+            right: 60px; /* Distance from the right */
             font-size: 1.5em; /* Size of the icon */
             color: rgba(255, 255, 255, 0.9); /* Ice white color */
             cursor: pointer; /* Pointer cursor on hover */
@@ -105,6 +105,18 @@
         }
         .home-icon:hover {
             color: #2980b9; /* Change color on hover */
+        }
+        .info-icon {
+            position: fixed; /* Fixed position */
+            top: 20px; /* Distance from the top */
+            right: 20px; /* Distance from the right */
+            font-size: 1.5em; /* Size of the icon */
+            color: #2980b9; /* Theme color */
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: color 0.3s; /* Smooth color transition */
+        }
+        .info-icon:hover {
+            color: #1a5276; /* Darker shade on hover */
         }
         /* Add a frosty aura effect */
         .frosty-aura {
@@ -179,6 +191,28 @@
         .return-to-top:hover {
             background-color: rgba(0, 0, 0, 0.7); /* Darker background on hover */
         }
+        /* Add styles for the info icon and description container */
+        .description-container {
+            display: none; /* Initially hidden */
+            position: fixed; /* Fixed position */
+            top: 100px; /* Below the icon */
+            right: 20px; /* Align with the icon */
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+            border: 1px solid #2980b9; /* Border color */
+            border-radius: 5px; /* Rounded corners */
+            padding: 15px; /* Padding for content */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+            max-width: 300px; /* Limit width for mobile */
+            z-index: 1000; /* Ensure it stays above other content */
+        }
+        .description-container h3 {
+            margin: 0; /* Remove default margin */
+            color: #2980b9; /* Theme color */
+        }
+        .description-container p {
+            margin: 5px 0; /* Spacing for paragraphs */
+            color: #34495e; /* Darker text for readability */
+        }
     </style>
     <script>
         function showActivities(range) {
@@ -206,10 +240,16 @@
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' }); // Smooth scroll to top
         }
+        // Function to toggle the visibility of the description container
+        function toggleDescription() {
+            const container = document.getElementById('descriptionContainer');
+            container.style.display = container.style.display === 'none' ? 'block' : 'none';
+        }
     </script>
 </head>
 <body>
     <i class="fas fa-home home-icon" onclick="window.location.href='Index.html'"></i> <!-- Home Icon -->
+    <i class="fas fa-info-circle info-icon" onclick="toggleDescription()"></i> <!-- Info Icon -->
     <div class="frosty-aura"> <!-- Wrap content in frosty aura div -->
         <h1>Activities for Children</h1> <!-- Keep only one header -->
         <div class="age-range-container"> <!-- Container for age range buttons -->
@@ -504,6 +544,14 @@
 
     <!-- Return to Top Icon -->
     <i class="fas fa-arrow-up return-to-top" onclick="scrollToTop()"></i>
+
+    <!-- Collapsible Description Container -->
+    <div id="descriptionContainer" class="description-container">
+        <h3>Navigation Instructions</h3>
+        <p>Use the buttons to select the age range for activities.</p>
+        <p>Click on the activity titles to expand and view details.</p>
+        <p>Scroll down to see more activities and use the return to top icon to quickly navigate back.</p>
+    </div>
 
     <footer style="background-color: rgba(0, 123, 255, 0.8); color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; text-align: center;">
         ZenZac™

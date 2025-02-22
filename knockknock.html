@@ -72,7 +72,7 @@
             background-color: rgba(0, 86, 179, 0.7); /* Darker transparent blue on hover */
         }
         #jokeContainer {
-            margin-top: 20px;
+            margin-top: 5px; /* Further decrease the top margin */
             display: none;
             text-align: center;
         }
@@ -98,6 +98,36 @@
             font-size: 24px; /* Larger text for "Who's There?" */
             color: #FFFFFF; /* White text for better readability */
             font-weight: bold; /* Bold text */
+            margin-top: 2px; /* Further decrease the top margin */
+        }
+        #infoIcon {
+            position: fixed; /* Fixed positioning */
+            top: 60px; /* Distance from the top */
+            right: 20px; /* Distance from the right */
+            width: 40px; /* Width of the icon */
+            height: 30px; /* Height of the icon */
+            cursor: pointer; /* Change cursor to pointer on hover */
+            color: white; /* Match the theme color */
+        }
+        #descriptionContainer {
+            display: none; /* Initially hidden */
+            background-color: rgba(255, 255, 255, 0.9); /* Light background for readability */
+            color: black; /* Text color */
+            padding: 20px; /* Padding for the container */
+            border-radius: 10px; /* Rounded corners */
+            position: fixed; /* Fixed positioning */
+            top: 100px; /* Below the icons */
+            right: 20px; /* Distance from the right */
+            width: 250px; /* Width of the container */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Shadow for a 3D effect */
+            z-index: 10; /* Ensure it appears above other elements */
+            overflow-y: auto; /* Allow scrolling if content is too long */
+            max-height: 300px; /* Limit height for mobile view */
+        }
+        #toggleDescription {
+            cursor: pointer; /* Change cursor to pointer on hover */
+            color: #007BFF; /* Color for the toggle text */
+            text-decoration: underline; /* Underline for emphasis */
         }
     </style>
 </head>
@@ -105,7 +135,21 @@
     <a href="index.html" style="position: fixed; top: 10px; right: 20px; cursor: pointer;">
         <i class="fas fa-home" style="font-size: 30px; color: white;"></i> <!-- Font Awesome home icon -->
     </a>
-    <p id="instructions" style="font-size: 24px; color: white; text-align: center; margin-bottom: 20px;">Click the "Knock Knock" button to hear a joke!</p>
+    <a id="infoIcon" title="Info">
+        <i class="fas fa-info-circle" style="font-size: 30px;"></i> <!-- Font Awesome info icon -->
+    </a>
+    <div id="descriptionContainer">
+        <h3>How to Navigate</h3>
+        <p>Welcome to the Knock Knock Jokes page! Here's how to enjoy the experience:</p>
+        <ul>
+            <li><strong>Click the "Knock Knock" button</strong> to hear a joke.</li>
+            <li>Obviously you will say... <strong>"Who's There?"</strong></li>
+            <li><strong>Click the "Who's There?" button</strong> to hear response!</li>
+        </ul>
+        <p>If you have any questions, feel free to click the Info icon again to revisit these instructions.</p>
+        <p id="toggleDescription">Click here to collapse this description.</p>
+    </div>
+    <p id="instructions" style="font-size: 24px; color: white; text-align: center; margin-bottom: 20px;"></p>
     <div id="door"></div>
     <button id="knockButton">Knock Knock</button>
     <p id="whoIsThereText" style="display:none;">Who's There?</p>
@@ -223,6 +267,18 @@
             // Hide the "Who's There?" text and button after displaying the punchline
             document.getElementById('whoIsThereText').style.display = 'none';
             document.getElementById('whoIsThereButton').style.display = 'none';
+        });
+
+        // Toggle the description container
+        document.getElementById('infoIcon').addEventListener('click', function() {
+            const descriptionContainer = document.getElementById('descriptionContainer');
+            descriptionContainer.style.display = descriptionContainer.style.display === 'none' ? 'block' : 'none';
+        });
+
+        // Collapse functionality for the description
+        document.getElementById('toggleDescription').addEventListener('click', function() {
+            const descriptionContainer = document.getElementById('descriptionContainer');
+            descriptionContainer.style.display = 'none'; // Hide the description
         });
     </script>
 
