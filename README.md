@@ -49,4 +49,3 @@ To run the ZenZac Tools project locally, follow these steps:
 - Hover over the buttons to view descriptions of each tool.
 - Use the up and down arrows to scroll through the list of buttons.
 
-## File Structure
