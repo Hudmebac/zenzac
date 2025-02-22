@@ -278,6 +278,22 @@
         let currentIndex = 0; // Track the current index of the selected app
         const buttons = document.querySelectorAll('.button'); // Get all buttons
 
+        const navigationMap = {
+            home: 'index.html',
+            'now-and-next': 'nowandnext.html',
+            nutrition: 'nutrition.html',
+            'fidget-spinner': 'fidget-spinner.html',
+            health: 'health.html',
+            activities: 'activities.html',
+            'behavioral-tracking': 'behavioral-tracking.html',
+            'calming-techniques': 'calming-techniques.html',
+            wacazac: 'wacazac.html',
+            'make-your-own-fart': 'make-your-own-fart.html',
+            'download-app': 'download-app.html',
+            'rewards-motivation': 'rewards-motivation.html',
+            'knock-knock': 'knockknock.html'
+        };
+
         function navigateTo(topic) {
             const descriptions = {
                 nutrition: "Learn about healthy eating habits for your children.",
@@ -295,37 +311,10 @@
                 'interactive-games': "Engage in games that improve focus and memory.",
                 'community-forum': "Connect with other parents for support and advice."
             };
-            
-            // Update the navigation to point to the correct HTML file
-            if (topic === 'home') {
-                window.location.href = 'index.html'; // Navigate to the home page
-            } else if (topic === 'now-and-next') {
-                window.location.href = 'nowandnext.html'; // Correct link to nowandnext.html
-            } else if (topic === 'nutrition') {
-                window.location.href = 'nutrition.html'; // Correct link to nutrition.html
-            } else if (topic === 'fidget-spinner') {
-                window.location.href = 'fidget-spinner.html'; // Correct link to fidget-spinner.html
-            } else if (topic === 'health') {
-                window.location.href = 'health.html'; // Correct link to health.html
-            } else if (topic === 'activities') {
-                window.location.href = 'activities.html'; // Correct link to activities.html
-            } else if (topic === 'behavioral-tracking') {
-                window.location.href = 'behavioral-tracking.html'; // Correct link to behavioral-tracking.html
-            } else if (topic === 'calming-techniques') {
-                window.location.href = 'calming-techniques.html'; // Correct link to calming-techniques.html
-            } else if (topic === 'wacazac') {
-                window.location.href = 'wacazac.html'; // Navigate to wacazac.html
-            } else if (topic === 'make-your-own-fart') {
-                window.location.href = 'make-your-own-fart.html'; // Navigate to make-your-own-fart.html
-            } else if (topic === 'download-app') {
-                window.location.href = 'download-app.html'; // Navigate to download-app.html
-            } else if (topic === 'rewards-motivation') {
-                window.location.href = 'rewards-motivation.html'; // Navigate to rewards-motivation.html
-            } else if (topic === 'knock-knock') {
-                window.location.href = 'knockknock.html'; // Navigate to knockknock.html
-            } else {
-                window.location.href = `/${topic}.html`; // Other topics
-            }
+
+            // Navigate to the correct HTML file based on the topic
+            const targetPage = navigationMap[topic] || `/${topic}.html`;
+            window.location.href = targetPage;
         }
 
         function resetTitle() {
