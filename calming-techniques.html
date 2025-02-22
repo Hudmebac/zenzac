@@ -97,6 +97,7 @@
         .music-button-container {
             display: flex;
             justify-content: center;
+            flex-wrap: wrap; /* Allow buttons to wrap to the next line */
             margin-top: 10px;
         }
 
@@ -105,9 +106,15 @@
             color: white;
             border: none;
             border-radius: 5px;
-            padding: 10px 20px;
+            padding: 10px 15px; /* Adjust padding for better button size */
             margin: 5px;
             cursor: pointer;
+            display: flex; /* Use flexbox for icon and text alignment */
+            align-items: center; /* Center items vertically */
+        }
+
+        .music-button i {
+            margin-right: 5px; /* Space between icon and text */
         }
 
         .smiley {
@@ -131,6 +138,54 @@
             text-align: center; /* Center the text below the emoticon */
             font-size: 16px; /* Adjust font size as needed */
             margin-top: 5px; /* Space between emoticon and name */
+        }
+
+        #emotionDescription {
+            display: none; /* Initially hidden */
+            margin-top: 20px; /* Space above the description */
+            font-size: 18px; /* Font size for the description */
+            color: #004d40; /* Dark teal color for contrast */
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent background */
+            border-radius: 5px; /* Rounded corners */
+            padding: 10px; /* Padding for the description */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -327,9 +382,16 @@
                     <div>Relaxed</div> <!-- Name of the emoticon -->
                 </div>
             </div>
-            <div id="emotionDescription" style="margin-top: 20px; font-size: 18px;"></div> <!-- Description Container -->
+            <div id="emotionModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    <div id="emotionDescription" style="font-size: 18px;"></div> <!-- Description Container -->
+                </div>
+            </div>
         </div>
     </div>
+
+    <div id="tooltip" style="position: absolute; background-color: rgba(255, 255, 255, 0.9); border: 1px solid #888; border-radius: 5px; padding: 10px; display: none; z-index: 1000;"></div>
 
     <script>
         let countingInterval; // Declare a variable to hold the interval ID
@@ -494,10 +556,7 @@
         }
 
         function selectFeeling(feeling) {
-            const descriptionContainer = document.getElementById('emotionDescription');
-            let description = '';
-
-            // Define descriptions for each feeling
+            const tooltip = document.getElementById('tooltip');
             const descriptions = {
                 happy: "That's wonderful! It's great to feel happy. Keep smiling!",
                 sad: "It's okay to feel sad sometimes. Talking about it can help.",
@@ -522,9 +581,36 @@
                 relaxed: "Relaxation is important. Take a moment to breathe deeply."
             };
 
-            // Set the description based on the selected feeling
-            description = descriptions[feeling] || "I'm not sure how to describe that feeling.";
-            descriptionContainer.textContent = description; // Display the description
+            const description = descriptions[feeling] || "I'm not sure how to describe that feeling.";
+            tooltip.textContent = description; // Set the tooltip text
+            tooltip.style.display = 'block'; // Show the tooltip
+
+            // Position the tooltip near the clicked icon
+            const icon = event.currentTarget; // Get the clicked icon
+            const rect = icon.getBoundingClientRect(); // Get the icon's position
+            tooltip.style.left = `${rect.left + window.scrollX}px`; // Set tooltip position
+            tooltip.style.top = `${rect.bottom + window.scrollY + 5}px`; // Position below the icon
+
+            // Hide the tooltip after a short delay
+            setTimeout(() => {
+                tooltip.style.display = 'none';
+            }, 3000); // Tooltip will disappear after 3 seconds
+        }
+
+        function openModal() {
+            document.getElementById('emotionModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('emotionModal').style.display = 'none';
+        }
+
+        // Close the modal when the user clicks anywhere outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('emotionModal');
+            if (event.target === modal) {
+                closeModal();
+            }
         }
     </script>
 
