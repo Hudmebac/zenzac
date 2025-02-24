@@ -11,10 +11,14 @@
             color: #004d40; /* Dark teal text for contrast */
             text-align: center;
             padding: 20px;
+            overflow-y: auto; /* Enable vertical scrolling */
+            height: auto; /* Allow height to adjust based on content */
+            margin: 0; /* Remove default margin */
+            box-sizing: border-box; /* Include padding in width calculations */
         }
 
         h1 {
-            font-size: 48px;
+            font-size: 2.5rem; /* Responsive font size */
             margin-bottom: 20px;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
         }
@@ -26,6 +30,10 @@
             margin: 10px 0;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             cursor: pointer; /* Change cursor to pointer */
+            width: 90%; /* Responsive width */
+            max-width: 600px; /* Maximum width for larger screens */
+            margin-left: auto; /* Center align */
+            margin-right: auto; /* Center align */
         }
 
         .description {
@@ -204,224 +212,255 @@
             margin-left: 10px;
             color: #00796b; /* Match the theme color */
         }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem; /* Smaller font size for mobile */
+            }
+
+            .technique {
+                padding: 10px; /* Adjust padding for mobile */
+            }
+
+            .description {
+                padding: 8px; /* Adjust padding for mobile */
+            }
+        }
+
+        #tooltip {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.95); /* More opaque background for better visibility */
+            border: 2px solid #00796b; /* Teal border for better visibility */
+            border-radius: 5px; /* Rounded corners */
+            padding: 15px; /* Increased padding for better spacing */
+            display: none; /* Initially hidden */
+            z-index: 1000; /* Ensure it appears above other elements */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+            transition: opacity 0.3s; /* Smooth transition for visibility */
+            font-size: 120%; /* Increase font size by 120% */
+            color: #004d40; /* Dark teal text for contrast */
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7); /* Light shadow for text */
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <h1>
-        Calming Techniques
-        <i class="fas fa-info-circle info-icon" onclick="toggleInfo()" title="How to Navigate"></i>
-        <i class="fas fa-pause" onclick="toggleMusic()" style="cursor: pointer; margin-left: 10px;" title="Pause Music"></i>
-        <a href="Index.html" style="position: absolute; top: 20px; right: 20px; text-decoration: none;">
-            <i class="fas fa-home" title="Home"></i>
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
+        <i class="fas fa-info-circle info-icon" onclick="toggleInfo()" title="How to Navigate" aria-label="How to Navigate" style="font-size: 20px; cursor: pointer; color: #00796b;"></i>
+        <i class="fas fa-pause" onclick="toggleMusic()" style="cursor: pointer; font-size: 20px; color: #00796b;"></i>
+        <a href="Index.html" style="text-decoration: none; color: #00796b;" aria-label="Home">
+            <i class="fas fa-home" title="Home" style="font-size: 20px;"></i>
         </a>
-    </h1>
-    
-    <!-- Collapsible Info Container -->
-    <div id="infoContainer" class="info-container">
-        <h2>Navigation Instructions</h2>
-        <p>Welcome to the Calming Techniques page! Here's how to navigate:</p>
-        <ul>
-            <li>Click on any technique to view its description.</li>
-            <li>Use the breathing visual to practice deep breathing.</li>
-            <li>Listen to relaxing music by clicking the buttons provided.</li>
-            <li>Share your feelings by selecting an emoticon.</li>
-            <li>Feel free to explore and try different techniques!</li>
-        </ul>
-        <button onclick="toggleInfo()">Collapse</button>
     </div>
+    <h1 style="margin-top: 20px;">Calming Techniques</h1>
     
-    <div class="technique" onclick="toggleDescription('breathing')">
-        <h2>Breathing Exercises</h2>
-        <div id="breathing" class="description">
-            <div class="breathing-visual"></div>
-            <p>Practice deep breathing to help calm the mind and body.</p>
-            <p><strong>Instructions:</strong> Inhale deeply through your nose for 4 seconds, hold for 4 seconds, and exhale slowly through your mouth for 4 seconds.</p>
-            <p><strong>Interval:</strong> Repeat this cycle for 5 minutes.</p>
-            <audio id="breathingAudio" controls>
-                <source src="slow-breathing.mp3" type="audio/mpeg">
-                Your browser does not support the audio element.
-            </audio>
-            <p>Listen to the audio for example, repeat as necessary.</p>
+    <main>
+        <!-- Collapsible Info Container -->
+        <div id="infoContainer" class="info-container">
+            <h2>Navigation Instructions</h2>
+            <p>Welcome to the Calming Techniques page! Here's how to navigate:</p>
+            <ul>
+                <li>Click on any technique to view its description.</li>
+                <li>Use the breathing visual to practice deep breathing.</li>
+                <li>Listen to relaxing music by clicking the buttons provided.</li>
+                <li>Share your feelings by selecting an emoticon.</li>
+                <li>Feel free to explore and try different techniques!</li>
+            </ul>
+            <button onclick="toggleInfo()" aria-label="Collapse Info">Collapse</button>
         </div>
-    </div>
-    
-    <div class="technique" onclick="toggleDescription('countTo10')">
-        <h2>Count to 10</h2>
-        <div id="countTo10" class="description">
-            <p>Take a moment to count to 10 slowly, focusing on each number.</p>
-            <div id="counter" class="counter">
-                <div class="wave-background"></div>
-                Start
+        
+        <div class="technique" onclick="toggleDescription('breathing')">
+            <h2>Breathing Exercises</h2>
+            <div id="breathing" class="description">
+                <div class="breathing-visual"></div>
+                <p>Practice deep breathing to help calm the mind and body.</p>
+                <p><strong>Instructions:</strong> Inhale deeply through your nose for 4 seconds, hold for 4 seconds, and exhale slowly through your mouth for 4 seconds.</p>
+                <p><strong>Interval:</strong> Repeat this cycle for 5 minutes.</p>
+                <audio id="breathingAudio" controls>
+                    <source src="slow-breathing.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+                <p>Listen to the audio for example, repeat as necessary.</p>
             </div>
         </div>
-    </div>
-    
-    <div class="technique" onclick="toggleDescription('makeShape')">
-        <h2>Make a Shape</h2>
-        <div id="makeShape" class="description">
-            <p>Use your hands to create shapes in the air, focusing on the movement.</p>
-            <div id="shapeMessage" style="display: none;">
-                <p id="shapeSuggestion"></p>
-                <button onclick="getRandomShape()" style="cursor: pointer; padding: 10px 20px; background-color: #00796b; color: white; border: none; border-radius: 5px;">Refresh Shape</button>
-            </div>
-        </div>
-    </div>
-    
-    <div class="technique" onclick="toggleDescription('meditation')">
-        <h2>Meditation</h2>
-        <div id="meditation" class="description">
-            <p>Engage in a short meditation session to clear your mind.</p>
-            <button onclick="showMeditationTechniques()" style="cursor: pointer; padding: 10px 20px; background-color: #00796b; color: white; border: none; border-radius: 5px;">Show Techniques</button>
-            <div id="meditationTechniques" style="display: none; margin-top: 20px; text-align: center;">
-                <button onclick="toggleTechnique('mindfulness')" style="margin-bottom: 10px; background-color: #00796b; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;">Mindfulness</button>
-                <button onclick="toggleTechnique('bodyScan')" style="margin-bottom: 10px; background-color: #00796b; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;">Body Scan</button>
-                <button onclick="toggleTechnique('mantra')" style="margin-bottom: 10px; background-color: #00796b; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;">Mantra</button>
-                <button onclick="toggleTechnique('lovingKindness')" style="margin-bottom: 10px; background-color: #00796b; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;">Loving Kindness</button>
-                <button onclick="toggleTechnique('progressiveMuscle')" style="margin-bottom: 10px; background-color: #00796b; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;">Progressive Muscle Relaxation</button>
-                <button onclick="toggleTechnique('transcendental')" style="margin-bottom: 10px; background-color: #00796b; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;">Transcendental Meditation</button>
-                <button onclick="toggleTechnique('guided')" style="margin-bottom: 10px; background-color: #00796b; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;">Guided Meditation</button>
-                <button onclick="toggleTechnique('walking')" style="margin-bottom: 10px; background-color: #00796b; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;">Walking Meditation</button>
-                
-                <div id="descriptionContainer" style="display: none; margin-top: 20px; padding: 15px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
-                    <div id="descriptionText"></div>
+        
+        <div class="technique" onclick="toggleDescription('countTo10')">
+            <h2>Count to 10</h2>
+            <div id="countTo10" class="description">
+                <p>Take a moment to count to 10 slowly, focusing on each number.</p>
+                <div id="counter" class="counter">
+                    <div class="wave-background"></div>
+                    Start
                 </div>
             </div>
         </div>
-    </div>
-    
-    <div class="technique" onclick="toggleDescription('relaxingMusic')">
-        <h2>Relaxing Music</h2>
-        <div id="relaxingMusic" class="description">
-            <p>Listen to calming music to soothe your senses.</p>
-            <div id="musicButtons" class="music-button-container">
-                <button onclick="playMusic('animal_sounds.mp3')" class="music-button">
-                    <i class="fas fa-paw" aria-hidden="true"></i> Animal Sounds
-                </button>
-                <button onclick="playMusic('relax_music_1.mp3')" class="music-button">
-                    <i class="fas fa-music" aria-hidden="true"></i> Relax Music 1
-                </button>
-                <button onclick="playMusic('tranquil.mp3')" class="music-button">
-                    <i class="fas fa-music" aria-hidden="true"></i> Tranquil Music
-                </button>
-                <button onclick="playMusic('waves.mp3')" class="music-button">
-                    <i class="fas fa-water" aria-hidden="true"></i> Waves
-                </button>
-                <button onclick="playMusic('white_noise.mp3')" class="music-button">
-                    <i class="fas fa-volume-up" aria-hidden="true"></i> White Noise
-                </button>
-                <button onclick="playMusic('whale_sounds.mp3')" class="music-button">
-                    <i class="fas fa-fish" aria-hidden="true"></i> Whale Sounds
-                </button>
-                <button onclick="playMusic('wind_sounds.mp3')" class="music-button">
-                    <i class="fas fa-wind" aria-hidden="true"></i> Wind Sounds
-                </button>
-            </div>
-            <audio id="musicPlayer" controls loop>
-                <source src="relax_music_1.mp3" type="audio/mpeg">
-                Your browser does not support the audio element.
-            </audio>
-        </div>
-    </div>
-    
-    <div class="technique" onclick="toggleDescription('shareFeelings')">
-        <h2>Share My Feelings</h2>
-        <div id="shareFeelings" class="description">
-            <p>Talk about your feelings with someone you trust.</p>
-            <div id="smileyGrid" style="display: none; margin-top: 20px;">
-                <div class="smiley" onclick="selectFeeling('happy')" title="Happy">
-                    😊 <!-- Happy Emoticon -->
-                    <div>Happy</div> <!-- Name of the emoticon -->
-                </div>
-                <div class="smiley" onclick="selectFeeling('sad')" title="Sad">
-                    😢 <!-- Sad Emoticon -->
-                    <div>Sad</div> <!-- Name of the emoticon -->
-                </div>
-                <div class="smiley" onclick="selectFeeling('angry')" title="Angry">
-                    😠 <!-- Angry Emoticon -->
-                    <div>Angry</div> <!-- Name of the emoticon -->
-                </div>
-                <div class="smiley" onclick="selectFeeling('confused')" title="Confused">
-                    😕 <!-- Confused Emoticon -->
-                    <div>Confused</div> <!-- Name of the emoticon -->
-                </div>
-                <div class="smiley" onclick="selectFeeling('excited')" title="Excited">
-                    😃 <!-- Excited Emoticon -->
-                    <div>Excited</div> <!-- Name of the emoticon -->
-                </div>
-                <div class="smiley" onclick="selectFeeling('scared')" title="Scared">
-                    😨 <!-- Scared Emoticon -->
-                    <div>Scared</div> <!-- Name of the emoticon -->
-                </div>
-                <div class="smiley" onclick="selectFeeling('bored')" title="Bored">
-                    😐 <!-- Bored Emoticon -->
-                    <div>Bored</div> <!-- Name of the emoticon -->
-                </div>
-                <div class="smiley" onclick="selectFeeling('loved')" title="Loved">
-                    ❤️ <!-- Loved Emoticon -->
-                    <div>Loved</div> <!-- Name of the emoticon -->
-                </div>
-                <div class="smiley" onclick="selectFeeling('surprised')" title="Surprised">
-                    😲 <!-- Surprised Emoticon -->
-                    <div>Surprised</div> <!-- Name of the emoticon -->
-                </div>
-                <div class="smiley" onclick="selectFeeling('tired')" title="Tired">
-                    😴 <!-- Tired Emoticon -->
-                    <div>Tired</div> <!-- Name of the emoticon -->
-                </div>
-                <div class="smiley" onclick="selectFeeling('nervous')" title="Nervous">
-                    😬 <!-- Nervous Emoticon -->
-                    <div>Nervous</div> <!-- Name of the emoticon -->
-                </div>
-                <div class="smiley" onclick="selectFeeling('silly')" title="Silly">
-                    🤪 <!-- Silly Emoticon -->
-                    <div>Silly</div> <!-- Name of the emoticon -->
-                </div>
-                <div class="smiley" onclick="selectFeeling('cool')" title="Cool">
-                    😎 <!-- Cool Emoticon -->
-                    <div>Cool</div> <!-- Name of the emoticon -->
-                </div>
-                <div class="smiley" onclick="selectFeeling('sleepy')" title="Sleepy">
-                    😪 <!-- Sleepy Emoticon -->
-                    <div>Sleepy</div> <!-- Name of the emoticon -->
-                </div>
-                <div class="smiley" onclick="selectFeeling('grateful')" title="Grateful">
-                    🙏 <!-- Grateful Emoticon -->
-                    <div>Grateful</div> <!-- Name of the emoticon -->
-                </div>
-                <div class="smiley" onclick="selectFeeling('hopeful')" title="Hopeful">
-                    🌈 <!-- Hopeful Emoticon -->
-                    <div>Hopeful</div> <!-- Name of the emoticon -->
-                </div>
-                <div class="smiley" onclick="selectFeeling('confident')" title="Confident">
-                    💪 <!-- Confident Emoticon -->
-                    <div>Confident</div> <!-- Name of the emoticon -->
-                </div>
-                <div class="smiley" onclick="selectFeeling('playful')" title="Playful">
-                    🎉 <!-- Playful Emoticon -->
-                    <div>Playful</div> <!-- Name of the emoticon -->
-                </div>
-                <div class="smiley" onclick="selectFeeling('curious')" title="Curious">
-                    🤔 <!-- Curious Emoticon -->
-                    <div>Curious</div> <!-- Name of the emoticon -->
-                </div>
-                <div class="smiley" onclick="selectFeeling('lonely')" title="Lonely">
-                    😞 <!-- Lonely Emoticon -->
-                    <div>Lonely</div> <!-- Name of the emoticon -->
-                </div>
-                <div class="smiley" onclick="selectFeeling('relaxed')" title="Relaxed">
-                    😌 <!-- Relaxed Emoticon -->
-                    <div>Relaxed</div> <!-- Name of the emoticon -->
-                </div>
-            </div>
-            <div id="emotionModal" class="modal">
-                <div class="modal-content">
-                    <span class="close" onclick="closeModal()">&times;</span>
-                    <div id="emotionDescription" style="font-size: 18px;"></div> <!-- Description Container -->
+        
+        <div class="technique" onclick="toggleDescription('makeShape')">
+            <h2>Make a Shape</h2>
+            <div id="makeShape" class="description">
+                <p>Use your hands to create shapes in the air, focusing on the movement.</p>
+                <div id="shapeMessage" style="display: none;">
+                    <p id="shapeSuggestion"></p>
+                    <button onclick="getRandomShape()" style="cursor: pointer; padding: 10px 20px; background-color: #00796b; color: white; border: none; border-radius: 5px;">Refresh Shape</button>
                 </div>
             </div>
         </div>
-    </div>
+        
+        <div class="technique" onclick="toggleDescription('meditation')">
+            <h2>Meditation</h2>
+            <div id="meditation" class="description">
+                <p>Engage in a short meditation session to clear your mind.</p>
+                <button onclick="showMeditationTechniques()" style="cursor: pointer; padding: 10px 20px; background-color: #00796b; color: white; border: none; border-radius: 5px;">Show Techniques</button>
+                <div id="meditationTechniques" style="display: none; margin-top: 20px; text-align: center;">
+                    <button onclick="toggleTechnique('mindfulness')" style="margin-bottom: 10px; background-color: #00796b; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;">Mindfulness</button>
+                    <button onclick="toggleTechnique('bodyScan')" style="margin-bottom: 10px; background-color: #00796b; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;">Body Scan</button>
+                    <button onclick="toggleTechnique('mantra')" style="margin-bottom: 10px; background-color: #00796b; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;">Mantra</button>
+                    <button onclick="toggleTechnique('lovingKindness')" style="margin-bottom: 10px; background-color: #00796b; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;">Loving Kindness</button>
+                    <button onclick="toggleTechnique('progressiveMuscle')" style="margin-bottom: 10px; background-color: #00796b; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;">Progressive Muscle Relaxation</button>
+                    <button onclick="toggleTechnique('transcendental')" style="margin-bottom: 10px; background-color: #00796b; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;">Transcendental Meditation</button>
+                    <button onclick="toggleTechnique('guided')" style="margin-bottom: 10px; background-color: #00796b; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;">Guided Meditation</button>
+                    <button onclick="toggleTechnique('walking')" style="margin-bottom: 10px; background-color: #00796b; color: white; border: none; border-radius: 5px; padding: 10px; cursor: pointer;">Walking Meditation</button>
+                    
+                    <div id="descriptionContainer" style="display: none; margin-top: 20px; padding: 15px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+                        <div id="descriptionText"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="technique" onclick="toggleDescription('relaxingMusic')">
+            <h2>Relaxing Music</h2>
+            <div id="relaxingMusic" class="description">
+                <p>Listen to calming music to soothe your senses.</p>
+                <div id="musicButtons" class="music-button-container">
+                    <button onclick="playMusic('animal_sounds.mp3')" class="music-button">
+                        <i class="fas fa-paw" aria-hidden="true"></i> Animal Sounds
+                    </button>
+                    <button onclick="playMusic('relax_music_1.mp3')" class="music-button">
+                        <i class="fas fa-music" aria-hidden="true"></i> Relax Music 1
+                    </button>
+                    <button onclick="playMusic('tranquil.mp3')" class="music-button">
+                        <i class="fas fa-music" aria-hidden="true"></i> Tranquil Music
+                    </button>
+                    <button onclick="playMusic('waves.mp3')" class="music-button">
+                        <i class="fas fa-water" aria-hidden="true"></i> Waves
+                    </button>
+                    <button onclick="playMusic('white_noise.mp3')" class="music-button">
+                        <i class="fas fa-volume-up" aria-hidden="true"></i> White Noise
+                    </button>
+                    <button onclick="playMusic('whale_sounds.mp3')" class="music-button">
+                        <i class="fas fa-fish" aria-hidden="true"></i> Whale Sounds
+                    </button>
+                    <button onclick="playMusic('wind_sounds.mp3')" class="music-button">
+                        <i class="fas fa-wind" aria-hidden="true"></i> Wind Sounds
+                    </button>
+                </div>
+                <audio id="musicPlayer" controls loop>
+                    <source src="relax_music_1.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+        
+        <div class="technique" onclick="toggleDescription('shareFeelings')">
+            <h2>Share My Feelings</h2>
+            <div id="shareFeelings" class="description">
+                <p>Talk about your feelings with someone you trust.</p>
+                <div id="smileyGrid" style="display: none; margin-top: 20px;">
+                    <div class="smiley" onclick="selectFeeling('happy')" title="Happy">
+                        😊 <!-- Happy Emoticon -->
+                        <div>Happy</div> <!-- Name of the emoticon -->
+                    </div>
+                    <div class="smiley" onclick="selectFeeling('sad')" title="Sad">
+                        😢 <!-- Sad Emoticon -->
+                        <div>Sad</div> <!-- Name of the emoticon -->
+                    </div>
+                    <div class="smiley" onclick="selectFeeling('angry')" title="Angry">
+                        😠 <!-- Angry Emoticon -->
+                        <div>Angry</div> <!-- Name of the emoticon -->
+                    </div>
+                    <div class="smiley" onclick="selectFeeling('confused')" title="Confused">
+                        😕 <!-- Confused Emoticon -->
+                        <div>Confused</div> <!-- Name of the emoticon -->
+                    </div>
+                    <div class="smiley" onclick="selectFeeling('excited')" title="Excited">
+                        😃 <!-- Excited Emoticon -->
+                        <div>Excited</div> <!-- Name of the emoticon -->
+                    </div>
+                    <div class="smiley" onclick="selectFeeling('scared')" title="Scared">
+                        😨 <!-- Scared Emoticon -->
+                        <div>Scared</div> <!-- Name of the emoticon -->
+                    </div>
+                    <div class="smiley" onclick="selectFeeling('bored')" title="Bored">
+                        😐 <!-- Bored Emoticon -->
+                        <div>Bored</div> <!-- Name of the emoticon -->
+                    </div>
+                    <div class="smiley" onclick="selectFeeling('loved')" title="Loved">
+                        ❤️ <!-- Loved Emoticon -->
+                        <div>Loved</div> <!-- Name of the emoticon -->
+                    </div>
+                    <div class="smiley" onclick="selectFeeling('surprised')" title="Surprised">
+                        😲 <!-- Surprised Emoticon -->
+                        <div>Surprised</div> <!-- Name of the emoticon -->
+                    </div>
+                    <div class="smiley" onclick="selectFeeling('tired')" title="Tired">
+                        😴 <!-- Tired Emoticon -->
+                        <div>Tired</div> <!-- Name of the emoticon -->
+                    </div>
+                    <div class="smiley" onclick="selectFeeling('nervous')" title="Nervous">
+                        😬 <!-- Nervous Emoticon -->
+                        <div>Nervous</div> <!-- Name of the emoticon -->
+                    </div>
+                    <div class="smiley" onclick="selectFeeling('silly')" title="Silly">
+                        🤪 <!-- Silly Emoticon -->
+                        <div>Silly</div> <!-- Name of the emoticon -->
+                    </div>
+                    <div class="smiley" onclick="selectFeeling('cool')" title="Cool">
+                        😎 <!-- Cool Emoticon -->
+                        <div>Cool</div> <!-- Name of the emoticon -->
+                    </div>
+                    <div class="smiley" onclick="selectFeeling('sleepy')" title="Sleepy">
+                        😪 <!-- Sleepy Emoticon -->
+                        <div>Sleepy</div> <!-- Name of the emoticon -->
+                    </div>
+                    <div class="smiley" onclick="selectFeeling('grateful')" title="Grateful">
+                        🙏 <!-- Grateful Emoticon -->
+                        <div>Grateful</div> <!-- Name of the emoticon -->
+                    </div>
+                    <div class="smiley" onclick="selectFeeling('hopeful')" title="Hopeful">
+                        🌈 <!-- Hopeful Emoticon -->
+                        <div>Hopeful</div> <!-- Name of the emoticon -->
+                    </div>
+                    <div class="smiley" onclick="selectFeeling('confident')" title="Confident">
+                        💪 <!-- Confident Emoticon -->
+                        <div>Confident</div> <!-- Name of the emoticon -->
+                    </div>
+                    <div class="smiley" onclick="selectFeeling('playful')" title="Playful">
+                        🎉 <!-- Playful Emoticon -->
+                        <div>Playful</div> <!-- Name of the emoticon -->
+                    </div>
+                    <div class="smiley" onclick="selectFeeling('curious')" title="Curious">
+                        🤔 <!-- Curious Emoticon -->
+                        <div>Curious</div> <!-- Name of the emoticon -->
+                    </div>
+                    <div class="smiley" onclick="selectFeeling('lonely')" title="Lonely">
+                        😞 <!-- Lonely Emoticon -->
+                        <div>Lonely</div> <!-- Name of the emoticon -->
+                    </div>
+                    <div class="smiley" onclick="selectFeeling('relaxed')" title="Relaxed">
+                        😌 <!-- Relaxed Emoticon -->
+                        <div>Relaxed</div> <!-- Name of the emoticon -->
+                    </div>
+                </div>
+                <div id="emotionModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeModal()">&times;</span>
+                        <div id="emotionDescription" style="font-size: 18px;"></div> <!-- Description Container -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 
     <div id="tooltip" style="position: absolute; background-color: rgba(255, 255, 255, 0.9); border: 1px solid #888; border-radius: 5px; padding: 10px; display: none; z-index: 1000;"></div>
 
@@ -617,16 +656,16 @@
             tooltip.textContent = description; // Set the tooltip text
             tooltip.style.display = 'block'; // Show the tooltip
 
-            // Position the tooltip near the clicked icon
+            // Position the tooltip above the clicked icon
             const icon = event.currentTarget; // Get the clicked icon
             const rect = icon.getBoundingClientRect(); // Get the icon's position
             tooltip.style.left = `${rect.left + window.scrollX}px`; // Set tooltip position
-            tooltip.style.top = `${rect.bottom + window.scrollY + 5}px`; // Position below the icon
+            tooltip.style.top = `${rect.top + window.scrollY - tooltip.offsetHeight - 5}px`; // Position above the icon
 
-            // Hide the tooltip after a short delay
+            // Hide the tooltip after 10 seconds
             setTimeout(() => {
                 tooltip.style.display = 'none';
-            }, 3000); // Tooltip will disappear after 3 seconds
+            }, 10000); // Tooltip will disappear after 10 seconds
         }
 
         function openModal() {

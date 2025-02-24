@@ -43,13 +43,14 @@
             margin: auto; /* Center the container */
             margin-top: 20px; /* Space above the container */
             flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            margin-bottom: 40px; /* Add margin to create space below the container */
         }
         .bucket {
             width: 30%; /* Width for the task menu */
             margin-right: 20px; /* Space between the task menu and the Now/Next areas */
         }
         .task-area {
-            width: 35%; /* Width for the Now and Next areas */
+            width: 17.5%; /* Reduce width to 17.5% for 50% reduction */
             border: 1px solid #ccc;
             border-radius: 5px;
             padding: 10px;
@@ -60,6 +61,7 @@
             height: auto; /* Allow height to adjust based on content */
             min-height: 50vh; /* Set minimum height to 50% of the viewport height */
             overflow-y: auto; /* Enable vertical scrolling if content exceeds height */
+            margin-bottom: 20px; /* Add margin to create space below each task area */
         }
         .task {
             border: 1px solid #007BFF; /* Border for tasks */
@@ -67,7 +69,7 @@
             margin: 5px 0; /* Space between tasks */
             padding: 10px; /* Increase padding for better touch targets */
             cursor: pointer; /* Pointer cursor for tasks */
-            transition: background-color 0.3s; /* Smooth background transition */
+            transition: background-color 0.3s, transform 0.3s; /* Smooth background and transform transition */
             font-size: 8px; /* Reduce font size by 50% */
             line-height: 1.5; /* Increase line height for better spacing */
             font-family: 'Roboto', sans-serif; /* Use a more readable font */
@@ -77,6 +79,8 @@
         }
         .task:hover {
             background-color: #e0f7fa; /* Change background on hover */
+            transform: scale(1.5); /* Scale the task to 150% on hover */
+            z-index: 10; /* Bring the hovered task to the front */
         }
         .delete-btn {
             background: none; /* No background */
@@ -249,7 +253,7 @@
                 <input type="text" id="newTaskInput" placeholder="Add your own task..." />
                 <button onclick="addCustomTask()">Add Task</button>
             </div>
-
+            
             <div class="task-group" id="choresTasks" style="display: none;">
                 <ul>
                     <li class="task" id="task1" onclick="addToNow(this)">Clean Up Toys</li>
@@ -677,35 +681,6 @@
             }
         }
 
-        function addCustomTask() {
-            const newTaskInput = document.getElementById('newTaskInput');
-            const taskText = newTaskInput.value.trim();
-            if (taskText === "") {
-                alert("Please enter a task.");
-                return;
-            }
-            const nowArea = document.getElementById('nowArea');
-            if (nowArea.children.length >= 5) {
-                alert("You can only have a maximum of 5 tasks in the 'Now' area.");
-                return; // Prevent adding more tasks if limit is reached
-            }
-            const newTask = document.createElement('li');
-            newTask.className = 'task';
-            newTask.onclick = function() {
-                showTaskOptions(newTask, newTask); // Show options when task is clicked
-            };
-            newTask.textContent = taskText;
-            nowArea.appendChild(newTask); // Add the new task to the Now area
-            newTaskInput.value = ""; // Clear the input field
-        }
-
-        // Add this function to handle keypress events
-        document.getElementById('newTaskInput').addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') { // Check if the pressed key is "Enter"
-                addCustomTask(); // Call the function to add the task
-            }
-        });
-
         function toggleFullScreen() {
             const fullScreenDiv = document.createElement('div');
             fullScreenDiv.className = 'full-screen';
@@ -756,6 +731,35 @@
                 infoDescription.style.display = "none"; // Hide the info description
             }
         }
+
+        function addCustomTask() {
+            const newTaskInput = document.getElementById('newTaskInput');
+            const taskText = newTaskInput.value.trim();
+            if (taskText === "") {
+                alert("Please enter a task.");
+                return;
+            }
+            const nowArea = document.getElementById('nowArea');
+            if (nowArea.children.length >= 5) {
+                alert("You can only have a maximum of 5 tasks in the 'Now' area.");
+                return; // Prevent adding more tasks if limit is reached
+            }
+            const newTask = document.createElement('li');
+            newTask.className = 'task';
+            newTask.onclick = function() {
+                showTaskOptions(newTask, newTask); // Show options when task is clicked
+            };
+            newTask.textContent = taskText;
+            nowArea.appendChild(newTask); // Add the new task to the Now area
+            newTaskInput.value = ""; // Clear the input field
+        }
+
+        // Add this function to handle keypress events
+        document.getElementById('newTaskInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') { // Check if the pressed key is "Enter"
+                addCustomTask(); // Call the function to add the task
+            }
+        });
     </script>
 
     <footer style="background-color: rgba(0, 123, 255, 0.8); color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; text-align: center;">

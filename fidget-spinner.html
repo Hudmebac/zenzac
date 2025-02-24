@@ -245,16 +245,11 @@
     </style>
 </head>
 <body>
-    <!-- Remove the home button -->
-    <!-- <button id="homeButton" class="button home-icon"> -->
-    <!--     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" class="bi bi-house" viewBox="0 0 16 16"> -->
-    <!--         <path d="M8 3.293l-6 6V14h4v-4h4v4h4V9.293l-6-6z"/> -->
-    <!--         <path fill-rule="evenodd" d="M7.5 0a.5.5 0 0 1 .5.5v1.793l6 6V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8.293l6-6V.5a.5.5 0 0 1 .5-.5z"/> -->
-    <!--     </svg> -->
-    <!-- </button> -->
-    
-    <!-- Add Info Icon -->
-    <i class="fas fa-info-circle info-icon" id="infoIcon" title="Click for navigation help"></i>
+    <!-- Top Right Navigation -->
+    <div style="position: absolute; top: 10px; right: 10px; z-index: 1000;">
+        <a href="index.html" id="homeLink" title="Go to Home" style="color: white; text-decoration: none; margin-right: 15px; font-size: 16px;">Home</a>
+        <a href="#" id="infoLink" title="Click for navigation help" style="color: white; text-decoration: none; font-size: 16px;">Info</a>
+    </div>
 
     <!-- Description Container -->
     <div class="description-container" id="descriptionContainer">
@@ -576,7 +571,7 @@
         });
 
         // Toggle description container visibility
-        document.getElementById('infoIcon').addEventListener('click', () => {
+        document.getElementById('infoLink').addEventListener('click', () => {
             const descriptionContainer = document.getElementById('descriptionContainer');
             descriptionContainer.style.display = descriptionContainer.style.display === 'block' ? 'none' : 'block';
         });

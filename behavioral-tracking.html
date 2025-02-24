@@ -175,7 +175,7 @@
         .info-icon {
             position: fixed; /* Fixed position */
             top: 20px; /* Distance from the top */
-            left: 80px; /* Distance from the left */
+            right: 80px; /* Distance from the right */
             font-size: 24px; /* Icon size */
             color: #0077b3; /* Frost blue color */
             cursor: pointer; /* Pointer cursor on hover */
@@ -219,16 +219,16 @@
     </style>
 </head>
 <body>
-    <a href="index.html" class="home-icon" title="Go to Home">
+    <a href="index.html" class="home-icon" title="Go to Home" aria-label="Home">
         <i class="fas fa-home"></i> <!-- Font Awesome home icon -->
     </a>
-    <div class="info-icon" onclick="toggleDescription()" title="How to Navigate">
+    <div class="info-icon" onclick="toggleDescription()" title="How to Navigate" aria-label="Info">
         <i class="fas fa-info-circle"></i> <!-- Font Awesome info icon -->
     </div>
 
     <div class="container">
         <h1>Behavioural Tracking</h1>
-        <p>This is a simple event tracker designed to help you quickly log details about behavioural incidents. You can use this tool to track antecedents, behaviours, and consequences, which can assist in identifying patterns and developing strategies for managing behaviours.</p>
+        <p>This tool helps you log details about behavioral incidents quickly. Track antecedents, behaviors, and consequences to identify patterns and develop management strategies.</p>
         
         <h2>Create Event</h2>
         <button id="createEventButton" onclick="showEventForm()">Create Event</button>
@@ -237,7 +237,7 @@
             <label for="eventTime" title="Event Time: The time when the event occurred.">Event Time:</label>
             <input type="datetime-local" id="eventTime" required style="margin-bottom: 15px;">
 
-            <label for="antecedent" title="Antecedents (A): what happened directly before the behaviour occurred.">Select Antecedent:</label>
+            <label for="antecedent" title="Antecedents (A): what happened directly before the behavior occurred.">Select Antecedent:</label>
             <select id="antecedent" onchange="toggleOtherInput()" style="margin-bottom: 15px;">
                 <option value="">Select an option</option>
                 <option value="boredom">Boredom</option>
@@ -331,7 +331,7 @@
             </select>
             <input type="text" id="otherConsequence" placeholder="Specify if 'Other'" style="display:none; margin-bottom: 15px;">
             
-            <button id="saveEventButton" type="button" onclick="saveEvent()" style="margin-top: 20px;">Save Event</button>
+            <button id="saveEventButton" type="button" onclick="saveEvent()">Save Event</button>
         </form>
 
         <div id="responseMessage" style="display:none;"></div>
@@ -357,7 +357,7 @@
         <p>Welcome to the Behavioural Tracking tool! Here's how to use it:</p>
         <p>1. Click on "Create Event" to log a new behavioural incident.</p>
         <p>2. Fill in the required fields and click "Save Event".</p>
-        <p>3. You can view your event history by clicking on "View ABC Chart History".</p>
+        <p>3. You can view the history of the ABC Chart by clicking on "View ABC Chart History".</p>
         <p>4. For any questions, feel free to reach out!</p>
     </div>
 
@@ -516,9 +516,5 @@
             descriptionContainer.style.display = descriptionContainer.style.display === 'block' ? 'none' : 'block';
         }
     </script>
-
-    <footer style="background-color: rgba(0, 123, 255, 0.8); color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; text-align: center;">
-        ZenZac™
-    </footer>
 </body>
 </html> 

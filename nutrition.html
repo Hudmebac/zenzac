@@ -6,6 +6,7 @@
     <title>Nutrition - Parent Resource Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -89,18 +90,12 @@
         }
 
         .details-container {
-            display: none;
-            background: rgba(255, 255, 255, 0.95);
-            color: #333;
-            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+            border: 1px solid #007BFF;
             border-radius: 10px;
-            margin-top: 20px;
-            width: 80%;
-            max-width: 600px;
-            text-align: left;
-            position: relative;
-            z-index: 5;
-            margin-bottom: 40px;
+            background-color: rgba(255, 255, 255, 0.95);
         }
 
         .default-icon {
@@ -174,7 +169,14 @@
         .home-button {
             position: absolute;
             top: 20px;
+            right: 60px;
+        }
+
+        .info-icon {
+            position: absolute;
+            top: 20px;
             right: 20px;
+            cursor: pointer;
         }
 
         /* Add styles for the modal */
@@ -244,11 +246,40 @@
             top: 20px; /* Distance from the top */
             left: 20px; /* Distance from the left */
         }
+
+        /* Add a tooltip style to the existing styles */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%; /* Position above the tooltip */
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <button class="frost-button home-button" onclick="window.location.href='index.html'">
+        <button class="frost-button home-button" onclick="window.location.href='index.html'" title="Go to Home">
             <i class="fas fa-home"></i>
         </button>
         <h1 id="nutrition-header">Nutrition</h1>
@@ -257,9 +288,9 @@
         <i class="fas fa-info-circle info-icon" onclick="toggleInfo()"></i>
         
         <!-- Collapsible Info Section -->
-        <div id="infoContainer" class="info-container">
-            <div class="info-header" onclick="toggleInfoContent()">How to Navigate</div>
-            <div id="infoContent" style="display: none;">
+        <div id="infoContainer" class="info-container" style="border: 1px solid #007BFF; border-radius: 10px; padding: 15px;">
+            <div class="info-header" onclick="toggleInfoContent()" style="cursor: pointer; color: #007BFF; font-weight: bold;">How to Navigate</div>
+            <div id="infoContent" style="display: none; padding: 10px; background-color: rgba(255, 255, 255, 0.9); border-radius: 5px;">
                 <p>Welcome to the Nutrition Resource Page! Here's how to use it:</p>
                 <ul>
                     <li>Click on any food group to see details about it.</li>
@@ -271,57 +302,64 @@
         </div>
 
         <div class="food-groups-container">
-            <div class="food-group" onclick="showDetails('fruits')">
+            <div class="food-group tooltip" data-food-group="fruits" onclick="showDetails('fruits')">
                 <i class="fas fa-apple-alt food-icon default-icon"></i>
                 <p>Fruits</p>
+                <span class="tooltiptext">Click for details on fruits</span>
                 <div class="description">
                     <h3>Fruits</h3>
                     <p>Fruits are a great source of vitamins and minerals.</p>
                 </div>
             </div>
-            <div class="food-group" onclick="showDetails('vegetables')">
+            <div class="food-group tooltip" data-food-group="vegetables" onclick="showDetails('vegetables')">
                 <i class="fas fa-carrot food-icon default-icon"></i>
                 <p>Vegetables</p>
+                <span class="tooltiptext">Click for details on vegetables</span>
                 <div class="description">
                     <h3>Vegetables</h3>
                     <p>Essential for a balanced diet.</p>
                 </div>
             </div>
-            <div class="food-group" onclick="showDetails('grains')">
+            <div class="food-group tooltip" data-food-group="grains" onclick="showDetails('grains')">
                 <i class="fas fa-bread-slice food-icon default-icon"></i>
                 <p>Grains</p>
+                <span class="tooltiptext">Click for details on grains</span>
                 <div class="description">
                     <h3>Grains</h3>
                     <p>Provide energy and fiber.</p>
                 </div>
             </div>
-            <div class="food-group" onclick="showDetails('proteins')">
+            <div class="food-group tooltip" data-food-group="proteins" onclick="showDetails('proteins')">
                 <i class="fas fa-drumstick-bite food-icon default-icon"></i>
                 <p>Proteins</p>
+                <span class="tooltiptext">Click for details on proteins</span>
                 <div class="description">
                     <h3>Proteins</h3>
                     <p>Important for growth and repair.</p>
                 </div>
             </div>
-            <div class="food-group" onclick="showDetails('dairy')">
+            <div class="food-group tooltip" data-food-group="dairy" onclick="showDetails('dairy')">
                 <i class="fas fa-glass-whiskey food-icon default-icon"></i>
                 <p>Dairy</p>
+                <span class="tooltiptext">Click for details on dairy</span>
                 <div class="description">
                     <h3>Dairy</h3>
                     <p>Good source of calcium.</p>
                 </div>
             </div>
-            <div class="food-group" onclick="showDetails('fats')">
+            <div class="food-group tooltip" data-food-group="fats" onclick="showDetails('fats')">
                 <i class="fas fa-question-circle food-icon default-icon"></i>
                 <p>Fats</p>
+                <span class="tooltiptext">Click for details on fats</span>
                 <div class="description">
                     <h3>Fats</h3>
                     <p>Important for brain health.</p>
                 </div>
             </div>
-            <div class="food-group" onclick="showDetails('sweets')">
+            <div class="food-group tooltip" data-food-group="sweets" onclick="showDetails('sweets')">
                 <i class="fas fa-candy-cane food-icon default-icon"></i>
                 <p>Sweets</p>
+                <span class="tooltiptext">Click for details on sweets</span>
                 <div class="description">
                     <h3>Sweets</h3>
                     <p>Should be consumed in moderation.</p>
@@ -329,24 +367,9 @@
             </div>
         </div>
 
-        <div class="details-container" id="details">
-            <h2 id="details-title">Details</h2>
+        <div class="details-container" id="details" style="display: none;">
             <p id="details-description"></p>
-            <h3>Kids' Favorites</h3>
             <ul id="kids-favorites-list"></ul>
-        </div>
-
-        <div class="kids-favorites" id="kids-favorites">
-            <h2>Kids' Favorites</h2>
-            <p>Here are some favorite foods among kids:</p>
-            <ul>
-                <li><i class="fas fa-apple-alt"></i> Apples</li>
-                <li><i class="fas fa-carrot"></i> Carrots</li>
-                <li><i class="fas fa-bread-slice"></i> Bread</li>
-                <li><i class="fas fa-drumstick-bite"></i> Chicken Nuggets</li>
-                <li><i class="fas fa-glass-whiskey"></i> Milk</li>
-                <li><i class="fas fa-candy-cane"></i> Candy</li>
-            </ul>
         </div>
 
         <!-- Modal for How to Navigate -->
@@ -365,20 +388,39 @@
         </div>
     </div>
 
+    <footer style="background-color: rgba(0, 123, 255, 0.8); color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; text-align: center;">
+        ZenZac™
+    </footer>
+
     <script>
+        // Create an object to track whether details have been shown for each food group
+        const detailsShown = {
+            fruits: false,
+            vegetables: false,
+            grains: false,
+            proteins: false,
+            dairy: false,
+            fats: false,
+            sweets: false
+        };
+
         function showDetails(foodGroup) {
             const detailsContainer = document.getElementById('details');
-            const detailsTitle = document.getElementById('details-title');
             const detailsDescription = document.getElementById('details-description');
             const kidsFavoritesList = document.getElementById('kids-favorites-list');
-            const kidsFavorites = document.getElementById('kids-favorites');
 
             detailsDescription.innerHTML = '';
             kidsFavoritesList.innerHTML = '';
 
+            // Hide the tooltip if details have already been shown
+            if (!detailsShown[foodGroup]) {
+                const tooltip = document.querySelector(`.food-group.tooltip[data-food-group="${foodGroup}"] .tooltiptext`);
+                tooltip.style.visibility = 'hidden'; // Hide the tooltip
+                detailsShown[foodGroup] = true; // Mark as shown
+            }
+
             switch (foodGroup) {
                 case 'fruits':
-                    detailsTitle.innerText = 'Fruits';
                     detailsDescription.innerHTML = `
                         Fruits are a great source of vitamins and minerals. They are rich in antioxidants and can help reduce the risk of chronic diseases. 
                         Examples include apples, bananas, berries, and oranges. 
@@ -401,7 +443,6 @@
                     kidsFavoritesList.innerHTML = '<li><i class="fas fa-apple-alt"></i> Apples</li><li><i class="fas fa-banana"></i> Bananas</li>';
                     break;
                 case 'vegetables':
-                    detailsTitle.innerText = 'Vegetables';
                     detailsDescription.innerHTML = `
                         Vegetables are essential for a balanced diet. They provide vital nutrients, including vitamins, minerals, and fiber. 
                         Examples include carrots, broccoli, spinach, and bell peppers. 
@@ -424,7 +465,6 @@
                     kidsFavoritesList.innerHTML = '<li><i class="fas fa-carrot"></i> Carrots</li><li><i class="fas fa-broccoli"></i> Broccoli</li>';
                     break;
                 case 'grains':
-                    detailsTitle.innerText = 'Grains';
                     detailsDescription.innerHTML = `
                         Grains provide energy and fiber. Whole grains are particularly beneficial as they contain more nutrients than refined grains. 
                         Examples include rice, oats, quinoa, and whole wheat bread. 
@@ -447,7 +487,6 @@
                     kidsFavoritesList.innerHTML = '<li><i class="fas fa-bread-slice"></i> Bread</li><li><i class="fas fa-rice-bowl"></i> Rice</li>';
                     break;
                 case 'proteins':
-                    detailsTitle.innerText = 'Proteins';
                     detailsDescription.innerHTML = `
                         Proteins are important for growth and repair. They are made up of amino acids, which are essential for building and repairing tissues. 
                         Examples include chicken, fish, beans, and nuts. 
@@ -470,7 +509,6 @@
                     kidsFavoritesList.innerHTML = '<li><i class="fas fa-drumstick-bite"></i> Chicken Nuggets</li><li><i class="fas fa-fish"></i> Fish</li>';
                     break;
                 case 'dairy':
-                    detailsTitle.innerText = 'Dairy';
                     detailsDescription.innerHTML = `
                         Dairy products are a good source of calcium, which is vital for strong bones and teeth. They also provide protein and other essential nutrients. 
                         Examples include milk, cheese, and yogurt. 
@@ -493,7 +531,6 @@
                     kidsFavoritesList.innerHTML = '<li><i class="fas fa-glass-whiskey"></i> Milk</li><li><i class="fas fa-cheese"></i> Cheese</li>';
                     break;
                 case 'fats':
-                    detailsTitle.innerText = 'Fats';
                     detailsDescription.innerHTML = `
                         Healthy fats are important for brain health and hormone production. They also help absorb fat-soluble vitamins. 
                         Examples include avocados, nuts, seeds, and olive oil. 
@@ -516,7 +553,6 @@
                     kidsFavoritesList.innerHTML = '<li><i class="fas fa-avocado"></i> Avocados</li><li><i class="fas fa-nut"></i> Nuts</li>';
                     break;
                 case 'sweets':
-                    detailsTitle.innerText = 'Sweets';
                     detailsDescription.innerHTML = `
                         Sweets should be consumed in moderation. While they can provide quick energy, excessive sugar intake can lead to health issues. 
                         Examples include candies, cakes, and cookies. 
@@ -540,8 +576,8 @@
                     break;
             }
 
+            // Show the details container
             detailsContainer.style.display = 'block';
-            kidsFavorites.style.display = 'block';
         }
 
         function toggleInfo() {
@@ -570,9 +606,5 @@
             }
         }
     </script>
-
-    <footer style="background-color: rgba(0, 123, 255, 0.8); color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; text-align: center;">
-        ZenZac™
-    </footer>
 </body>
 </html> 
