@@ -1,51 +1,56 @@
-# ZenZac Tools
+# ZenZac
 
-Welcome to the **ZenZac Tools** project! This web application is designed to provide parents with various resources and tools to support their children's health, nutrition, and activities. The application features an engaging user interface with interactive elements to enhance the user experience.
+A calm, offline toolkit for children with ADHD, autism, or both — and the grown-ups beside them. No accounts, no adverts, no tracking, no network calls.
 
-## Table of Contents
+Open `index.html` in a browser. Everything works from a double-click; a local server is optional.
 
-- [Features](#features)
-- [Technologies Used](#technologies-used)
-- [Installation](#installation)
-- [Usage](#usage)
-- [File Structure](#file-structure)
-- [Contributing](#contributing)
-- [License](#license)
+## What is in it
 
-## Features
+| Section | What it does |
+| --- | --- |
+| **Home** | Greeting, mood check-in, "start here today" suggestions from the child's plan, house rules, today's numbers. |
+| **Set-up** | Seven short questions: name, age band, mode (ADHD / autism / both / not sure), what is hard, what helps, sensory notes, house rules, colours. Every answer can be changed later. |
+| **Calm** | Guided breathing (three patterns), six ambient sounds, grounding exercises. |
+| **Now & Next** | Two-slot routine with timer, task queue, stickers, and the house rules kept in view. |
+| **Focus** | Fidget wheel, Wac-A-Zac, focus timer. |
+| **Journal** | Private feelings check-ins, behaviour notes, weekly chart. |
+| **Play** | Knock-knock jokes and the fart machine. |
+| **Compendium** | 65 practical entries in 12 categories, searchable and filterable, plus links into the matching app tool. |
+| **Learn** | Ten longer guides for grown-ups. |
+| **Settings** | Name, sound, spoken cues, calm motion, bigger text, six soft palettes, plan summary, export and delete. |
 
-- **Interactive Navigation**: Easily navigate through various topics related to children's health and activities.
-- **Dynamic Descriptions**: Hover over buttons to see descriptions of each resource.
-- **Smooth Scrolling**: Scroll through the button list with up and down arrows.
-- **Engaging Animations**: Animated title and buttons for a visually appealing experience.
-- **Responsive Design**: Optimized for different screen sizes and devices.
+## The plan
 
-## Technologies Used
+The set-up wizard builds a local profile and a **house rules** set. The profile is a starting point, not a label: it changes what Home puts first and which shortcuts appear. Rules are short agreements shown on Home and Now & Next, and they can be toggled, rewritten or added to at any time.
 
-- HTML
-- CSS
-- JavaScript
-- Font Awesome (for icons)
-- Google Fonts (for custom typography)
+Six palettes are included — three light (Meadow, Blossom, Sea glass) and three low-glare dark (Dusk, Twilight, Forest). No pure white, no external fonts, no CDN icons.
 
-## Installation
+## Files
 
-To run the ZenZac Tools project locally, follow these steps:
+```
+index.html            shell, SVG icon sprite, inline palette bootstrap
+assets/theme.css      design system, palettes, layout (rail → bottom tabs)
+assets/data.js        moods, sounds, jokes, guides, setup questions, rule defaults
+assets/compendium.js  65 entries across 12 categories
+assets/app.js         state, storage, audio, router and every view
+assets/logo.svg       favicon
+legacy/               the original 15 standalone pages, archived not deleted
+Fart/                 fart-machine audio
+*.mp3                 ambient audio
+```
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/zenzac-tools.git
-   ```
-2. Navigate to the project directory:
-   ```bash
-   cd zenzac-tools
-   ```
-3. Open the `Index.html` file in your web browser.
+## Run it
 
-## Usage
+```bash
+python3 -m http.server 8000
+```
 
-- Open the `Index.html` file in your web browser to access the application.
-- Click on the buttons to navigate to different resources.
-- Hover over the buttons to view descriptions of each tool.
-- Use the up and down arrows to scroll through the list of buttons.
+Then open <http://localhost:8000>. Serving over HTTP is recommended if audio does not play from a `file://` URL in your browser.
 
+## Privacy
+
+Everything lives in `localStorage` under the key `zenzac.v1` on that device. Export a JSON copy from Settings before clearing browser data. There are no accounts, no analytics, no cookies and no requests to any third party.
+
+## Boundaries
+
+ZenZac is a support tool, not a medical device and not a diagnosis. If you are worried about a child, speak to a GP, health visitor or school SENCO.
