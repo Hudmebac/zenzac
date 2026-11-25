@@ -2954,7 +2954,7 @@
       }).join("");
       return '<div class="card">' +
         '<div class="row-between"><div><h2 class="card-title">Sounds</h2>' +
-          '<p class="card-sub">Tap a pad. A new silly sound stops the last one; backgrounds can layer.</p></div>' +
+          '<p class="card-sub">Tap a pad. A new pad stops the last one; backgrounds can layer.</p></div>' +
           '<button type="button" class="btn" id="stopSounds">' + icon("pause") + " Stop everything</button></div>" +
         soundGroup("Background", "Calm and looping. Tap one again to stop it.", backgrounds) +
         soundGroup("Fart sounds 💨", "It is what it is. Tap a pad, or let the app surprise you.", fartPads) +
