@@ -1886,3 +1886,9 @@ html:is([data-emoji="soft"], [data-emoji="matt"], [data-emoji="gloss"]) :is(
   min-height: 1.65em;
   padding: 0.08em;
 }
+
+/* Sound control inside the joke card, so a run of jokes can be muted there. */
+.joke-tools {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; width: 100%; margin-bottom: -2px;
+}

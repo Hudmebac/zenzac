@@ -373,31 +373,52 @@
       } catch (e) {}
     }
 
-    /* Two knocks on a door. Synthesised, so it works offline. */
+    /* Three knocks on a wooden door. Slower and lower than a click: a short
+       filtered noise tap for the door, plus a low body thud underneath. */
     function knock() {
       if (!soundOn()) return;
       var c = ctxOn();
       if (!c) return;
       try {
-        [0, 0.15].forEach(function (offset, n) {
-          var t = c.currentTime + offset;
-          var len = Math.floor(c.sampleRate * 0.11);
+        var t0 = c.currentTime + 0.03;
+        [0, 0.32, 0.64].forEach(function (offset, n) {
+          var t = t0 + offset;
+          var strength = n === 1 ? 1 : 0.92;
+
+          var len = Math.floor(c.sampleRate * 0.18);
           var buf = c.createBuffer(1, len, c.sampleRate);
           var data = buf.getChannelData(0);
           for (var i = 0; i < len; i++) {
-            data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 7);
+            data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 5);
           }
           var src = c.createBufferSource();
           src.buffer = buf;
           var filter = c.createBiquadFilter();
           filter.type = "lowpass";
-          filter.frequency.value = n ? 800 : 1050;
+          filter.frequency.setValueAtTime(760, t);
+          filter.frequency.exponentialRampToValueAtTime(360, t + 0.12);
+          filter.Q.value = 1.2;
           var gain = c.createGain();
-          gain.gain.value = clamp((n ? 0.4 : 0.55) * master(), 0.02, 0.8);
+          gain.gain.setValueAtTime(0.0001, t);
+          gain.gain.exponentialRampToValueAtTime(clamp(0.5 * strength * master(), 0.02, 0.85), t + 0.008);
+          gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.16);
           src.connect(filter);
           filter.connect(gain);
           gain.connect(c.destination);
           src.start(t);
+
+          var osc = c.createOscillator();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(145 - n * 5, t);
+          osc.frequency.exponentialRampToValueAtTime(68, t + 0.13);
+          var thud = c.createGain();
+          thud.gain.setValueAtTime(0.0001, t);
+          thud.gain.exponentialRampToValueAtTime(clamp(0.26 * strength * master(), 0.015, 0.5), t + 0.01);
+          thud.gain.exponentialRampToValueAtTime(0.0001, t + 0.15);
+          osc.connect(thud);
+          thud.connect(c.destination);
+          osc.start(t);
+          osc.stop(t + 0.17);
         });
       } catch (e) {}
     }
@@ -438,6 +459,22 @@
       } catch (e) {}
     }
 
+    /* A question, not a statement. A higher pitch and a slower ending give
+       the voice somewhere to rise; how much it rises depends on the device. */
+    function ask(text) {
+      if (!soundOn()) return;
+      if (!("speechSynthesis" in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        var u = new window.SpeechSynthesisUtterance(text);
+        u.lang = "en-GB";
+        u.rate = 0.94;
+        u.pitch = 1.35;
+        u.volume = clamp(master(), 0.2, 1);
+        window.speechSynthesis.speak(u);
+      } catch (e) {}
+    }
+
     function hush() {
       if (!("speechSynthesis" in window)) return;
       try { window.speechSynthesis.cancel(); } catch (e) {}
@@ -462,6 +499,7 @@
       knock: knock,
       chime: chime,
       say: say,
+      ask: ask,
       hush: hush,
       applyMaster: applyMaster,
       isPlaying: function (id) { return !!active[id]; }
@@ -2905,10 +2943,10 @@
       if (stage === 0) {
         content = '<p class="joke-step">Step 1</p>' +
           '<p class="joke-setup">Knock knock!</p>' +
-          '<p class="tiny muted" style="margin-top:-6px">Press the door and hear the knock.</p>' +
+          '<p class="tiny muted" style="margin-top:-6px">Knock again plays the door. Who&rsquo;s there? just moves the joke on.</p>' +
           '<div class="row-wrap" style="justify-content:center">' +
-            '<button type="button" class="btn primary lg" id="jokeNext">' + icon("sound") + " Who&rsquo;s there?</button>" +
-            '<button type="button" class="btn ghost" id="jokeKnock" aria-label="Play the knock knock sound again">🔊 Knock again</button>' +
+            '<button type="button" class="btn primary lg" id="jokeNext">Who&rsquo;s there?</button>' +
+            '<button type="button" class="btn ghost" id="jokeKnock" aria-label="Play the door knock again">🔊 Knock again</button>' +
           "</div>";
       } else if (stage === 1) {
         content = '<p class="joke-step">Step 2</p>' +
@@ -2922,7 +2960,14 @@
             '<a class="btn ghost" href="#/focus">Tap game →</a>' +
           "</div>";
       }
-      return '<div class="joke-card">' + content + "</div>" +
+      var soundOnNow = state.settings.sound;
+      return '<div class="joke-card">' +
+        '<div class="joke-tools">' +
+          '<span class="tiny muted">' + (soundOnNow ? "Sound is on" : "Sound is muted") + "</span>" +
+          '<button type="button" class="btn sm ghost" id="jokeSound" aria-pressed="' + soundOnNow + '">' +
+            icon(soundOnNow ? "sound" : "mute") + (soundOnNow ? " Mute" : " Sound on") + "</button>" +
+        "</div>" +
+        content + "</div>" +
         '<div class="grid grid-2" style="margin-top:14px">' +
           '<div class="card tight"><h2 class="card-title">Make it a game</h2>' +
             '<p class="card-sub">Take turns. Whoever laughs first does the next silly dance.</p></div>' +
@@ -2934,12 +2979,33 @@
     function bindJokes() {
       var next = $("#jokeNext");
       if (next) next.addEventListener("click", function () {
-        AudioEngine.knock();
+        var stage = jokeDeck.stage;
+        var j = jokeDeck.current;
         jokeDeck.stage++;
         render();
+        if (stage === 0) AudioEngine.ask("Who's there?");
+        else if (j) AudioEngine.ask(j.setup + " who?");
       });
+
       var knock = $("#jokeKnock");
-      if (knock) knock.addEventListener("click", function () { AudioEngine.knock(); });
+      if (knock) knock.addEventListener("click", function () {
+        if (!state.settings.sound) {
+          toast("Sound is muted. Use the button above to turn it on.");
+          return;
+        }
+        AudioEngine.knock();
+      });
+
+      var soundBtn = $("#jokeSound");
+      if (soundBtn) soundBtn.addEventListener("click", function () {
+        state.settings.sound = !state.settings.sound;
+        if (!state.settings.sound) { AudioEngine.stopAll(); AudioEngine.hush(); }
+        save();
+        applyChrome();
+        render();
+        toast(state.settings.sound ? "Sound on." : "Sound muted for the jokes.");
+      });
+
       var again = $("#jokeAgain");
       if (again) again.addEventListener("click", function () {
         nextJoke();
