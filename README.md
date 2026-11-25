@@ -14,7 +14,7 @@ Open `index.html` in a browser. Everything works from a double-click; a local se
 | **Now & Next** | Two-slot routine with timer, task queue, stickers, and the house rules kept in view. |
 | **Focus** | Choice wheel with themed sets (foods, sports, colours, animals, computer, silly), Wac-A-Zac with gold/mover/grump targets and a best-rounds board, focus timer. |
 | **Journal** | Private feelings check-ins, behaviour notes, weekly chart, ranked trigger/help lists, and full edit or delete of every saved entry in the grown-ups area. |
-| **Play** | 195 gentle jokes for ages 5 to 11: 45 knock-knocks with a slower three-knock door sound, spoken questions and spoken punchlines, plus 50 animal, 50 food and 50 silly jokes. On-screen mute, master volume, one-at-a-time sound pads, and a fart soundboard (Fart sounds, labelled plainly). |
+| **Play** | 195 gentle jokes for ages 5 to 11: 45 knock-knocks with a slower three-knock door sound, a spoken Who's there? and spoken punchlines, plus 50 animal, 50 food and 50 silly jokes. On-screen mute, master volume, one-at-a-time sound pads, and a fart soundboard (Fart sounds, labelled plainly). |
 | **Compendium** | 89 practical entries in 15 categories - including nutrition, health, activities and behaviour tracking - searchable and filterable, plus links into the matching app tool. |
 | **Learn** | Thirteen longer guides for grown-ups, plus official guidance and charity links (NHS, NICE, NAS, ADHD Foundation, IPSEA, Contact). |
 | **Parent support** | The long version: 45 entries across 13 topics, searchable, with scripts, a GP appointment guide, medication questions and a direct email contact. |

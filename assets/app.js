@@ -537,7 +537,7 @@
 
     /* A question, not a statement. A higher pitch and a slower ending give
        the voice somewhere to rise; how much it rises depends on the device. */
-    function ask(text, after) {
+    function ask(text) {
       if (!soundOn()) return;
       if (!("speechSynthesis" in window)) return;
       try {
@@ -547,7 +547,6 @@
         u.rate = 0.94;
         u.pitch = 1.35;
         u.volume = clamp(master(), 0.2, 1);
-        if (after) u.onend = after;
         window.speechSynthesis.speak(u);
       } catch (e) {}
     }
@@ -3137,9 +3136,7 @@
         render();
         if (!isKnock) return;
         if (stage === 0) AudioEngine.ask("Who's there?");
-        else if (j) AudioEngine.ask(j.setup + " who?", function () {
-          if (jokeDeck.current === j) AudioEngine.tell(j.punchline);
-        });
+        else if (j) AudioEngine.tell(j.punchline);
       });
 
       var knock = $("#jokeKnock");
