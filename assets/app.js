@@ -63,6 +63,19 @@
   var DEFAULT_MIX = { waves: 0.55, rain: 0.4, white: 0.35, breath: 0.5, tranquil: 0.35, wind: 0.35, whale: 0.3,
     pink: 0.3, brown: 0.35, fan: 0.3, heart: 0.35 };
 
+  var LIGHT_THEMES = ["meadow", "blossom", "seaglass"];
+  var DARK_THEMES = ["dusk", "twilight", "forest"];
+  var APPEARANCE_MODES = [
+    { id: "light",    name: "Light",         note: "Warm, clean surfaces with dark text." },
+    { id: "dark",     name: "Dark",          note: "Dim surfaces for evenings and low glare." },
+    { id: "contrast", name: "High contrast", note: "Black, white and bold yellow." }
+  ];
+
+  function themeMode(id) {
+    if (id === "contrast") return "contrast";
+    return DARK_THEMES.indexOf(id) > -1 ? "dark" : "light";
+  }
+
   var DEFAULTS = {
     version: 1,
     settings: {
@@ -80,6 +93,8 @@
       whackLevel: "normal",
       spinTopic: "mix",
       jokeTheme: "knock",
+      lightTheme: "meadow",
+      darkTheme: "dusk",
       mix: DEFAULT_MIX
     },
     profile: { done: false, mode: "", age: "", hard: [], helps: [], sensory: [], updated: 0 },
@@ -113,6 +128,12 @@
       base.settings.voice = !!s.voice;
       base.settings.mix = Object.assign({}, DEFAULT_MIX, s.mix || {});
       base.settings.theme = typeof s.theme === "string" && s.theme ? s.theme : "dusk";
+      base.settings.lightTheme = LIGHT_THEMES.indexOf(s.lightTheme) > -1
+        ? s.lightTheme
+        : (LIGHT_THEMES.indexOf(base.settings.theme) > -1 ? base.settings.theme : "meadow");
+      base.settings.darkTheme = DARK_THEMES.indexOf(s.darkTheme) > -1
+        ? s.darkTheme
+        : (DARK_THEMES.indexOf(base.settings.theme) > -1 ? base.settings.theme : "dusk");
       base.settings.showHistory = s.showHistory === true;
       base.settings.emojiStyle = typeof s.emojiStyle === "string" ? s.emojiStyle : "basic";
       base.settings.font = typeof s.font === "string" ? s.font : "default";
@@ -4115,6 +4136,8 @@
 
   VIEWS.settings = function (view) {
     function render() {
+      var mode = themeMode(state.settings.theme);
+      var paletteList = D.themes.filter(function (t) { return themeMode(t.id) === mode; });
       view.innerHTML = pageHead("Settings", "Make it fit your family",
         "Changes are saved on this device straight away.") +
         '<div class="settings-jump" role="group" aria-label="Jump to a settings section">' +
@@ -4195,24 +4218,39 @@
         '</div><p class="tiny muted" style="margin-top:12px">Soft, Matt and Gloss pick up the tint of whichever colour palette you choose. Basic uses the plain emoji your device draws.</p></div>' +
 
         '<div class="section-head"><h2 class="section-title" id="setColours">Colours</h2>' +
-          '<span class="tiny muted">Six low-glare palettes, shown as they will look. Saved straight away.</span></div>' +
-        '<div class="card"><div class="theme-grid" role="group" aria-label="Colour theme">' +
-          D.themes.map(function (t) {
-            var on = state.settings.theme === t.id;
-            return '<button type="button" class="theme-btn' + (on ? " is-on" : "") + '" data-pick-theme="' + t.id +
-              '" aria-pressed="' + (on ? "true" : "false") + '" aria-label="' + esc(t.name) + ": " + esc(t.note) + '">' +
-              '<span class="theme-mini" aria-hidden="true" style="background:' + t.sw[0] + ";color:" + t.ink + '">' +
-                '<span class="theme-mini-row"><span class="theme-mini-title">Aa</span>' +
-                  '<span class="theme-mini-pill" style="background:' + t.sw[1] + ";color:" + t.accentInk + '">Start</span></span>' +
-                '<span class="theme-mini-copy" style="color:' + t.mute + '">A calm corner</span>' +
-              "</span>" +
-              '<span class="theme-swatch" aria-hidden="true">' + t.sw.map(function (c) {
-                return '<i style="background:' + c + '"></i>';
-              }).join("") + "</span>" +
-              '<span class="theme-name">' + esc(t.name) + "</span>" +
-              '<span class="theme-note">' + esc(t.note) + "</span></button>";
-          }).join("") +
-        "</div></div>" +
+          '<span class="tiny muted">Light, dark or high contrast. Three palettes each for light and dark.</span></div>' +
+        '<div class="card">' +
+          '<div class="appearance-grid" role="group" aria-label="Appearance">' +
+            APPEARANCE_MODES.map(function (m) {
+              var on = m.id === mode;
+              return '<button type="button" class="appearance-btn' + (on ? " is-on" : "") +
+                '" data-pick-mode="' + m.id + '" aria-pressed="' + on + '">' +
+                '<span class="appearance-swatch ' + m.id + '" aria-hidden="true"></span>' +
+                '<span class="appearance-copy"><strong>' + esc(m.name) + "</strong><small>" + esc(m.note) + "</small></span>" +
+                "</button>";
+            }).join("") +
+          "</div>" +
+          (mode === "contrast"
+            ? '<p class="card-sub" style="margin-top:14px">High contrast uses black, white and bold yellow. Choose Light or Dark to use the softer palettes.</p>'
+            : '<h3 class="mini-title" style="margin:18px 0 10px">' + (mode === "dark" ? "Dark palettes" : "Light palettes") + "</h3>" +
+              '<div class="theme-grid" role="group" aria-label="Colour palette">' +
+                paletteList.map(function (t) {
+                  var on = state.settings.theme === t.id;
+                  return '<button type="button" class="theme-btn' + (on ? " is-on" : "") + '" data-pick-theme="' + t.id +
+                    '" aria-pressed="' + (on ? "true" : "false") + '" aria-label="' + esc(t.name) + ": " + esc(t.note) + '">' +
+                    '<span class="theme-mini" aria-hidden="true" style="background:' + t.sw[0] + ";color:" + t.ink + '">' +
+                      '<span class="theme-mini-row"><span class="theme-mini-title">Aa</span>' +
+                        '<span class="theme-mini-pill" style="background:' + t.sw[1] + ";color:" + t.accentInk + '">Start</span></span>' +
+                      '<span class="theme-mini-copy" style="color:' + t.mute + '">A calm corner</span>' +
+                    "</span>" +
+                    '<span class="theme-swatch" aria-hidden="true">' + t.sw.map(function (c) {
+                      return '<i style="background:' + c + '"></i>';
+                    }).join("") + "</span>" +
+                    '<span class="theme-name">' + esc(t.name) + "</span>" +
+                    '<span class="theme-note">' + esc(t.note) + "</span></button>";
+                }).join("") +
+              "</div>") +
+        "</div>" +
 
         '<div class="section-head"><h2 class="section-title" id="setData">Your data</h2></div>' +
         '<div class="card">' +
@@ -4300,9 +4338,31 @@
         });
       });
 
+      $$("[data-pick-mode]", view).forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var nextMode = btn.getAttribute("data-pick-mode");
+          if (nextMode === themeMode(state.settings.theme)) return;
+          var next = nextMode === "light" ? state.settings.lightTheme
+            : nextMode === "dark" ? state.settings.darkTheme
+            : "contrast";
+          var known = D.themes.some(function (t) { return t.id === next; });
+          if (!known) next = nextMode === "dark" ? "dusk" : "meadow";
+          state.settings.theme = next;
+          save();
+          applyChrome();
+          var y = window.scrollY;
+          render();
+          try { window.scrollTo(0, y); } catch (e) {}
+          toast(nextMode === "light" ? "Light mode." : nextMode === "dark" ? "Dark mode." : "High contrast on.");
+        });
+      });
+
       $$("[data-pick-theme]", view).forEach(function (btn) {
         btn.addEventListener("click", function () {
-          state.settings.theme = btn.getAttribute("data-pick-theme");
+          var id = btn.getAttribute("data-pick-theme");
+          state.settings.theme = id;
+          if (themeMode(id) === "light") state.settings.lightTheme = id;
+          else if (themeMode(id) === "dark") state.settings.darkTheme = id;
           save();
           applyChrome();
           $$("[data-pick-theme]", view).forEach(function (b) {
@@ -4310,7 +4370,7 @@
             b.classList.toggle("is-on", on);
             b.setAttribute("aria-pressed", on ? "true" : "false");
           });
-          toast("Colours changed.");
+          toast("Palette changed.");
         });
       });
 

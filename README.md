@@ -18,13 +18,13 @@ Open `index.html` in a browser. Everything works from a double-click; a local se
 | **Compendium** | 89 practical entries in 15 categories - including nutrition, health, activities and behaviour tracking - searchable and filterable, plus links into the matching app tool. |
 | **Learn** | Thirteen longer guides for grown-ups, plus official guidance and charity links (NHS, NICE, NAS, ADHD Foundation, IPSEA, Contact). |
 | **Parent support** | The long version: 45 entries across 13 topics, searchable, with scripts, a GP appointment guide, medication questions and a direct email contact. |
-| **Settings** | Name, sound, spoken cues, calm motion, bigger text, four icon finishes (Basic, Soft, Matt, Gloss), four clear font choices, six soft palettes with live previews, creator contact and support link, plan summary, export and delete. |
+| **Settings** | Name, sound, spoken cues, calm motion, bigger text, four icon finishes (Basic, Soft, Matt, Gloss), four clear font choices, Light, Dark and High contrast modes with live palette previews, creator contact and support link, plan summary, export and delete. |
 
 ## The plan
 
 The set-up wizard builds a local profile and a **house rules** set. The profile is a starting point, not a label: it changes what Home puts first and which shortcuts appear. Rules are short agreements shown on Home and Now & Next, and they can be toggled, rewritten or added to at any time.
 
-Six palettes are included - three light (Meadow, Blossom, Sea glass) and three low-glare dark (Dusk, Twilight, Forest). No pure white, no external fonts, no CDN icons. Body, secondary and muted text all clear WCAG AA contrast in every palette, and the Settings cards preview each palette before you choose it.
+Light mode offers Meadow, Blossom and Sea glass. Dark mode offers Dusk, Twilight and Forest. The app remembers the last palette you used in Light and in Dark. High contrast uses a black background, white text and bold yellow and cyan accents. No pure white, no external fonts, no CDN icons. Body, secondary and muted text all clear WCAG AA contrast in every palette, and the Settings cards preview each palette before you choose it.
 
 Emoji can be shown in four finishes - **Basic**, **Soft**, **Matt** or **Gloss**. Soft, Matt and Gloss take their tint from the active palette. The icon set was reviewed for meaning and for older devices, so the newest or easily-misread pictograms were swapped for clearer alternatives.
 

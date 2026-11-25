@@ -5,11 +5,11 @@ window.ZenData = (function () {
   /* Ordered best first on purpose: a child should meet the happiest face first,
      not the cross one. Values stay the same so saved check-ins still read right. */
   var moods = [
-    { v: 5, key: "happy",  label: "Happy",  color: "#5eead4", hint: "Lovely. Let's keep that feeling." },
-    { v: 4, key: "calm",   label: "Calm",   color: "#7ee2c4", hint: "Nice and steady. Keep it going." },
-    { v: 3, key: "ok",     label: "OK",     color: "#ffd166", hint: "Right in the middle. That's okay." },
-    { v: 2, key: "wobbly", label: "Wobbly", color: "#ffb86b", hint: "A bit wobbly. A slow breath might help." },
-    { v: 1, key: "cross",  label: "Cross",  color: "#ff8f8a", hint: "Big feelings. Let's let some steam out." }
+    { v: 5, key: "happy",  label: "Happy",  color: "var(--mood-happy)", hint: "Lovely. Let's keep that feeling." },
+    { v: 4, key: "calm",   label: "Calm",   color: "var(--mood-calm)", hint: "Nice and steady. Keep it going." },
+    { v: 3, key: "ok",     label: "OK",     color: "var(--mood-ok)", hint: "Right in the middle. That's okay." },
+    { v: 2, key: "wobbly", label: "Wobbly", color: "var(--mood-wobbly)", hint: "A bit wobbly. A slow breath might help." },
+    { v: 1, key: "cross",  label: "Cross",  color: "var(--mood-cross)", hint: "Big feelings. Let's let some steam out." }
   ];
 
   function mood(v) {
@@ -552,12 +552,13 @@ window.ZenData = (function () {
   /* ------------------------- profiles & themes ------------------------- */
 
   var themes = [
-    { id: "dusk",     name: "Dusk",      note: "Deep blue with mint. Low glare for evenings.",  sw: ["#0b1422", "#4fe3c1", "#8fb4ff", "#f2f7fb", "#a4b6cc"], ink: "#f2f7fb", mute: "#a4b6cc", accentInk: "#062421", panel: "#142235" },
-    { id: "meadow",   name: "Meadow",    note: "Soft daylight, sage and cream. The gentlest light.", sw: ["#f7f2e8", "#2f8f78", "#a9c7a0", "#28322c", "#55625a"], ink: "#28322c", mute: "#55625a", accentInk: "#0e2a23", panel: "#fffdf7" },
-    { id: "blossom",  name: "Blossom",   note: "Warm blush and lilac. Quiet, not babyish.", sw: ["#fbf1f2", "#a4597a", "#b79ad6", "#3a2c33", "#665059"], ink: "#3a2c33", mute: "#665059", accentInk: "#2c1420", panel: "#fffafa" },
-    { id: "seaglass", name: "Sea glass", note: "Cool aqua and pale sand. Easy on bright days.", sw: ["#edf5f4", "#2b7f8c", "#8fbccb", "#233437", "#51686d"], ink: "#233437", mute: "#51686d", accentInk: "#06272b", panel: "#fcfefe" },
-    { id: "twilight", name: "Twilight",  note: "Plum and lavender. Dim, soft and low-contrast.", sw: ["#15111f", "#c9b6ff", "#ffb3c7", "#f4efff", "#b5a8cb"], ink: "#f4efff", mute: "#b5a8cb", accentInk: "#211636", panel: "#241e33" },
-    { id: "forest",   name: "Forest",    note: "Deep green with moss and amber. Very low glare.", sw: ["#0d1712", "#9adcb0", "#e6c07a", "#eef7ef", "#adc0b1"], ink: "#eef7ef", mute: "#adc0b1", accentInk: "#0c2318", panel: "#16241c" }
+    { id: "dusk",     name: "Dusk",         note: "Deep blue with mint. Low glare for evenings.",  sw: ["#0b1422", "#4fe3c1", "#8fb4ff", "#f2f7fb", "#a4b6cc"], ink: "#f2f7fb", mute: "#a4b6cc", accentInk: "#062421", panel: "#142235" },
+    { id: "meadow",   name: "Meadow",       note: "Soft cream and sage, with clean warm cards.",   sw: ["#f4efe4", "#1f6f5b", "#a9d8c2", "#24312a", "#4c5a52"], ink: "#24312a", mute: "#4c5a52", accentInk: "#06241d", panel: "#fffdf8" },
+    { id: "blossom",  name: "Blossom",      note: "Blush and plum, with fresh white cards.",        sw: ["#fbf0f1", "#8f3457", "#f3c3d1", "#362830", "#5c454f"], ink: "#362830", mute: "#5c454f", accentInk: "#2b0f1a", panel: "#fffafa" },
+    { id: "seaglass", name: "Sea glass",    note: "Cool aqua and pale stone, easy on bright days.",  sw: ["#edf4f3", "#17636d", "#b4ddda", "#1e3033", "#465e63"], ink: "#1e3033", mute: "#465e63", accentInk: "#042327", panel: "#fcfffe" },
+    { id: "twilight", name: "Twilight",     note: "Plum and lavender. Dim, soft and low-glare.",    sw: ["#15111f", "#c9b6ff", "#ffb3c7", "#f4efff", "#b5a8cb"], ink: "#f4efff", mute: "#b5a8cb", accentInk: "#211636", panel: "#241e33" },
+    { id: "forest",   name: "Forest",       note: "Deep green with moss and amber. Very low glare.", sw: ["#0d1712", "#9adcb0", "#e6c07a", "#eef7ef", "#adc0b1"], ink: "#eef7ef", mute: "#adc0b1", accentInk: "#0c2318", panel: "#16241c" },
+    { id: "contrast", name: "High contrast", note: "Black, white and bold yellow. Maximum legibility.", sw: ["#000000", "#ffe14d", "#7fe8ff", "#ffffff", "#e8e8e8"], ink: "#ffffff", mute: "#e8e8e8", accentInk: "#000000", panel: "#111111" }
   ];
 
   var modes = [
