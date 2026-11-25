@@ -1892,3 +1892,7 @@ html:is([data-emoji="soft"], [data-emoji="matt"], [data-emoji="gloss"]) :is(
   display: flex; align-items: center; justify-content: space-between;
   gap: 12px; width: 100%; margin-bottom: -2px;
 }
+
+/* Joke deck picker above the card, so the four sets are obvious at a glance. */
+.joke-decks { margin-bottom: 14px; }
+.joke-decks .chips { margin-top: 8px; }

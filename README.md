@@ -14,7 +14,7 @@ Open `index.html` in a browser. Everything works from a double-click; a local se
 | **Now & Next** | Two-slot routine with timer, task queue, stickers, and the house rules kept in view. |
 | **Focus** | Choice wheel with themed sets (foods, sports, colours, animals, computer, silly), Wac-A-Zac with gold/mover/grump targets and a best-rounds board, focus timer. |
 | **Journal** | Private feelings check-ins, behaviour notes, weekly chart, ranked trigger/help lists, and full edit or delete of every saved entry in the grown-ups area. |
-| **Play** | Knock-knock jokes with a slower three-knock door sound, spoken questions, an on-screen mute, and a fart soundboard (Fart sounds, labelled plainly). |
+| **Play** | 195 gentle jokes for ages 5 to 11: 45 knock-knocks with a slower three-knock door sound and spoken questions, plus 50 animal, 50 food and 50 silly jokes. On-screen mute, and a fart soundboard (Fart sounds, labelled plainly). |
 | **Compendium** | 89 practical entries in 15 categories - including nutrition, health, activities and behaviour tracking - searchable and filterable, plus links into the matching app tool. |
 | **Learn** | Thirteen longer guides for grown-ups, plus official guidance and charity links (NHS, NICE, NAS, ADHD Foundation, IPSEA, Contact). |
 | **Parent support** | The long version: 45 entries across 13 topics, searchable, with scripts, a GP appointment guide, medication questions and a direct email contact. |
@@ -37,7 +37,7 @@ ZenZac is built by Craig Heggie, a parent of children with ADHD and autism. The 
 ```
 index.html            shell, SVG icon sprite, inline palette bootstrap
 assets/theme.css      design system, palettes, layout (rail → bottom tabs)
-assets/data.js        moods, sounds, jokes, guides, spinner sets, official sources, setup questions, rule defaults
+assets/data.js        moods, sounds, joke decks, guides, spinner sets, official sources, setup questions, rule defaults
 assets/compendium.js  89 entries across 15 categories
 assets/support.js     45 long-form parent support entries across 13 topics
 assets/app.js         state, storage, audio, router and every view

@@ -78,6 +78,7 @@
       whackTheme: "aliens",
       whackLevel: "normal",
       spinTopic: "mix",
+      jokeTheme: "knock",
       mix: DEFAULT_MIX
     },
     profile: { done: false, mode: "", age: "", hard: [], helps: [], sensory: [], updated: 0 },
@@ -117,6 +118,7 @@
       base.settings.whackTheme = typeof s.whackTheme === "string" ? s.whackTheme : "aliens";
       base.settings.whackLevel = typeof s.whackLevel === "string" ? s.whackLevel : "normal";
       base.settings.spinTopic = typeof s.spinTopic === "string" ? s.spinTopic : "mix";
+      base.settings.jokeTheme = typeof s.jokeTheme === "string" ? s.jokeTheme : "knock";
       var p = saved.profile || {};
       base.profile.done = !!p.done;
       base.profile.mode = typeof p.mode === "string" ? p.mode : "";
@@ -2905,19 +2907,27 @@
   var playTab = "jokes";
   var jokeDeck = { order: [], pos: 0, stage: 0, current: null };
 
+  function jokeTheme() {
+    var chosen = D.jokeThemes.filter(function (t) {
+      return t.id === state.settings.jokeTheme;
+    })[0];
+    return chosen || D.jokeThemes[0];
+  }
+
   function nextJoke() {
+    var list = jokeTheme().jokes;
     if (jokeDeck.pos >= jokeDeck.order.length) {
-      jokeDeck.order = shuffle(D.jokes.map(function (_, i) { return i; }));
+      jokeDeck.order = shuffle(list.map(function (_, i) { return i; }));
       jokeDeck.pos = 0;
     }
-    jokeDeck.current = D.jokes[jokeDeck.order[jokeDeck.pos++]];
+    jokeDeck.current = list[jokeDeck.order[jokeDeck.pos++]];
     jokeDeck.stage = 0;
   }
 
   VIEWS.play = function (view) {
     function render() {
       view.innerHTML = pageHead("Play", "Silly, on purpose",
-        "Laughter is a real reset, and there is nothing to get right here. Two tabs, no scores.") +
+        "Gentle jokes for ages 5 to 11: knock-knocks, animals, food and silly stuff. No scores, no pressure.") +
         '<div class="pill-toggle" role="group" aria-label="Play type">' +
           '<button type="button" data-ptab="jokes" aria-pressed="' + (playTab === "jokes") + '">Jokes</button>' +
           '<button type="button" data-ptab="sounds" aria-pressed="' + (playTab === "sounds") + '">Sounds</button>' +
@@ -2936,32 +2946,60 @@
     }
 
     function jokesPanel() {
+      var theme = jokeTheme();
+      var isKnock = theme.id === "knock";
       if (!jokeDeck.current) nextJoke();
       var j = jokeDeck.current;
       var stage = jokeDeck.stage;
       var content;
-      if (stage === 0) {
+
+      if (isKnock) {
+        if (stage === 0) {
+          content = '<p class="joke-step">Step 1</p>' +
+            '<p class="joke-setup">Knock knock!</p>' +
+            '<p class="tiny muted" style="margin-top:-6px">Knock again plays the door. Who&rsquo;s there? just moves the joke on.</p>' +
+            '<div class="row-wrap" style="justify-content:center">' +
+              '<button type="button" class="btn primary lg" id="jokeNext">Who&rsquo;s there?</button>' +
+              '<button type="button" class="btn ghost" id="jokeKnock" aria-label="Play the door knock again">🔊 Knock again</button>' +
+            "</div>";
+        } else if (stage === 1) {
+          content = '<p class="joke-step">Step 2</p>' +
+            '<p class="joke-setup">' + esc(j.setup) + "</p>" +
+            '<button type="button" class="btn primary lg" id="jokeNext">' + esc(j.setup) + " who?</button>";
+        } else {
+          content = '<p class="joke-step">The punchline</p>' +
+            '<p class="joke-punch">' + esc(j.punchline) + "</p>" +
+            '<div class="row-wrap" style="justify-content:center">' +
+              '<button type="button" class="btn primary" id="jokeAgain">Another joke</button>' +
+              '<a class="btn ghost" href="#/focus">Tap game →</a>' +
+            "</div>";
+        }
+      } else if (stage === 0) {
         content = '<p class="joke-step">Step 1</p>' +
-          '<p class="joke-setup">Knock knock!</p>' +
-          '<p class="tiny muted" style="margin-top:-6px">Knock again plays the door. Who&rsquo;s there? just moves the joke on.</p>' +
-          '<div class="row-wrap" style="justify-content:center">' +
-            '<button type="button" class="btn primary lg" id="jokeNext">Who&rsquo;s there?</button>' +
-            '<button type="button" class="btn ghost" id="jokeKnock" aria-label="Play the door knock again">🔊 Knock again</button>' +
-          "</div>";
-      } else if (stage === 1) {
-        content = '<p class="joke-step">Step 2</p>' +
           '<p class="joke-setup">' + esc(j.setup) + "</p>" +
-          '<button type="button" class="btn primary lg" id="jokeNext">' + esc(j.setup) + " who?</button>";
+          '<p class="tiny muted" style="margin-top:-6px">Read it out loud. Guess the answer before you tap.</p>' +
+          '<button type="button" class="btn primary lg" id="jokeNext">What&rsquo;s the answer?</button>';
       } else {
-        content = '<p class="joke-step">The punchline</p>' +
+        content = '<p class="joke-step">The answer</p>' +
           '<p class="joke-punch">' + esc(j.punchline) + "</p>" +
           '<div class="row-wrap" style="justify-content:center">' +
             '<button type="button" class="btn primary" id="jokeAgain">Another joke</button>' +
             '<a class="btn ghost" href="#/focus">Tap game →</a>' +
           "</div>";
       }
+
+      var decks = '<div class="joke-decks">' +
+        '<p class="tiny muted">Choose a deck. Every joke is for ages 5 to 11.</p>' +
+        '<div class="chips" role="group" aria-label="Choose a joke theme">' +
+          D.jokeThemes.map(function (t) {
+            var on = t.id === theme.id;
+            return '<button type="button" class="chip' + (on ? " is-on" : "") + '" data-joke-theme="' + t.id +
+              '" aria-pressed="' + on + '"><span aria-hidden="true">' + t.emoji + "</span> " + esc(t.name) + "</button>";
+          }).join("") +
+        "</div></div>";
+
       var soundOnNow = state.settings.sound;
-      return '<div class="joke-card">' +
+      return decks + '<div class="joke-card">' +
         '<div class="joke-tools">' +
           '<span class="tiny muted">' + (soundOnNow ? "Sound is on" : "Sound is muted") + "</span>" +
           '<button type="button" class="btn sm ghost" id="jokeSound" aria-pressed="' + soundOnNow + '">' +
@@ -2971,18 +3009,37 @@
         '<div class="grid grid-2" style="margin-top:14px">' +
           '<div class="card tight"><h2 class="card-title">Make it a game</h2>' +
             '<p class="card-sub">Take turns. Whoever laughs first does the next silly dance.</p></div>' +
-          '<div class="card tight"><h2 class="card-title">' + D.jokes.length + " jokes in the deck</h2>" +
-            '<p class="card-sub">Shuffled, so you will not get the same one twice in a row.</p></div>' +
+          '<div class="card tight"><h2 class="card-title">' + theme.jokes.length + " " +
+            (isKnock ? "knock-knock" : esc(theme.id)) + " jokes</h2>" +
+            '<p class="card-sub">' + (isKnock
+              ? "This deck is knock-knock jokes only. Animals, Food and Silly each have 50."
+              : "A full deck of 50, shuffled so the same joke waits its turn.") + "</p></div>" +
         "</div>";
     }
 
     function bindJokes() {
+      $$("[data-joke-theme]", view).forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var id = btn.getAttribute("data-joke-theme");
+          if (id === jokeTheme().id) return;
+          state.settings.jokeTheme = id;
+          jokeDeck.order = [];
+          jokeDeck.pos = 0;
+          jokeDeck.current = null;
+          jokeDeck.stage = 0;
+          save();
+          render();
+        });
+      });
+
+      var isKnock = jokeTheme().id === "knock";
       var next = $("#jokeNext");
       if (next) next.addEventListener("click", function () {
         var stage = jokeDeck.stage;
         var j = jokeDeck.current;
         jokeDeck.stage++;
         render();
+        if (!isKnock) return;
         if (stage === 0) AudioEngine.ask("Who's there?");
         else if (j) AudioEngine.ask(j.setup + " who?");
       });
