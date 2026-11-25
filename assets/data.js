@@ -91,17 +91,17 @@ window.ZenData = (function () {
   ];
 
   var ambience = [
-    { id: "waves",     name: "Ocean waves",    file: "waves.mp3",         emoji: "🌊", vol: 0.55 },
-    { id: "rain",      name: "Rain on glass",  file: "",                  emoji: "🌧️", vol: 0.4, synth: "rain" },
-    { id: "white",     name: "White noise",    file: "white_noise.mp3",   emoji: "☁️", vol: 0.35 },
-    { id: "breath",    name: "Slow breathing", file: "slow-breathing.mp3", emoji: "🫧", vol: 0.5 },
-    { id: "tranquil",  name: "Tranquil music", file: "tranquil.mp3",      emoji: "🎵", vol: 0.35 },
-    { id: "wind",      name: "Soft wind",      file: "wind_sounds.mp3",   emoji: "🍃", vol: 0.35 },
-    { id: "whale",     name: "Whale song",     file: "whale_sounds.mp3",  emoji: "🐋", vol: 0.3 },
-    { id: "pink",      name: "Pink noise",      file: "",                  emoji: "🌸", vol: 0.3,  synth: "pink",  sensory: true },
-    { id: "brown",     name: "Brown noise",     file: "",                  emoji: "🟤", vol: 0.35, synth: "brown", sensory: true },
-    { id: "fan",       name: "Fan hum",         file: "",                  emoji: "🌀", vol: 0.3,  synth: "fan",   sensory: true },
-    { id: "heart",     name: "Slow heartbeat",  file: "",                  emoji: "💗", vol: 0.35, synth: "heart", sensory: true }
+    { id: "waves",     name: "Ocean waves",    file: "waves.mp3",         emoji: "🌊", vol: 0.2 },
+    { id: "rain",      name: "Rain on glass",  file: "",                  emoji: "🌧️", vol: 0.2, synth: "rain" },
+    { id: "white",     name: "White noise",    file: "white_noise.mp3",   emoji: "☁️", vol: 0.2 },
+    { id: "breath",    name: "Slow breathing", file: "slow-breathing.mp3", emoji: "🫧", vol: 0.2 },
+    { id: "tranquil",  name: "Tranquil music", file: "tranquil.mp3",      emoji: "🎵", vol: 0.2 },
+    { id: "wind",      name: "Soft wind",      file: "wind_sounds.mp3",   emoji: "🍃", vol: 0.2 },
+    { id: "whale",     name: "Whale song",     file: "whale_sounds.mp3",  emoji: "🐋", vol: 0.2 },
+    { id: "pink",      name: "Pink noise",      file: "",                  emoji: "🌸", vol: 0.2,  synth: "pink",  sensory: true },
+    { id: "brown",     name: "Brown noise",     file: "",                  emoji: "🟤", vol: 0.2, synth: "brown", sensory: true },
+    { id: "fan",       name: "Fan hum",         file: "",                  emoji: "🌀", vol: 0.2,  synth: "fan",   sensory: true },
+    { id: "heart",     name: "Slow heartbeat",  file: "",                  emoji: "💗", vol: 0.2, synth: "heart", sensory: true }
   ];
 
   var knockJokes = [

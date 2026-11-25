@@ -60,8 +60,13 @@
 
   /* ------------------------------- state ------------------------------- */
 
-  var DEFAULT_MIX = { waves: 0.55, rain: 0.4, white: 0.35, breath: 0.5, tranquil: 0.35, wind: 0.35, whale: 0.3,
+  /* Start every Calm sound low. A slider is there when more is wanted. */
+  var LOW_MIX = 0.2;
+  var MIX_VERSION = 2;
+  var LEGACY_MIX = { waves: 0.55, rain: 0.4, white: 0.35, breath: 0.5, tranquil: 0.35, wind: 0.35, whale: 0.3,
     pink: 0.3, brown: 0.35, fan: 0.3, heart: 0.35 };
+  var DEFAULT_MIX = { waves: LOW_MIX, rain: LOW_MIX, white: LOW_MIX, breath: LOW_MIX, tranquil: LOW_MIX, wind: LOW_MIX, whale: LOW_MIX,
+    pink: LOW_MIX, brown: LOW_MIX, fan: LOW_MIX, heart: LOW_MIX };
 
   var LIGHT_THEMES = ["meadow", "blossom", "seaglass"];
   var DARK_THEMES = ["dusk", "twilight", "forest"];
@@ -95,7 +100,8 @@
       jokeTheme: "knock",
       lightTheme: "meadow",
       darkTheme: "dusk",
-      mix: DEFAULT_MIX
+      mix: DEFAULT_MIX,
+      mixDefaults: MIX_VERSION
     },
     profile: { done: false, mode: "", age: "", hard: [], helps: [], sensory: [], updated: 0 },
     rules: [],
@@ -127,6 +133,14 @@
       base.settings.bigText = !!s.bigText;
       base.settings.voice = !!s.voice;
       base.settings.mix = Object.assign({}, DEFAULT_MIX, s.mix || {});
+      /* Older installs saved the louder defaults. Lower only values still
+         sitting on those defaults; anything the user chose is kept. */
+      if (s.mixDefaults !== MIX_VERSION) {
+        Object.keys(LEGACY_MIX).forEach(function (id) {
+          if (base.settings.mix[id] === LEGACY_MIX[id]) base.settings.mix[id] = LOW_MIX;
+        });
+        base.settings.mixDefaults = MIX_VERSION;
+      }
       base.settings.theme = typeof s.theme === "string" && s.theme ? s.theme : "dusk";
       base.settings.lightTheme = LIGHT_THEMES.indexOf(s.lightTheme) > -1
         ? s.lightTheme
@@ -216,7 +230,7 @@
     function master() { return clamp(state.settings.volume, 0, 1); }
     function mixFor(id) {
       var v = state.settings.mix[id];
-      return typeof v === "number" ? v : 0.4;
+      return typeof v === "number" ? v : LOW_MIX;
     }
 
     function metaFor(id) {
@@ -1709,7 +1723,7 @@
             "</div>";
           }).join("") +
         "</div>" +
-        '<p class="tiny muted" style="margin-top:12px">Nothing autoplays. Big files load only when you tap play.</p>' +
+        '<p class="tiny muted" style="margin-top:12px">Nothing autoplays and levels start low. Big files load only when you tap play.</p>' +
       "</div>";
     }
 
