@@ -483,19 +483,23 @@ input[type="range"]::-moz-range-thumb {
 .hero p { color: var(--ink-2); margin-top: 8px; max-width: 52ch; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
 
-/* Wordmark — ZENZAC with each letter turning slowly. The lowercase e and n
-   read as other letters at half turn, which is what made the old logo work. */
+/* Wordmark — ZENZAC drawn as shapes, not typed. e/a and n/c are one glyph
+   each, so half a turn turns one letter into its partner. */
 .wordmark {
-  display: flex; align-items: baseline;
-  font-weight: 800; font-size: clamp(1.55rem, 1.15rem + 1.7vw, 2.15rem);
-  line-height: 1; letter-spacing: -0.02em;
-  color: var(--ink); margin: 0 0 14px;
+  display: flex; align-items: center;
+  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2rem);
+  line-height: 1; color: var(--ink); margin: 0 0 14px;
 }
 .wordmark .wm-l {
-  display: inline-block; width: 0.78em; text-align: center;
-  transform-origin: 50% 52%;
-  animation: wm-turn 9s linear infinite;
-  animation-delay: calc(var(--l) * 0.18s);
+  display: block; width: 0.8em; height: 1em;
+  transform-origin: 50% 50%;
+  animation: wm-turn 12s linear infinite;
+  animation-delay: calc(var(--p) * 0.9s);
+}
+.wordmark svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.wordmark svg g {
+  fill: none; stroke: currentColor; stroke-width: 9;
+  stroke-linecap: round; stroke-linejoin: round;
 }
 @keyframes wm-turn {
   from { transform: rotate(0deg); }

@@ -766,10 +766,30 @@
       (sub ? '<p class="page-sub">' + sub + "</p>" : "") + "</div>";
   }
 
+  /* The wordmark is drawn, not typed, so the pairs are literally one shape:
+     e and a share the first glyph, n and c share the second, and the second
+     letter of each pair starts half a turn round. Turn a letter and it becomes
+     its partner — that is what made the old logo work. */
+  var WM_GLYPHS = {
+    z: '<path d="M28 28h44L28 72h44"/>',
+    ae: '<path d="M74 28a26 26 0 1 0 0 44"/><path d="M24 50h26"/><path d="M76 50v26"/>',
+    nc: '<path d="M26 24v52"/><path d="M26 44a26 26 0 0 1 26 26v6"/>'
+  };
+
   function wordmarkHTML() {
+    var letters = [
+      { glyph: "z",  turn: 0,   phase: 0 },
+      { glyph: "ae", turn: 0,   phase: 1 },
+      { glyph: "nc", turn: 0,   phase: 2 },
+      { glyph: "z",  turn: 0,   phase: 3 },
+      { glyph: "ae", turn: 180, phase: 1 },
+      { glyph: "nc", turn: 180, phase: 2 }
+    ];
     return '<div class="wordmark" role="img" aria-label="ZenZac">' +
-      ["Z", "e", "n", "Z", "a", "c"].map(function (ch, i) {
-        return '<span class="wm-l" style="--l:' + i + '">' + ch + "</span>";
+      letters.map(function (l) {
+        return '<span class="wm-l" style="--p:' + l.phase + '">' +
+          '<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">' +
+          '<g transform="rotate(' + l.turn + ' 50 50)">' + WM_GLYPHS[l.glyph] + "</g></svg></span>";
       }).join("") + "</div>";
   }
 
