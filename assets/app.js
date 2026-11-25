@@ -60,7 +60,7 @@
 
   /* ------------------------------- state ------------------------------- */
 
-  var DEFAULT_MIX = { waves: 0.55, white: 0.35, breath: 0.5, tranquil: 0.35, wind: 0.35, whale: 0.3 };
+  var DEFAULT_MIX = { waves: 0.55, rain: 0.4, white: 0.35, breath: 0.5, tranquil: 0.35, wind: 0.35, whale: 0.3 };
 
   var DEFAULTS = {
     version: 1,
@@ -159,15 +159,79 @@
 
   var AudioEngine = (function () {
     var tracks = {};
+    var synths = {};
     var active = {};
     var oneShots = [];
     var ctx = null;
+    var noiseBuf = null;
 
     function soundOn() { return state.settings.sound; }
     function master() { return clamp(state.settings.volume, 0, 1); }
     function mixFor(id) {
       var v = state.settings.mix[id];
       return typeof v === "number" ? v : 0.4;
+    }
+
+    function metaFor(id) {
+      var found = null;
+      D.ambience.forEach(function (a) { if (a.id === id) found = a; });
+      return found;
+    }
+
+    function ctxOn() {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      try {
+        ctx = ctx || new AC();
+        if (ctx.state === "suspended" && ctx.resume) ctx.resume();
+        return ctx;
+      } catch (e) { return null; }
+    }
+
+    function noiseBuffer() {
+      var c = ctxOn();
+      if (!c) return null;
+      if (!noiseBuf) {
+        var len = Math.floor(c.sampleRate * 2);
+        noiseBuf = c.createBuffer(1, len, c.sampleRate);
+        var data = noiseBuf.getChannelData(0);
+        for (var i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
+      }
+      return noiseBuf;
+    }
+
+    function synthLevel(id) { return clamp(mixFor(id) * master() * 0.6, 0, 1); }
+
+    function fadeTo(node, value, secs) {
+      var c = ctxOn();
+      if (!c) return;
+      try {
+        var t = c.currentTime, g = node.gain, now = g.value;
+        g.cancelScheduledValues(t);
+        g.setValueAtTime(now, t);
+        g.linearRampToValueAtTime(value, t + (secs || 0.4));
+      } catch (e) {}
+    }
+
+    /* Rain is made in the browser from filtered noise, so it needs no file. */
+    function makeSynth(id) {
+      var c = ctxOn(), buf = noiseBuffer();
+      if (!c || !buf) return null;
+      try {
+        var src = c.createBufferSource();
+        src.buffer = buf;
+        src.loop = true;
+        var hp = c.createBiquadFilter();
+        hp.type = "highpass"; hp.frequency.value = 900;
+        var lp = c.createBiquadFilter();
+        lp.type = "lowpass"; lp.frequency.value = 6200;
+        var gain = c.createGain();
+        gain.gain.value = 0;
+        src.connect(hp); hp.connect(lp); lp.connect(gain); gain.connect(c.destination);
+        src.start(0);
+        synths[id] = { src: src, gain: gain };
+        return synths[id];
+      } catch (e) { return null; }
     }
 
     function makeTrack(id) {
@@ -190,6 +254,15 @@
 
     function toggle(id) {
       if (!soundOn()) { toast("Sound is off — turn it on in Settings."); return false; }
+      var meta = metaFor(id);
+      if (meta && meta.synth) {
+        var synth = synths[id] || makeSynth(id);
+        if (!synth) { toast("This browser cannot make that sound."); return false; }
+        if (active[id]) { fadeTo(synth.gain, 0); active[id] = false; return false; }
+        fadeTo(synth.gain, synthLevel(id));
+        active[id] = true;
+        return true;
+      }
       var el = tracks[id] || makeTrack(id);
       if (!el) return false;
       if (active[id]) {
@@ -208,30 +281,73 @@
 
     function setVolume(id) {
       if (tracks[id]) tracks[id].volume = clamp(mixFor(id) * master(), 0, 1);
+      if (synths[id] && active[id]) fadeTo(synths[id].gain, synthLevel(id), 0.2);
     }
 
+    function finishShot(shot) {
+      if (shot.done) return;
+      shot.done = true;
+      var i = oneShots.indexOf(shot);
+      if (i > -1) oneShots.splice(i, 1);
+      if (shot.onEnd) shot.onEnd();
+    }
+
+    function stopOneShots() {
+      oneShots.slice().forEach(function (shot) {
+        try { shot.el.pause(); shot.el.currentTime = 0; } catch (e) {}
+        finishShot(shot);
+      });
+      oneShots = [];
+    }
+
+    /* Stop everything: loops, generated sounds and one-off sounds. */
     function stopAll() {
       Object.keys(tracks).forEach(function (id) {
         try { tracks[id].pause(); } catch (e) {}
         active[id] = false;
       });
+      Object.keys(synths).forEach(function (id) {
+        fadeTo(synths[id].gain, 0, 0.2);
+        active[id] = false;
+      });
+      stopOneShots();
     }
 
-    function playFile(src, vol) {
-      if (!soundOn()) { toast("Sound is off — turn it on in Settings."); return; }
+    /* One sound at a time: a new sound always stops the one before it. */
+    function playFile(src, vol, onEnd) {
+      if (!soundOn()) { toast("Sound is off — turn it on in Settings."); return null; }
+      stopOneShots();
       try {
         var el = new window.Audio(encodeURI(src));
         el.volume = clamp((typeof vol === "number" ? vol : 0.8) * master(), 0, 1);
+        var shot = { el: el, onEnd: onEnd, done: false };
+        oneShots.push(shot);
+        el.addEventListener("ended", function () { finishShot(shot); });
         var p = el.play();
         if (p && p.catch) p.catch(function () {});
-        oneShots.push(el);
-        if (oneShots.length > 4) {
-          try { oneShots.shift().pause(); } catch (e) {}
-        }
-        el.addEventListener("ended", function () {
-          var i = oneShots.indexOf(el);
-          if (i > -1) oneShots.splice(i, 1);
-        });
+        return el;
+      } catch (e) { return null; }
+    }
+
+    /* A soft click for the spinner. Quiet on purpose. */
+    function tick(strength) {
+      if (!soundOn()) return;
+      var c = ctxOn();
+      if (!c) return;
+      try {
+        var t = c.currentTime;
+        var osc = c.createOscillator();
+        var gain = c.createGain();
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(1400, t);
+        osc.frequency.exponentialRampToValueAtTime(880, t + 0.05);
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.exponentialRampToValueAtTime(clamp(0.05 * (strength || 1) * master(), 0.0002, 0.12), t + 0.006);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.07);
+        osc.connect(gain);
+        gain.connect(c.destination);
+        osc.start(t);
+        osc.stop(t + 0.09);
       } catch (e) {}
     }
 
@@ -281,6 +397,9 @@
       Object.keys(tracks).forEach(function (id) {
         tracks[id].volume = clamp(mixFor(id) * master(), 0, 1);
       });
+      Object.keys(synths).forEach(function (id) {
+        if (active[id]) fadeTo(synths[id].gain, synthLevel(id), 0.2);
+      });
     }
 
     return {
@@ -288,6 +407,7 @@
       setVolume: setVolume,
       stopAll: stopAll,
       playFile: playFile,
+      tick: tick,
       chime: chime,
       say: say,
       hush: hush,
@@ -567,16 +687,33 @@
   /* ------------------------------- wheel ------------------------------- */
 
   var WHEEL_COLORS = ["#4fe3c1", "#8fb4ff", "#b8a5ff", "#ffcc7a", "#ff9a86", "#7ee2c4", "#9ad7ff", "#ffd9a8"];
-  var WHEEL_EMOJI = ["🌈", "⭐", "🐢", "🎈", "🍀", "🐳", "🌙", "☀️"];
-  var spin = { rot: 0, raf: null, dragging: false, lastAngle: 0, lastTime: 0, vel: 0 };
+  var WHEEL_SHAPES = [
+    "🌈", "⭐", "🐢", "🎈", "🍀", "🐳", "🌙", "☀️", "❤️", "🌸",
+    "🦋", "🐙", "🍭", "🧩", "🚀", "🐝", "🫧", "🎵", "🍄", "⚡",
+    "🐬", "🌻", "🧸", "🎨", "🍉", "🐞", "🪀", "🎠"
+  ];
+  var spin = { rot: 0, raf: null, dragging: false, lastAngle: 0, lastTime: 0, vel: 0, faces: null, lastSeg: 0, tickAt: 0 };
+
+  function pickFaces() {
+    var pool = WHEEL_SHAPES.slice();
+    var out = [];
+    for (var i = 0; i < 8; i++) out.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
+    return out;
+  }
+
+  function wheelFaces() {
+    if (!spin.faces) spin.faces = pickFaces();
+    return spin.faces;
+  }
 
   function polar(cx, cy, r, deg) {
     var rad = deg * Math.PI / 180;
     return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
   }
 
-  function wheelSVG() {
+  function wheelParts() {
     var cx = 160, cy = 160, r = 150, seg = 45;
+    var faces = wheelFaces();
     var parts = "";
     for (var i = 0; i < 8; i++) {
       var a0 = -90 + i * seg;
@@ -588,15 +725,24 @@
         WHEEL_COLORS[i] + '" fill-opacity="' + (i % 2 ? "0.82" : "0.62") + '"/>';
       var mid = polar(cx, cy, r * 0.65, a0 + seg / 2);
       parts += '<text x="' + mid.x.toFixed(1) + '" y="' + (mid.y + 10).toFixed(1) +
-        '" text-anchor="middle" font-size="30" aria-hidden="true">' + WHEEL_EMOJI[i] + "</text>";
+        '" text-anchor="middle" font-size="30" aria-hidden="true">' + faces[i] + "</text>";
     }
+    return parts;
+  }
+
+  function wheelSVG() {
     return '<svg class="wheel" id="wheel" viewBox="0 0 320 320" role="img" ' +
       'aria-label="Spinning fidget wheel. Drag it or use the spin button.">' +
-      '<g id="wheelRotor">' + parts + "</g>" +
+      '<g id="wheelRotor">' + wheelParts() + "</g>" +
       '<circle class="wheel-cap" cx="160" cy="160" r="34"/>' +
       '<text x="160" y="166" text-anchor="middle" font-size="14" font-weight="700" fill="#dff8ff" ' +
       'font-family="system-ui, sans-serif">SPIN</text>' +
       '<path d="M160 3l10 17h-20z" fill="#ffffff" fill-opacity="0.9"/></svg>';
+  }
+
+  function paintFaces() {
+    var rotor = $("#wheelRotor");
+    if (rotor) rotor.innerHTML = wheelParts();
   }
 
   function paintWheel() {
@@ -612,17 +758,40 @@
   function spinMomentum(velocity) {
     if (spin.raf) cancelAnimationFrame(spin.raf);
     var v = velocity;
+    spin.lastSeg = Math.floor(spin.rot / 45);
     function step() {
       spin.rot += v;
-      v *= 0.985;
+      v *= 0.988;
       paintWheel();
-      if (Math.abs(v) > 0.06) {
+      tickSpin(v);
+      if (Math.abs(v) > 0.05) {
         spin.raf = requestAnimationFrame(step);
       } else {
         spin.raf = null;
       }
     }
     spin.raf = requestAnimationFrame(step);
+  }
+
+  /* One quiet click each time a segment passes the pointer. */
+  function tickSpin(v) {
+    var speed = Math.abs(v);
+    if (speed < 0.5) return;
+    var seg = Math.floor(spin.rot / 45);
+    if (seg === spin.lastSeg) return;
+    spin.lastSeg = seg;
+    var now = Date.now();
+    if (now - spin.tickAt < 45) return;
+    spin.tickAt = now;
+    AudioEngine.tick(clamp(speed / 18, 0.25, 1));
+  }
+
+  function spinButton() {
+    spin.faces = pickFaces();
+    paintFaces();
+    paintWheel();
+    spinMomentum((26 + Math.random() * 18) * (Math.random() < 0.5 ? -1 : 1));
+    AudioEngine.tick(0.9);
   }
 
   function bindWheel() {
@@ -913,10 +1082,10 @@
         '<a class="tiny muted" href="#/more">See everything →</a></div>' +
       '<div class="grid grid-auto">' +
         tileHTML("#/calm", "🫧", "Calm", "Breathing, soothing sounds, grounding.", "mint") +
-        tileHTML("#/routine", "📋", "Now &amp; Next", "One step at a time, with a timer.", "sky") +
+        tileHTML("#/routine", "📋", "Now & Next", "One step at a time, with a timer.", "sky") +
         tileHTML("#/focus", "🎯", "Focus", "Fidget wheel and Wac-A-Zac.", "lilac") +
         tileHTML("#/journal", "📔", "Journal", "Feelings and behaviour, kept private.", "amber") +
-        tileHTML("#/play", "😂", "Play", "Jokes and the fart machine.", "coral") +
+        tileHTML("#/play", "😂", "Play", "Jokes and silly sounds.", "coral") +
         tileHTML("#/learn", "📚", "Learn", "Short, practical guides for grown-ups.", "") +
       "</div>" +
 
@@ -1499,8 +1668,9 @@
           wheelSVG() +
           '<div class="row-wrap" style="justify-content:center;margin-top:12px">' +
             '<button type="button" class="btn primary" id="spinNow">' + icon("shuffle") + " Give it a spin</button>" +
+            '<button type="button" class="btn ghost" id="spinStop">Stop</button>' +
           "</div>" +
-          '<p class="tiny muted center" style="margin-top:8px">Drag the wheel, or press the button.</p>' +
+          '<p class="tiny muted center" style="margin-top:8px">Fresh shapes every spin, a long slow roll, and quiet ticks while it turns.</p>' +
         "</div>" +
         '<div class="card">' +
           '<h2 class="card-title">Make it feel nice</h2>' +
@@ -1539,7 +1709,12 @@
     function bindSpinner() {
       bindWheel();
       var btn = $("#spinNow");
-      if (btn) btn.addEventListener("click", function () { spinMomentum(22); });
+      if (btn) btn.addEventListener("click", spinButton);
+      var halt = $("#spinStop");
+      if (halt) halt.addEventListener("click", function () {
+        stopSpin();
+        paintWheel();
+      });
       paintWheel();
     }
 
@@ -1825,9 +2000,9 @@
         "Laughter is a genuine reset. Nothing here is serious, and nothing is scored except the mole game.") +
         '<div class="pill-toggle" role="group" aria-label="Play type">' +
           '<button type="button" data-ptab="jokes" aria-pressed="' + (playTab === "jokes") + '">Knock knock</button>' +
-          '<button type="button" data-ptab="farts" aria-pressed="' + (playTab === "farts") + '">Fart machine</button>' +
+          '<button type="button" data-ptab="sounds" aria-pressed="' + (playTab === "sounds") + '">Sounds</button>' +
         "</div>" +
-        '<div style="margin-top:16px">' + (playTab === "farts" ? fartsPanel() : jokesPanel()) + "</div>";
+        '<div style="margin-top:16px">' + (playTab === "sounds" ? soundsPanel() : jokesPanel()) + "</div>";
 
       $$("[data-ptab]", view).forEach(function (btn) {
         btn.addEventListener("click", function () {
@@ -1836,7 +2011,7 @@
         });
       });
 
-      if (playTab === "farts") bindFarts();
+      if (playTab === "sounds") bindSounds();
       else bindJokes();
     }
 
@@ -1883,52 +2058,77 @@
       });
     }
 
-    function fartsPanel() {
+    function padHTML(attrs, emoji, label, pressed) {
+      return '<button type="button" class="pad"' + attrs +
+        (pressed === undefined ? "" : ' aria-pressed="' + pressed + '"') + ">" +
+        '<span class="pad-emoji" aria-hidden="true">' + emoji + "</span>" + esc(label) + "</button>";
+    }
+
+    function soundGroup(title, note, pads) {
+      return '<div class="sound-group"><h3 class="sound-group-title">' + esc(title) + "</h3>" +
+        (note ? '<p class="tiny muted">' + esc(note) + "</p>" : "") +
+        '<div class="sound-grid" style="margin-top:10px">' + pads + "</div></div>";
+    }
+
+    function soundsPanel() {
+      var backgrounds = D.ambience.map(function (a) {
+        return padHTML(' data-amb="' + a.id + '"', a.emoji, a.name, AudioEngine.isPlaying(a.id));
+      }).join("");
+      var silly = D.farts.map(function (f, i) {
+        return padHTML(' data-fart="' + i + '"', f.emoji, f.name);
+      }).join("");
       return '<div class="card">' +
-        '<div class="row-between"><div><h2 class="card-title">The fart machine</h2>' +
-          '<p class="card-sub">' + D.farts.length + " sounds. Tap one, or leave it to chance.</p></div>" +
-          '<button type="button" class="btn" id="stopFarts">Stop</button></div>' +
-        '<div class="sound-grid" style="margin-top:14px">' +
-          D.farts.map(function (f, i) {
-            return '<button type="button" class="pad" data-fart="' + i + '">' +
-              '<span class="pad-emoji" aria-hidden="true">' + f.emoji + "</span>" + esc(f.name) + "</button>";
-          }).join("") +
-        "</div>" +
-        '<div class="row-wrap" style="margin-top:14px">' +
-          '<button type="button" class="btn primary" id="randomFart">' + icon("shuffle") + " Random fart</button>" +
-          '<button type="button" class="btn" id="animalNoise">🐘 Animal noises</button>' +
+        '<div class="row-between"><div><h2 class="card-title">Sounds</h2>' +
+          '<p class="card-sub">Tap a pad. A new silly sound stops the last one; backgrounds can layer.</p></div>' +
+          '<button type="button" class="btn" id="stopSounds">' + icon("pause") + " Stop everything</button></div>" +
+        soundGroup("Background", "Calm and looping. Tap one again to stop it.", backgrounds) +
+        soundGroup("Silly sounds", "", silly) +
+        soundGroup("Animals", "", padHTML(' id="animalSound"', "🐘", "Animal noises")) +
+        '<div class="row-wrap" style="margin-top:16px">' +
+          '<button type="button" class="btn primary" id="randomFart">' + icon("shuffle") + " Surprise me</button>" +
         "</div>" +
         '<p class="tiny muted" style="margin-top:12px">Volume follows the sound setting. Turn sound off upstairs.</p>' +
       "</div>";
     }
 
-    function bindFarts() {
-      $$("[data-fart]", view).forEach(function (pad) {
+    function oneShot(pad, src, vol, message) {
+      /* Backgrounds keep running; only the one-off sounds hand over. */
+      $$(".pad.is-playing:not([data-amb])", view).forEach(function (p) { p.classList.remove("is-playing"); });
+      AudioEngine.playFile(src, vol, function () { pad.classList.remove("is-playing"); });
+      pad.classList.add("is-playing");
+      if (message) toast(message);
+    }
+
+    function bindSounds() {
+      $$("[data-amb]", view).forEach(function (pad) {
         pad.addEventListener("click", function () {
-          var i = parseInt(pad.getAttribute("data-fart"), 10);
-          var f = D.farts[i];
-          if (!f) return;
-          AudioEngine.playFile("Fart/" + f.file, 0.85);
-          $$("[data-fart]", view).forEach(function (p) { p.classList.remove("is-playing"); });
-          pad.classList.add("is-playing");
-          setTimeout(function () { pad.classList.remove("is-playing"); }, 400);
+          var on = AudioEngine.toggle(pad.getAttribute("data-amb"));
+          pad.classList.toggle("is-playing", on);
+          pad.setAttribute("aria-pressed", on ? "true" : "false");
         });
       });
-      var random = $("#randomFart");
+      $$("[data-fart]", view).forEach(function (pad) {
+        pad.addEventListener("click", function () {
+          var f = D.farts[parseInt(pad.getAttribute("data-fart"), 10)];
+          if (f) oneShot(pad, "Fart/" + f.file, 0.85);
+        });
+      });
+      var animals = $("#animalSound", view);
+      if (animals) animals.addEventListener("click", function () {
+        oneShot(animals, "animal_sounds.mp3", 0.75, "Animal noises 🐘");
+      });
+      var random = $("#randomFart", view);
       if (random) random.addEventListener("click", function () {
         var f = D.farts[Math.floor(Math.random() * D.farts.length)];
-        AudioEngine.playFile("Fart/" + f.file, 0.9);
-        toast(f.name + " 💨");
+        var pad = $('[data-fart="' + D.farts.indexOf(f) + '"]', view) || random;
+        oneShot(pad, "Fart/" + f.file, 0.9, f.name + " 💨");
       });
-      var animals = $("#animalNoise");
-      if (animals) animals.addEventListener("click", function () {
-        AudioEngine.playFile("animal_sounds.mp3", 0.7);
-        toast("Animal noises 🐘");
-      });
-      var stop = $("#stopFarts");
+      var stop = $("#stopSounds", view);
       if (stop) stop.addEventListener("click", function () {
         AudioEngine.stopAll();
-        toast("Shhh.");
+        $$(".pad.is-playing", view).forEach(function (p) { p.classList.remove("is-playing"); });
+        $$("[data-amb]", view).forEach(function (p) { p.setAttribute("aria-pressed", "false"); });
+        toast("All quiet.");
       });
     }
 
@@ -2510,7 +2710,7 @@
       '<div class="grid grid-auto">' +
         tileHTML("#/focus", "🎯", "Focus", "Fidget wheel and Wac-A-Zac.", "lilac") +
         tileHTML("#/journal", "📔", "Journal", "Feelings check-ins and behaviour notes.", "amber") +
-        tileHTML("#/play", "😂", "Play", "Jokes and the fart machine.", "coral") +
+        tileHTML("#/play", "😂", "Play", "Jokes and silly sounds.", "coral") +
         tileHTML("#/compendium", "📖", "Compendium", "65 tools and guides, searchable.", "mint") +
         tileHTML("#/setup", "🎛️", "Your plan", "Mode, answers and house rules.", "") +
         tileHTML("#/learn", "📚", "Learn", "Practical guides, no lectures.", "") +

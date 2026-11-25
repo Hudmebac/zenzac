@@ -90,6 +90,7 @@ window.ZenData = (function () {
 
   var ambience = [
     { id: "waves",     name: "Ocean waves",    file: "waves.mp3",         emoji: "🌊", vol: 0.55 },
+    { id: "rain",      name: "Rain on glass",  file: "",                  emoji: "🌧️", vol: 0.4, synth: "rain" },
     { id: "white",     name: "White noise",    file: "white_noise.mp3",   emoji: "☁️", vol: 0.35 },
     { id: "breath",    name: "Slow breathing", file: "slow-breathing.mp3", emoji: "🫧", vol: 0.5 },
     { id: "tranquil",  name: "Tranquil music", file: "tranquil.mp3",      emoji: "🎵", vol: 0.35 },
@@ -127,7 +128,22 @@ window.ZenData = (function () {
     { setup: "Kenya",     punchline: "Kenya believe it's me?" },
     { setup: "Cargo",     punchline: "Cargo beep beep!" },
     { setup: "Igloo",     punchline: "Igloo my fingers to the doorbell." },
-    { setup: "Kanga",     punchline: "Kanga who? Actually, it's kangaroo!" }
+    { setup: "Kanga",     punchline: "Kanga who? Actually, it's kangaroo!" },
+    { setup: "Ivy",       punchline: "Ivy got a question for you!" },
+    { setup: "Bean",      punchline: "Bean waiting to see you!" },
+    { setup: "Marsha",    punchline: "Marsha marshmallow before it burns!" },
+    { setup: "Sunny",     punchline: "Sunny you going to let me in?" },
+    { setup: "Tuba",      punchline: "Tuba toothpaste, please!" },
+    { setup: "Claire",    punchline: "Claire the way, I'm coming through!" },
+    { setup: "Feline",    punchline: "Feline okay? You look a bit poorly!" },
+    { setup: "Amos",      punchline: "Amos the only one out here!" },
+    { setup: "Needle",    punchline: "Needle little help with this door!" },
+    { setup: "Owl",       punchline: "Owl be waiting right here!" },
+    { setup: "Waddle",    punchline: "Waddle you do if I don't open up?" },
+    { setup: "Smore",     punchline: "Smore please, I'm hungry!" },
+    { setup: "Fig",       punchline: "Fig-ure it out, I'm freezing out here!" },
+    { setup: "Yule",      punchline: "Yule be sorry if you don't let me in!" },
+    { setup: "Cassette",  punchline: "Cassette me free, I'm stuck in here!" }
   ];
 
   var guides = [
