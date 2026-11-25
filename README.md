@@ -18,7 +18,7 @@ Open `index.html` in a browser. Everything works from a double-click; a local se
 | **Compendium** | 89 practical entries in 15 categories - including nutrition, health, activities and behaviour tracking - searchable and filterable, plus links into the matching app tool. |
 | **Learn** | Thirteen longer guides for grown-ups, plus official guidance and charity links (NHS, NICE, NAS, ADHD Foundation, IPSEA, Contact). |
 | **Parent support** | The long version: 45 entries across 13 topics, searchable, with scripts, a GP appointment guide, medication questions and a direct email contact. |
-| **Settings** | Name, sound, spoken cues, calm motion, bigger text, four icon finishes (Basic, Soft, Matt, Gloss), six soft palettes with live previews, creator contact and support link, plan summary, export and delete. |
+| **Settings** | Name, sound, spoken cues, calm motion, bigger text, four icon finishes (Basic, Soft, Matt, Gloss), four clear font choices, six soft palettes with live previews, creator contact and support link, plan summary, export and delete. |
 
 ## The plan
 
@@ -30,7 +30,7 @@ Emoji can be shown in four finishes - **Basic**, **Soft**, **Matt** or **Gloss**
 
 ## Creator
 
-ZenZac is built by Craig Heggie, a parent of children with ADHD and autism. The Settings page has a Creator section with a direct email address (`craigheggie@googlemail.com`) and an optional one-off support link. The app stays free, with no adverts and no accounts.
+ZenZac is built by Craig Heggie, a parent of children with ADHD and autism. The Settings page has a Creator section with a Support ZenZac banner, a direct email address (`craigheggie@googlemail.com`) and an optional one-off support link. The app stays free, with no adverts and no accounts.
 
 ## Files
 
@@ -42,6 +42,7 @@ assets/compendium.js  89 entries across 15 categories
 assets/support.js     45 long-form parent support entries across 13 topics
 assets/app.js         state, storage, audio, router and every view
 assets/logo.svg       favicon
+assets/support-heart.jpg  Support ZenZac banner artwork
 legacy/               the original 15 standalone pages, archived not deleted
 Fart/                 fart-machine audio
 *.mp3                 ambient audio

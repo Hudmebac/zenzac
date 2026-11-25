@@ -1587,13 +1587,13 @@ html[data-motion="calm"] .orb { transition-duration: 1.2s; }
     .slot-emoji, .plan-emoji, .mode-emoji, .ground-pick-img, .creator-avatar) {
   display: inline-grid;
   place-items: center;
+  line-height: 1;
 }
 
 html[data-emoji="soft"] :is(.tile-ico, .section-title .emoji, .entry-face, .sound-emoji,
     .pad-emoji, .guide-emoji, .comp-entry-emoji, .spin-result-emoji, .now-emoji,
     .slot-emoji, .plan-emoji, .mode-emoji, .ground-pick-img, .creator-avatar) {
-  padding: 0.16em;
-  border-radius: 38%;
+  border-radius: 28%;
   border: 1px solid color-mix(in srgb, var(--mint) 24%, transparent);
   background: color-mix(in srgb, var(--mint) 14%, var(--panel-solid));
   box-shadow: 0 8px 18px color-mix(in srgb, var(--mint) 16%, transparent);
@@ -1602,8 +1602,7 @@ html[data-emoji="soft"] :is(.tile-ico, .section-title .emoji, .entry-face, .soun
 html[data-emoji="matt"] :is(.tile-ico, .section-title .emoji, .entry-face, .sound-emoji,
     .pad-emoji, .guide-emoji, .comp-entry-emoji, .spin-result-emoji, .now-emoji,
     .slot-emoji, .plan-emoji, .mode-emoji, .ground-pick-img, .creator-avatar) {
-  padding: 0.16em;
-  border-radius: 24%;
+  border-radius: 22%;
   border: 1px solid var(--line-strong);
   background: color-mix(in srgb, var(--ink) 8%, transparent);
   box-shadow: none;
@@ -1612,8 +1611,7 @@ html[data-emoji="matt"] :is(.tile-ico, .section-title .emoji, .entry-face, .soun
 html[data-emoji="gloss"] :is(.tile-ico, .section-title .emoji, .entry-face, .sound-emoji,
     .pad-emoji, .guide-emoji, .comp-entry-emoji, .spin-result-emoji, .now-emoji,
     .slot-emoji, .plan-emoji, .mode-emoji, .ground-pick-img, .creator-avatar) {
-  padding: 0.16em;
-  border-radius: 34%;
+  border-radius: 26%;
   border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
   background: linear-gradient(150deg,
     color-mix(in srgb, var(--mint) 34%, transparent),
@@ -1643,25 +1641,26 @@ html[data-emoji="gloss"] :is(.tile-ico, .section-title .emoji, .entry-face, .sou
 }
 .emoji-style-sample { display: flex; gap: 8px; align-items: center; min-height: 46px; }
 .emoji-style-sample span {
-  width: 42px; height: 42px; display: grid; place-items: center;
-  font-size: 1.3rem; box-sizing: border-box;
+  width: 44px; height: 44px; display: grid; place-items: center;
+  font-size: 1.3rem; line-height: 1; box-sizing: border-box;
+  border-radius: 12px;
 }
 .emoji-style-name { font-weight: 700; font-size: 0.9rem; }
 .emoji-style-note { color: var(--muted); font-size: 0.75rem; line-height: 1.35; }
 
 .emoji-style-btn.s-soft .emoji-style-sample span {
-  padding: 0.16em; border-radius: 38%;
+  border-radius: 12px;
   border: 1px solid color-mix(in srgb, var(--mint) 24%, transparent);
   background: color-mix(in srgb, var(--mint) 14%, var(--panel-solid));
   box-shadow: 0 8px 18px color-mix(in srgb, var(--mint) 16%, transparent);
 }
 .emoji-style-btn.s-matt .emoji-style-sample span {
-  padding: 0.16em; border-radius: 24%;
+  border-radius: 12px;
   border: 1px solid var(--line-strong);
   background: color-mix(in srgb, var(--ink) 8%, transparent);
 }
 .emoji-style-btn.s-gloss .emoji-style-sample span {
-  padding: 0.16em; border-radius: 34%;
+  border-radius: 12px;
   border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
   background: linear-gradient(150deg,
     color-mix(in srgb, var(--mint) 34%, transparent),
@@ -1802,3 +1801,75 @@ html[data-emoji="gloss"] :is(.tile-ico, .section-title .emoji, .entry-face, .sou
 .settings-jump { display: flex; flex-wrap: wrap; gap: 8px; margin: -6px 0 18px; }
 .settings-jump .chip { min-height: 36px; font-size: 0.82rem; padding: 4px 12px; }
 #setIcons, #setColours, #setCreator, #setData { scroll-margin-top: 92px; }
+
+/* ==========================================================================
+   Font choice - four clear, child-friendly options. No downloads, no CDN.
+   ========================================================================== */
+
+:root[data-font="clear"] {
+  --sans: "Atkinson Hyperlegible", Verdana, Tahoma, "Segoe UI", system-ui, sans-serif;
+}
+:root[data-font="simple"] {
+  --sans: system-ui, -apple-system, "Segoe UI", Arial, "Helvetica Neue", sans-serif;
+}
+:root[data-font="friendly"] {
+  --sans: "Comic Sans MS", "Comic Sans", "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+}
+html[data-font="clear"] body { line-height: 1.62; letter-spacing: 0.004em; }
+html[data-font="friendly"] body { line-height: 1.6; letter-spacing: 0.006em; }
+
+.font-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+.font-btn {
+  display: flex; flex-direction: column; gap: 6px; align-items: flex-start;
+  padding: 12px; text-align: left;
+  border-radius: var(--r-md); border: 1px solid var(--line);
+  background: var(--panel); color: var(--ink);
+}
+.font-btn:hover { border-color: var(--line-strong); }
+.font-btn.is-on {
+  border-color: color-mix(in srgb, var(--mint) 55%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mint) 32%, transparent);
+}
+.font-sample {
+  display: flex; align-items: baseline; gap: 8px;
+  font-size: 1.45rem; font-weight: 800; letter-spacing: -0.01em; line-height: 1.1;
+}
+.font-sample small { font-size: 0.78rem; font-weight: 600; letter-spacing: 0; color: var(--muted); }
+.font-btn.f-default .font-sample { font-family: ui-rounded, "SF Pro Rounded", "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif; }
+.font-btn.f-clear .font-sample { font-family: "Atkinson Hyperlegible", Verdana, Tahoma, "Segoe UI", sans-serif; }
+.font-btn.f-simple .font-sample { font-family: system-ui, -apple-system, "Segoe UI", Arial, "Helvetica Neue", sans-serif; }
+.font-btn.f-friendly .font-sample { font-family: "Comic Sans MS", "Comic Sans", "Trebuchet MS", "Segoe UI", sans-serif; }
+.font-name { font-weight: 700; font-size: 0.9rem; }
+.font-note { color: var(--muted); font-size: 0.75rem; line-height: 1.35; }
+
+/* ==========================================================================
+   Support ZenZac banner (Creator)
+   ========================================================================== */
+
+.support-banner {
+  display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  align-items: stretch; gap: 0; margin: 0 0 18px;
+  border-radius: var(--r-md); overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--sky) 32%, transparent);
+  background: linear-gradient(120deg, #eef8ff, #d9ecff);
+  color: #0b2b46; text-decoration: none;
+  box-shadow: 0 10px 26px color-mix(in srgb, var(--ink) 14%, transparent);
+}
+.support-banner:hover { text-decoration: none; filter: brightness(1.02); }
+.support-banner-copy { display: flex; flex-direction: column; gap: 6px; justify-content: center; padding: 18px 20px; }
+.support-banner-kicker { font-size: clamp(1.15rem, 1rem + 0.8vw, 1.6rem); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+.support-banner-kicker span { color: #1f7ae0; }
+.support-banner-tag { font-style: italic; font-weight: 700; color: #245a86; font-size: 0.9rem; }
+.support-banner-line { font-size: 0.85rem; line-height: 1.45; color: #24506f; max-width: 38ch; }
+.support-banner-cta {
+  align-self: flex-start; margin-top: 6px;
+  padding: 7px 14px; border-radius: 999px;
+  background: #1f7ae0; color: #fff; font-weight: 750; font-size: 0.82rem;
+}
+.support-banner-img { width: 100%; height: 100%; min-height: 190px; object-fit: cover; display: block; }
+
+@media (max-width: 560px) {
+  .support-banner { grid-template-columns: 1fr; }
+  .support-banner-img { order: -1; min-height: 140px; max-height: 160px; }
+  .support-banner-copy { padding: 16px; }
+}

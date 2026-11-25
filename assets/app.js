@@ -74,6 +74,7 @@
       theme: "dusk",
       showHistory: false,
       emojiStyle: "basic",
+      font: "default",
       whackTheme: "aliens",
       whackLevel: "normal",
       spinTopic: "mix",
@@ -112,6 +113,7 @@
       base.settings.theme = typeof s.theme === "string" && s.theme ? s.theme : "dusk";
       base.settings.showHistory = s.showHistory === true;
       base.settings.emojiStyle = typeof s.emojiStyle === "string" ? s.emojiStyle : "basic";
+      base.settings.font = typeof s.font === "string" ? s.font : "default";
       base.settings.whackTheme = typeof s.whackTheme === "string" ? s.whackTheme : "aliens";
       base.settings.whackLevel = typeof s.whackLevel === "string" ? s.whackLevel : "normal";
       base.settings.spinTopic = typeof s.spinTopic === "string" ? s.spinTopic : "mix";
@@ -564,6 +566,9 @@
     var emoji = state.settings.emojiStyle || "basic";
     if (["basic", "soft", "matt", "gloss"].indexOf(emoji) < 0) emoji = "basic";
     document.documentElement.setAttribute("data-emoji", emoji);
+    var font = state.settings.font || "default";
+    if (["default", "clear", "simple", "friendly"].indexOf(font) < 0) font = "default";
+    document.documentElement.setAttribute("data-font", font);
     var btn = $("#soundToggle");
     if (btn) {
       btn.setAttribute("aria-pressed", state.settings.sound ? "true" : "false");
@@ -1194,6 +1199,15 @@
     { id: "soft",  name: "Soft",  note: "Rounded, gently tinted and blurred at the edges." },
     { id: "matt",  name: "Matt",  note: "Flat and quiet, with no shine or depth." },
     { id: "gloss", name: "Gloss", note: "A little shine and depth, like a button." }
+  ];
+
+  /* Clear, unfussy faces only. These use fonts already on the device, so the
+     app still works offline and nothing is downloaded. */
+  var FONT_STYLES = [
+    { id: "default",  name: "Rounded",  note: "The calm rounded default. Friendly without being loud." },
+    { id: "clear",    name: "Clear",    note: "Wide, open letters (Verdana or Atkinson Hyperlegible). Easiest for new readers." },
+    { id: "simple",   name: "Simple",   note: "Plain system text. Familiar and no-fuss." },
+    { id: "friendly", name: "Friendly", note: "Soft, informal letters (Comic Sans where available). Popular with dyslexic readers." }
   ];
 
   function pageHead(eyebrow, title, sub) {
@@ -3844,6 +3858,7 @@
       view.innerHTML = pageHead("Settings", "Make it fit your family",
         "Changes are saved on this device straight away.") +
         '<div class="settings-jump" role="group" aria-label="Jump to a settings section">' +
+          '<button type="button" class="chip sm" data-jump="setFont">🔤 Font</button>' +
           '<button type="button" class="chip sm" data-jump="setIcons">🧸 Icons &amp; emoji</button>' +
           '<button type="button" class="chip sm" data-jump="setColours">🎨 Colours</button>' +
           '<button type="button" class="chip sm" data-jump="setCreator">💙 Creator &amp; support</button>' +
@@ -3892,6 +3907,19 @@
             "</div>" +
           "</div>" +
         "</div>" +
+
+        '<div class="section-head"><h2 class="section-title" id="setFont">Font</h2>' +
+          '<span class="tiny muted">Clear, easy-read choices. Nothing downloaded.</span></div>' +
+        '<div class="card"><div class="font-grid" role="group" aria-label="Font">' +
+          FONT_STYLES.map(function (f) {
+            var on = (state.settings.font || "default") === f.id;
+            return '<button type="button" class="font-btn f-' + f.id + (on ? " is-on" : "") +
+              '" data-pick-font="' + f.id + '" aria-pressed="' + on + '">' +
+              '<span class="font-sample">Aa <small>abc 123</small></span>' +
+              '<span class="font-name">' + esc(f.name) + "</span>" +
+              '<span class="font-note">' + esc(f.note) + "</span></button>";
+          }).join("") +
+        '</div><p class="tiny muted" style="margin-top:12px">These use fonts already on your device. If one is not installed, the closest clear alternative is used.</p></div>' +
 
         '<div class="section-head"><h2 class="section-title" id="setIcons">Icons &amp; emoji</h2>' +
           '<span class="tiny muted">Same pictures, four finishes. Saved straight away.</span></div>' +
@@ -3947,6 +3975,15 @@
         '<div class="section-head"><h2 class="section-title" id="setCreator">Creator</h2>' +
           '<span class="tiny muted">Made by a parent, for parents.</span></div>' +
         '<div class="card creator-card">' +
+          '<a class="support-banner" href="https://buy.stripe.com/cNi14m8fK7lF8x35MX4wM05" target="_blank" rel="noopener" aria-label="Support ZenZac - small support, big impact">' +
+            '<span class="support-banner-copy">' +
+              '<span class="support-banner-kicker">Support <span>ZenZac</span></span>' +
+              '<span class="support-banner-tag">Small support, big impact.</span>' +
+              '<span class="support-banner-line">Your support helps keep ZenZac free, with no adverts and no accounts, and funds the hours behind new features.</span>' +
+              '<span class="support-banner-cta">Support the app →</span>' +
+            "</span>" +
+            '<img class="support-banner-img" src="assets/support-heart.jpg" alt="" width="1392" height="752" loading="lazy">' +
+          "</a>" +
           '<div class="creator-head">' +
             '<span class="creator-avatar" aria-hidden="true">💙</span>' +
             '<div><h2 class="card-title">Craig Heggie</h2>' +
@@ -3979,6 +4016,20 @@
     }
 
     function bind() {
+      $$("[data-pick-font]", view).forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          state.settings.font = btn.getAttribute("data-pick-font");
+          save();
+          applyChrome();
+          $$("[data-pick-font]", view).forEach(function (b) {
+            var on = b === btn;
+            b.classList.toggle("is-on", on);
+            b.setAttribute("aria-pressed", on ? "true" : "false");
+          });
+          toast("Font changed.");
+        });
+      });
+
       $$("[data-jump]", view).forEach(function (btn) {
         btn.addEventListener("click", function () {
           var target = document.getElementById(btn.getAttribute("data-jump"));
