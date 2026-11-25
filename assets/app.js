@@ -561,12 +561,20 @@
   /* ------------------------- breathing (Calm) ------------------------- */
 
   var PATTERNS = {
-    calm: { label: "Calm 4·4·6", phases: [["Breathe in", 4, "in"], ["Hold", 4, "hold"], ["Breathe out", 6, "out"]] },
-    box: { label: "Box 4·4·4·4", phases: [["Breathe in", 4, "in"], ["Hold", 4, "hold"], ["Breathe out", 4, "out"], ["Hold", 4, "hold"]] },
-    balloon: { label: "Balloon 4·2·6", phases: [["Breathe in", 4, "in"], ["Hold", 2, "hold"], ["Breathe out", 6, "out"]] }
+    calm: { label: "Calm", phases: [["Breathe in", 4, "in"], ["Hold", 4, "hold"], ["Breathe out", 6, "out"]] },
+    box: { label: "Box", phases: [["Breathe in", 4, "in"], ["Hold", 4, "hold"], ["Breathe out", 4, "out"], ["Hold", 4, "hold"]] },
+    balloon: { label: "Balloon", phases: [["Breathe in", 4, "in"], ["Hold", 2, "hold"], ["Breathe out", 6, "out"]] }
   };
 
   var breath = { pattern: "calm", running: false, timer: null, left: 0, pi: 0, round: 0, scale: 0.82 };
+
+  /* "in 4 · hold 4 · out 6" — the numbers mean nothing without the words. */
+  function patternNote(p) {
+    return p.phases.map(function (ph, i) {
+      var word = ph[2] === "in" ? "in" : ph[2] === "out" ? "out" : "hold";
+      return (i === 0 ? word.charAt(0).toUpperCase() + word.slice(1) : word) + " " + ph[1];
+    }).join(" · ");
+  }
 
   function breathMeta() {
     var el = $("#breathMeta");
@@ -648,7 +656,7 @@
 
   /* ---------------------------- Now & Next ----------------------------- */
 
-  var timerState = { left: 0, total: 0, running: false, id: null };
+  var timerState = { left: 0, total: 0, running: false, id: null, warned: false, endAt: 0 };
   var redraw = null;
 
   function timerMins() { return (state.routine.now && state.routine.now.mins) || 5; }
@@ -664,25 +672,37 @@
     if (fill) fill.style.width = clamp(secs / Math.max(1, timerMins() * 60) * 100, 0, 100).toFixed(2) + "%";
   }
 
+  /* Count from a deadline rather than by subtraction, so a throttled tab or a
+     missed tick cannot skip the one-minute warning or the end of the timer. */
   function timerStart() {
     if (!state.routine.now) return;
     if (timerState.running) return;
     if (timerState.left <= 0) timerState.left = timerMins() * 60;
     timerState.running = true;
-    timerState.id = setInterval(function () {
-      timerState.left--;
-      paintClock();
-      if (timerState.left <= 0) {
-        timerPause();
-        AudioEngine.chime();
-        toast("Time's up.");
-        if (redraw) redraw();
-      } else if (timerState.left === 60) {
-        AudioEngine.tick(0.9);
-        toast("One minute left.");
-      }
-    }, 1000);
+    timerState.warned = timerState.left <= 60;
+    timerState.endAt = Date.now() + timerState.left * 1000;
+    timerState.id = setInterval(timerTick, 250);
     if (redraw) redraw();
+  }
+
+  function timerTick() {
+    if (!timerState.running) return;
+    var left = Math.max(0, Math.ceil((timerState.endAt - Date.now()) / 1000));
+    if (left === timerState.left) return;
+    timerState.left = left;
+    paintClock();
+    if (left <= 0) {
+      timerPause();
+      AudioEngine.chime();
+      toast("Time's up.");
+      if (redraw) redraw();
+      return;
+    }
+    if (left <= 60 && !timerState.warned) {
+      timerState.warned = true;
+      AudioEngine.tick(0.9);
+      toast("One minute left.");
+    }
   }
 
   function timerPause() {
@@ -694,6 +714,8 @@
     timerPause();
     timerState.left = 0;
     timerState.total = 0;
+    timerState.warned = false;
+    timerState.endAt = 0;
     paintClock();
   }
 
@@ -1248,16 +1270,27 @@
 
     function render() {
       stopBreath();
+      /* One line per tool, so a tired parent knows which to reach for. */
+      var lead = calmTab === "sounds"
+        ? "For winding down, or covering a noisy room."
+        : calmTab === "ground"
+          ? "For when talking feels hard."
+          : "For when feelings are already big.";
+      var foot = calmTab === "sounds"
+        ? "Nothing to get right here. Change the volume or stop whenever you like."
+        : calmTab === "ground"
+          ? "Go at your own pace. Stopping after any step is fine."
+          : "Breathe out for longer than you breathe in. If you feel dizzy, stop and rest.";
       view.innerHTML = pageHead("Calm", "Let&rsquo;s slow things down",
-        "Pick whichever feels easiest. You do not have to do all of it.") +
+        "Three ways to settle. Pick one — you do not have to do them all.") +
         '<div class="pill-toggle" role="group" aria-label="Calm tools">' +
           '<button type="button" data-ctab="breathe" aria-pressed="' + (calmTab === "breathe") + '">Breathe</button>' +
           '<button type="button" data-ctab="sounds" aria-pressed="' + (calmTab === "sounds") + '">Sounds</button>' +
-          '<button type="button" data-ctab="ground" aria-pressed="' + (calmTab === "ground") + '">Ground</button>' +
+          '<button type="button" data-ctab="ground" aria-pressed="' + (calmTab === "ground") + '">Look around</button>' +
         "</div>" +
-        '<div style="margin-top:16px" id="calmPanel">' + panelHTML() + "</div>" +
-        (calmTab === "sounds" ? "" :
-          '<p class="tiny muted" style="margin-top:14px">Breathe out for longer than you breathe in. If anyone feels dizzy, stop and rest.</p>');
+        '<p class="calm-lead">' + lead + "</p>" +
+        '<div id="calmPanel">' + panelHTML() + "</div>" +
+        '<p class="tiny muted" style="margin-top:16px">' + foot + "</p>";
 
       $$("[data-ctab]", view).forEach(function (btn) {
         btn.addEventListener("click", function () {
@@ -1290,13 +1323,14 @@
                 '" data-pattern="' + key + '" aria-pressed="' + (breath.pattern === key) + '">' + PATTERNS[key].label + "</button>";
             }).join("") +
           "</div>" +
+          '<p class="tiny muted center" id="patternNote" style="margin-top:8px">' + patternNote(PATTERNS[breath.pattern]) + "</p>" +
         "</div>" +
       "</div>" +
-      '<div class="grid grid-2" style="margin-top:14px">' +
-        '<div class="card tight"><h2 class="card-title">Why longer out-breaths?</h2>' +
-          "<p class=\"card-sub\">A slow breath out nudges the body out of fight-or-flight. Two minutes is plenty.</p></div>" +
-        '<div class="card tight"><h2 class="card-title">Easier version</h2>' +
-          "<p class=\"card-sub\">Count on your fingers instead of in your head, or trace up and down each finger.</p></div>" +
+      '<div class="card tight" style="margin-top:14px">' +
+        '<h2 class="card-title">If it feels hard</h2>' +
+        '<p class="card-sub">The out-breath is the part that helps. Two minutes is plenty, and stopping early is fine.</p>' +
+        '<p class="card-sub" style="margin-top:10px">Counting on your fingers is easier than counting in your head. ' +
+          "Tracing up and down each finger works too.</p>" +
       "</div>";
     }
 
@@ -1314,6 +1348,8 @@
             b.setAttribute("aria-pressed", on ? "true" : "false");
           });
           breathMeta();
+          var note = $("#patternNote");
+          if (note) note.textContent = patternNote(PATTERNS[breath.pattern]);
           if (breath.running) startBreath();
         });
       });
@@ -1388,7 +1424,7 @@
         '<div class="row" style="justify-content:center;gap:8px;margin-top:16px" id="groundDots" aria-hidden="true">' +
           GROUND.map(function (g, i) {
             return '<span style="width:8px;height:8px;border-radius:50%;background:' +
-              (i === 0 ? "var(--mint)" : "rgba(255,255,255,0.22)") + '"></span>';
+              (i === 0 ? "var(--mint)" : "color-mix(in srgb, var(--ink) 22%, transparent)") + '"></span>';
           }).join("") +
         "</div>" +
         '<div class="row" style="justify-content:center;gap:10px;margin-top:18px">' +
@@ -1413,7 +1449,7 @@
         if (next) next.textContent = step === GROUND.length - 1 ? "Finish" : "Next";
         if (dots) {
           $$("span", dots).forEach(function (dot, i) {
-            dot.style.background = i === step ? "var(--mint)" : "rgba(255,255,255,0.22)";
+            dot.style.background = i === step ? "var(--mint)" : "color-mix(in srgb, var(--ink) 22%, transparent)";
           });
         }
         AudioEngine.say(g.sense);
@@ -1424,7 +1460,7 @@
       });
       if (next) next.addEventListener("click", function () {
         if (step < GROUND.length - 1) { step++; paint(); }
-        else { toast("Lovely grounding. How do you feel now?"); }
+        else { toast("That's all five. How do you feel now?"); }
       });
       paint();
     }
