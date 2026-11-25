@@ -660,6 +660,8 @@
     el.textContent = clockText(secs);
     if (secs <= 30) el.classList.add("is-low");
     else el.classList.remove("is-low");
+    var fill = $("#timerFill");
+    if (fill) fill.style.width = clamp(secs / Math.max(1, timerMins() * 60) * 100, 0, 100).toFixed(2) + "%";
   }
 
   function timerStart() {
@@ -673,8 +675,11 @@
       if (timerState.left <= 0) {
         timerPause();
         AudioEngine.chime();
-        toast("Time's up! ⏰");
+        toast("Time's up.");
         if (redraw) redraw();
+      } else if (timerState.left === 60) {
+        AudioEngine.tick(0.9);
+        toast("One minute left.");
       }
     }, 1000);
     if (redraw) redraw();
@@ -1437,57 +1442,88 @@
 
   /* ---- Now & Next ---- */
 
-  function slotHTML(kind, task) {
-    var isNow = kind === "now";
-    var label = isNow ? "Now" : "Next";
+  var PRESET_LABELS = { morning: "Morning", bedtime: "Bedtime", homework: "After school" };
+  /* The name box is rebuilt on every change, so keep what was typed. */
+  var routineNameDraft = "";
+
+  /* One big Now card and a quiet Next strip. A child who finds handovers hard
+     only ever has to read the first box; Next is a heads-up, not a second task. */
+  function nowCardHTML(task) {
     if (!task) {
-      return '<div class="slot ' + (isNow ? "now" : "") + '">' +
-        '<span class="slot-label">' + label + "</span>" +
-        '<div class="slot-task slot-empty">' + (isNow ? "Nothing set yet" : "Nothing after that") + "</div>" +
-        '<div class="slot-actions"><button type="button" class="btn sm" data-addfocus="' + kind + '">' + icon("plus") + " Add a task</button></div>" +
+      return '<div class="now-card is-empty">' +
+        '<span class="slot-label">Now</span>' +
+        '<p class="now-empty">Nothing here yet. Pick one thing to start with.</p>' +
+        '<div class="slot-actions"><button type="button" class="btn primary" data-addfocus="now">' +
+          icon("plus") + " Add the first task</button></div>" +
       "</div>";
     }
-    var controls;
-    if (isNow) {
-      var secs = (timerState.running || timerState.left > 0) ? timerState.left : timerMins() * 60;
-      controls = '<div class="timer-big' + (secs <= 30 && (timerState.running || timerState.left > 0) ? " is-low" : "") +
-        '" id="routineClock">' + clockText(secs) + "</div>" +
-        '<div class="slot-actions">' +
-          '<button type="button" class="btn sm primary" data-act="done">' + icon("check") + " Done</button>" +
-          '<button type="button" class="btn sm" data-act="timer">' +
-            (timerState.running ? icon("pause") + " Pause" : icon("clock") + " Timer") + "</button>" +
-          '<button type="button" class="btn sm ghost" data-act="reset">Reset</button>' +
-          '<button type="button" class="btn sm ghost" data-act="clear">Clear</button>' +
-        "</div>";
-    } else {
-      controls = '<div class="slot-actions"><button type="button" class="btn sm" data-act="promote">Make this Now</button></div>';
-    }
-    return '<div class="slot ' + (isNow ? "now" : "") + '">' +
-      '<span class="slot-label">' + label + "</span>" +
-      '<span class="slot-emoji" aria-hidden="true">' + esc(task.emoji || "🎯") + "</span>" +
-      '<div class="slot-task">' + esc(task.name) + "</div>" +
-      controls +
+    var secs = (timerState.running || timerState.left > 0) ? timerState.left : timerMins() * 60;
+    var total = Math.max(1, timerMins() * 60);
+    var pct = clamp(Math.round(secs / total * 100), 0, 100);
+    return '<div class="now-card">' +
+      '<span class="slot-label">Now</span>' +
+      '<div class="now-main">' +
+        '<span class="now-emoji" aria-hidden="true">' + esc(task.emoji || "🎯") + "</span>" +
+        '<span class="now-task">' + esc(task.name) + "</span>" +
+      "</div>" +
+      '<div class="timer-big' + (secs <= 30 ? " is-low" : "") + '" id="routineClock">' + clockText(secs) + "</div>" +
+      '<div class="timer-bar" aria-hidden="true"><span id="timerFill" style="width:' + pct + '%"></span></div>' +
+      '<div class="slot-actions">' +
+        '<button type="button" class="btn primary" data-act="done">' + icon("check") + " Done</button>" +
+        '<button type="button" class="btn" data-act="timer">' +
+          (timerState.running ? icon("pause") + " Pause" : icon("clock") + " Start timer") + "</button>" +
+        '<button type="button" class="btn ghost sm" data-act="reset">Reset time</button>' +
+        '<button type="button" class="btn ghost sm" data-act="clear">Remove</button>' +
+      "</div>" +
+    "</div>";
+  }
+
+  function nextStripHTML(task) {
+    return '<div class="next-strip">' +
+      '<span class="slot-label">Next</span>' +
+      (task
+        ? '<span class="next-emoji" aria-hidden="true">' + esc(task.emoji || "🎯") + "</span>" +
+          '<span class="next-task">' + esc(task.name) + "</span>" +
+          '<button type="button" class="btn sm" data-act="promote">Make this Now</button>'
+        : '<span class="next-empty">Nothing after that yet.</span>' +
+          '<button type="button" class="btn sm" data-addfocus="next">' + icon("plus") + " Add something to follow</button>") +
     "</div>";
   }
 
   function routineBodyHTML() {
     var r = state.routine;
     var done = r.done.filter(function (d) { return isToday(d.ts); }).slice(0, 10);
-    return '<div class="routine-grid">' +
-        slotHTML("now", r.now) +
-        slotHTML("next", r.next) +
+    return '<div class="routine-plan">' +
+        nowCardHTML(r.now) +
+        nextStripHTML(r.next) +
       "</div>" +
 
-      '<div class="row-wrap" style="margin-top:12px">' +
+      (r.queue.length
+        ? '<div class="section-head"><h2 class="section-title">Then</h2>' +
+            '<span class="tiny muted">' + r.queue.length + " more</span></div>" +
+          '<div class="tasklist">' + r.queue.map(function (t, i) {
+            return '<div class="task-row">' +
+              '<span class="task-emoji" aria-hidden="true">' + esc(t.emoji || "🎯") + "</span>" +
+              '<span class="task-name">' + esc(t.name) + "</span>" +
+              '<button type="button" class="btn sm ghost" data-qnext="' + i + '">Make Next</button>' +
+              '<button type="button" class="icon-btn" data-qdel="' + i + '" aria-label="Remove ' + esc(t.name) + '">' +
+                icon("x") + "</button>" +
+            "</div>";
+          }).join("") + "</div>"
+        : "") +
+
+      '<p class="tiny muted center" style="margin-top:12px">Tap <strong>Done</strong> when a thing is finished — ' +
+        "the next one moves up on its own.</p>" +
+
+      '<div class="row-wrap" style="margin-top:14px">' +
         '<button type="button" class="btn sm" data-preset="morning">☀️ Morning</button>' +
         '<button type="button" class="btn sm" data-preset="bedtime">🌙 Bedtime</button>' +
         '<button type="button" class="btn sm" data-preset="homework">📚 After school</button>' +
-        '<button type="button" class="btn sm ghost" id="clearDay">Reset day</button>' +
       "</div>" +
 
-      '<div class="card" style="margin-top:14px">' +
-        '<h2 class="card-title">Add something</h2>' +
-        '<p class="card-sub">Tap one, or type your own.</p>' +
+      '<div class="card" id="addCard" style="margin-top:14px">' +
+        '<h2 class="card-title">Add a task</h2>' +
+        '<p class="card-sub">Tap one, or type your own. It joins the end of the list.</p>' +
         '<div class="chips" style="margin-top:12px">' +
           D.routineChips.map(function (c) {
             return '<button type="button" class="chip" data-chip="' + esc(c.name) + '" data-emoji="' + c.emoji + '">' +
@@ -1501,39 +1537,26 @@
         "</form>" +
       "</div>" +
 
-      (r.queue.length
-        ? '<div class="section-head"><h2 class="section-title">Then</h2>' +
-            '<span class="tiny muted">' + r.queue.length + " waiting</span></div>" +
-          '<div class="tasklist">' + r.queue.map(function (t, i) {
-            return '<div class="task-row">' +
-              '<span class="task-emoji" aria-hidden="true">' + esc(t.emoji || "🎯") + "</span>" +
-              '<span class="task-name">' + esc(t.name) + "</span>" +
-              '<button type="button" class="btn sm ghost" data-qnext="' + i + '">Next</button>' +
-              '<button type="button" class="icon-btn" data-qdel="' + i + '" aria-label="Remove ' + esc(t.name) + '">' +
-                icon("x") + "</button>" +
-            "</div>";
-          }).join("") + "</div>"
-        : "") +
-
-      '<div class="section-head"><h2 class="section-title">Saved routines</h2></div>' +
+      '<div class="section-head"><h2 class="section-title">Saved lists</h2>' +
+        '<span class="tiny muted">one tap on a busy morning</span></div>' +
       '<div class="card tight">' +
         '<div class="row" style="flex-wrap:wrap">' +
-          '<input class="input" id="routineName" placeholder="Name this routine" maxlength="32" ' +
-            'aria-label="Routine name" style="flex:1;min-width:170px">' +
-          '<button type="button" class="btn" id="saveRoutine">Save</button>' +
+          '<input class="input" id="routineName" placeholder="Name this list" maxlength="32" ' +
+            'aria-label="List name" style="flex:1;min-width:170px" value="' + esc(routineNameDraft) + '">' +
+          '<button type="button" class="btn" id="saveRoutine">Save this list</button>' +
         "</div>" +
         (state.routines.length
           ? '<div class="stack" style="margin-top:12px">' + state.routines.map(function (rt) {
               return '<div class="saved-row">' +
                 '<span class="task-emoji" aria-hidden="true">💾</span>' +
                 '<span class="task-name">' + esc(rt.name) + "</span>" +
-                '<span class="tiny muted">' + rt.items.length + " steps</span>" +
+                '<span class="tiny muted">' + rt.items.length + (rt.items.length === 1 ? " task" : " tasks") + "</span>" +
                 '<button type="button" class="btn sm" data-load="' + rt.id + '">Load</button>' +
                 '<button type="button" class="icon-btn" data-delroutine="' + rt.id + '" aria-label="Delete ' + esc(rt.name) + '">' +
                   icon("trash") + "</button>" +
               "</div>";
             }).join("") + "</div>"
-          : '<p class="tiny muted" style="margin-top:10px">Save a routine once, then load it on busy mornings.</p>') +
+          : '<p class="tiny muted" style="margin-top:10px">Nothing saved yet. Build a list above, then save it here.</p>') +
       "</div>" +
 
       (done.length
@@ -1543,12 +1566,16 @@
             return '<div class="task-row is-done"><span class="task-emoji" aria-hidden="true">' + esc(d.emoji || "⭐") + "</span>" +
               '<span class="task-name">' + esc(d.name) + '</span><span class="tiny muted">' + dateLabel(d.ts).replace("Today ", "") + "</span></div>";
           }).join("") + "</div>"
-        : "");
+        : "") +
+
+      '<div class="row" style="justify-content:center;margin-top:24px">' +
+        '<button type="button" class="btn ghost sm" id="clearDay">Reset the whole day</button>' +
+      "</div>";
   }
 
   VIEWS.routine = function (view) {
     view.innerHTML = pageHead("Now &amp; Next", "One thing at a time",
-      "Show the next thing, then the thing after. Keep it short and where everyone can see it.") +
+      "Now is the only thing that needs attention for the moment. Next is a heads-up, so the handover is not a surprise.") +
       ruleStripHTML() +
       '<div id="routineBody"></div>';
     var body = $("#routineBody");
@@ -1597,7 +1624,7 @@
             normaliseRoutine();
             timerReset();
             AudioEngine.chime();
-            commit("One sticker for " + now.name + " ⭐");
+            commit("⭐ " + now.name + " done" + (state.routine.now ? ". Next up: " + state.routine.now.name : ""));
           } else if (act === "timer") {
             if (timerState.running) {
               timerPause();
@@ -1612,7 +1639,7 @@
             state.routine.now = null;
             normaliseRoutine();
             timerReset();
-            commit("Cleared.");
+            commit("Removed from Now.");
           } else if (act === "promote") {
             if (!state.routine.next) return;
             if (state.routine.now) state.routine.queue.unshift(state.routine.now);
@@ -1626,11 +1653,17 @@
 
       $$("[data-addfocus]", body).forEach(function (btn) {
         btn.addEventListener("click", function () {
+          var card = $("#addCard", body);
           var input = $("#addTaskInput", body);
-          if (input) {
-            input.focus();
-            toast("Type a task below, or tap a chip.");
+          if (card) {
+            card.classList.add("is-target");
+            setTimeout(function () { card.classList.remove("is-target"); }, 1800);
+            if (typeof card.scrollIntoView === "function") {
+              try { card.scrollIntoView({ block: "center", behavior: "smooth" }); } catch (e) {}
+            }
           }
+          if (input) input.focus();
+          toast("Pick a task below, or type your own.");
         });
       });
 
@@ -1660,19 +1693,24 @@
             return { name: p[0], emoji: p[1], mins: 5 };
           });
           if (!items.length) return;
+          var hasPlan = !!(state.routine.now || state.routine.next || state.routine.queue.length);
+          if (hasPlan && !window.confirm("Replace the list you have now with the " + (PRESET_LABELS[key] || key) + " one?")) return;
           state.routine.now = items.shift() || null;
           state.routine.next = items.shift() || null;
           state.routine.queue = items;
           timerReset();
-          commit("Loaded the " + key + " routine.");
+          commit((PRESET_LABELS[key] || "New") + " list ready.");
         });
       });
+
+      var nameInput = $("#routineName", body);
+      if (nameInput) nameInput.addEventListener("input", function () { routineNameDraft = nameInput.value; });
 
       var saveBtn = $("#saveRoutine", body);
       if (saveBtn) saveBtn.addEventListener("click", function () {
         var input = $("#routineName", body);
-        var name = input ? input.value.trim() : "";
-        if (!name) { if (input) input.focus(); toast("Give the routine a name first."); return; }
+        var name = (input ? input.value : routineNameDraft).trim();
+        if (!name) { if (input) input.focus(); toast("Give the list a name first."); return; }
         var items = [];
         if (state.routine.now) items.push(state.routine.now);
         if (state.routine.next) items.push(state.routine.next);
@@ -1680,6 +1718,7 @@
         if (!items.length) { toast("Add a task or two first."); return; }
         state.routines.unshift({ id: uid(), name: name.slice(0, 32), items: items.slice(0, 20) });
         state.routines = state.routines.slice(0, 8);
+        routineNameDraft = "";
         commit("Saved “" + name.slice(0, 32) + "”.");
       });
 
@@ -1702,13 +1741,13 @@
         btn.addEventListener("click", function () {
           var id = btn.getAttribute("data-delroutine");
           state.routines = state.routines.filter(function (r) { return r.id !== id; });
-          commit("Routine deleted.");
+          commit("List deleted.");
         });
       });
 
       var clear = $("#clearDay", body);
       if (clear) clear.addEventListener("click", function () {
-        if (!window.confirm("Clear today's plan and the done list? Saved routines are kept.")) return;
+        if (!window.confirm("Clear Now, Next, the list and today's done list? Saved lists are kept.")) return;
         state.routine.now = null;
         state.routine.next = null;
         state.routine.queue = [];
