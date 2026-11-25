@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ZenZac — app.js
+   ZenZac - app.js
    Vanilla JavaScript. No build step, no dependencies, no network calls.
    Everything the child or parent creates is stored in localStorage only.
    ========================================================================== */
@@ -73,6 +73,7 @@
       voice: false,
       theme: "dusk",
       showHistory: false,
+      emojiStyle: "basic",
       whackTheme: "aliens",
       whackLevel: "normal",
       spinTopic: "mix",
@@ -110,6 +111,7 @@
       base.settings.mix = Object.assign({}, DEFAULT_MIX, s.mix || {});
       base.settings.theme = typeof s.theme === "string" && s.theme ? s.theme : "dusk";
       base.settings.showHistory = s.showHistory === true;
+      base.settings.emojiStyle = typeof s.emojiStyle === "string" ? s.emojiStyle : "basic";
       base.settings.whackTheme = typeof s.whackTheme === "string" ? s.whackTheme : "aliens";
       base.settings.whackLevel = typeof s.whackLevel === "string" ? s.whackLevel : "normal";
       base.settings.spinTopic = typeof s.spinTopic === "string" ? s.spinTopic : "mix";
@@ -153,7 +155,7 @@
     try {
       window.localStorage.setItem(KEY, JSON.stringify(state));
     } catch (e) {
-      toast("Could not save on this device — storage may be full.");
+      toast("Could not save on this device - storage may be full.");
     }
   }
 
@@ -271,7 +273,7 @@
     }
 
     function toggle(id) {
-      if (!soundOn()) { toast("Sound is off — turn it on in Settings."); return false; }
+      if (!soundOn()) { toast("Sound is off - turn it on in Settings."); return false; }
       var meta = metaFor(id);
       if (meta && meta.synth) {
         var synth = synths[id] || makeSynth(id);
@@ -333,7 +335,7 @@
 
     /* One sound at a time: a new sound always stops the one before it. */
     function playFile(src, vol, onEnd) {
-      if (!soundOn()) { toast("Sound is off — turn it on in Settings."); return null; }
+      if (!soundOn()) { toast("Sound is off - turn it on in Settings."); return null; }
       stopOneShots();
       try {
         var el = new window.Audio(encodeURI(src));
@@ -512,7 +514,7 @@
   var MORE_ROUTES = ["more", "focus", "journal", "learn", "support", "compendium", "setup", "settings"];
 
   var TITLES = {
-    home: "ZenZac — calm, routines & play",
+    home: "ZenZac - calm, routines & play",
     calm: "Calm · ZenZac",
     routine: "Now & Next · ZenZac",
     focus: "Focus · ZenZac",
@@ -559,6 +561,9 @@
     document.documentElement.setAttribute("data-theme", known ? theme : "dusk");
     document.documentElement.setAttribute("data-motion", state.settings.motion === "calm" ? "calm" : "full");
     document.documentElement.setAttribute("data-bigtext", state.settings.bigText ? "on" : "off");
+    var emoji = state.settings.emojiStyle || "basic";
+    if (["basic", "soft", "matt", "gloss"].indexOf(emoji) < 0) emoji = "basic";
+    document.documentElement.setAttribute("data-emoji", emoji);
     var btn = $("#soundToggle");
     if (btn) {
       btn.setAttribute("aria-pressed", state.settings.sound ? "true" : "false");
@@ -573,7 +578,7 @@
     var id = (window.location.hash || "").replace(/^#\/?/, "").split("?")[0].split("/")[0] || "home";
     if (!VIEWS[id] && id !== "more") id = "home";
     if (id !== "setup") setupOpened = false;
-    if (id !== "journal") journalUnlocked = false;
+    if (id !== "journal") { journalUnlocked = false; journalEdit = null; }
     stopAllActivity();
     renderChrome(id);
     var view = $("#view");
@@ -606,7 +611,7 @@
 
   var breath = { pattern: "calm", running: false, timer: null, left: 0, pi: 0, round: 0, scale: 0.82 };
 
-  /* "in 4 · hold 4 · out 6" — the numbers mean nothing without the words. */
+  /* "in 4 · hold 4 · out 6" - the numbers mean nothing without the words. */
   function patternNote(p) {
     return p.phases.map(function (ph, i) {
       var word = ph[2] === "in" ? "in" : ph[2] === "out" ? "out" : "hold";
@@ -783,7 +788,7 @@
   }
 
   var PRESETS = {
-    morning: [["Wake up", "☀️"], ["Brush teeth", "🪥"], ["Get dressed", "👕"], ["Breakfast", "🥣"], ["Pack bag", "🎒"]],
+    morning: [["Wake up", "☀️"], ["Brush teeth", "🦷"], ["Get dressed", "👕"], ["Breakfast", "🥣"], ["Pack bag", "🎒"]],
     bedtime: [["Bath", "🛁"], ["Pyjamas", "🧦"], ["Story", "📖"], ["Bed", "🌙"]],
     homework: [["Snack", "🍎"], ["Homework", "✏️"], ["Screen time", "📱"], ["Dinner", "🍽️"]]
   };
@@ -985,7 +990,7 @@
 
   var WHACK_THEMES = [
     { id: "aliens",   name: "Aliens",   emoji: "👽", bonus: "🛸", mover: "🪐", grump: "👾", line: "Tap the aliens before they fly off." },
-    { id: "monsters", name: "Monsters", emoji: "👾", bonus: "⭐", mover: "🦠", grump: "🧟", line: "Tap the monsters before they bounce away." },
+    { id: "monsters", name: "Monsters", emoji: "👾", bonus: "⭐", mover: "🦠", grump: "🥦", line: "Tap the monsters before they bounce away." },
     { id: "robots",   name: "Robots",   emoji: "🤖", bonus: "⚡", mover: "🔧", grump: "🔌", line: "Tap the robots before they power down." },
     { id: "sea",      name: "Sea",      emoji: "🐙", bonus: "🐚", mover: "🐠", grump: "🦈", line: "Tap the sea creatures before they swim off." },
     { id: "snacks",   name: "Snacks",   emoji: "🍕", bonus: "🍩", mover: "🍿", grump: "🌶️", line: "Tap the snacks before they disappear." },
@@ -1134,12 +1139,12 @@
     var points = parseInt(hole.dataset.points || "1", 10);
     if (kind === "grump") {
       whack.score = Math.max(0, whack.score - 1);
-      whackSay("That one was a grump. Minus one — no harm done.");
+      whackSay("That one was a grump. Minus one - no harm done.");
       AudioEngine.tick(0.3);
     } else {
       whack.score += points;
       if (kind === "bonus") whackSay("Gold! Five points.");
-      else if (kind === "mover") whackSay("That one was moving — two points!");
+      else if (kind === "mover") whackSay("That one was moving - two points!");
       AudioEngine.tick(points > 1 ? 1 : 0.65);
     }
     hideHole(hole);
@@ -1158,7 +1163,7 @@
     var isBest = score > best;
     if (isBest) { state.whackBest[key] = score; save(); best = score; }
     whackSay(score === 0
-      ? "Good try. Nothing lost — have another go."
+      ? "Good try. Nothing lost - have another go."
       : isBest
         ? "New best for " + theme.name + ": " + score + "! 🎉"
         : "You scored " + score + ". Best for " + theme.name + ": " + best + ".");
@@ -1183,6 +1188,13 @@
   /* ------------------------------- views ------------------------------- */
 
   var VIEWS = {};
+
+  var EMOJI_STYLES = [
+    { id: "basic", name: "Basic", note: "Plain, exactly as your device draws it." },
+    { id: "soft",  name: "Soft",  note: "Rounded, gently tinted and blurred at the edges." },
+    { id: "matt",  name: "Matt",  note: "Flat and quiet, with no shine or depth." },
+    { id: "gloss", name: "Gloss", note: "A little shine and depth, like a button." }
+  ];
 
   function pageHead(eyebrow, title, sub) {
     return '<div class="page-head"><p class="eyebrow">' + esc(eyebrow) + "</p>" +
@@ -1330,7 +1342,7 @@
       '<div class="grid grid-2" style="margin-top:18px">' +
         '<div class="card">' +
           '<div class="row-between"><div><h2 class="card-title">Today</h2>' +
-            '<p class="card-sub">' + (streak > 1 ? streak + " days in a row — lovely." : "Small steps count.") + "</p></div>" +
+            '<p class="card-sub">' + (streak > 1 ? streak + " days in a row - lovely." : "Small steps count.") + "</p></div>" +
             '<span class="badge mint">' + icon("star") + " " + (state.stickers || 0) + "</span></div>" +
           '<div class="today-grid" style="margin-top:14px">' +
             '<div class="today-item"><span class="stat-num">' + moodsToday + '</span><span class="stat-label">Check-ins</span></div>' +
@@ -1384,6 +1396,10 @@
   /* ---- Calm ---- */
 
   var calmTab = "breathe";
+  var groundScene = "home";
+  var groundStep = 0;
+  var groundFound = {};
+  var groundDone = false;
 
   VIEWS.calm = function (view) {
     function panelHTML() {
@@ -1398,7 +1414,7 @@
       var lead = calmTab === "sounds"
         ? "For winding down, or covering a noisy room."
         : calmTab === "ground"
-          ? "For when talking feels hard."
+          ? "For when talking feels hard. Choose where you are, then find a few things with each sense."
           : "For when feelings are already big.";
       var foot = calmTab === "sounds"
         ? "Nothing to get right here. Change the volume or stop whenever you like."
@@ -1406,7 +1422,7 @@
           ? "Go at your own pace. Stopping after any step is fine."
           : "Breathe out for longer than you breathe in. If you feel dizzy, stop and rest.";
       view.innerHTML = pageHead("Calm", "Let&rsquo;s slow things down",
-        "Three ways to settle. Pick one — you do not have to do them all.") +
+        "Three ways to settle. Pick one - you do not have to do them all.") +
         '<div class="pill-toggle" role="group" aria-label="Calm tools">' +
           '<button type="button" data-ctab="breathe" aria-pressed="' + (calmTab === "breathe") + '">Breathe</button>' +
           '<button type="button" data-ctab="sounds" aria-pressed="' + (calmTab === "sounds") + '">Sounds</button>' +
@@ -1539,65 +1555,227 @@
       }
     }
 
+    function groundPicksFor() {
+      var key = groundScene + ":" + groundStep;
+      if (!Array.isArray(groundFound[key])) groundFound[key] = [];
+      return groundFound[key];
+    }
+
+    function groundCountText(found, total) {
+      return found
+        ? found + " of " + total + " tapped. It is fine to name something that is not in the list."
+        : "Nothing tapped yet - tapping is optional. It is fine to name something that is not in the list.";
+    }
+
     function groundPanel() {
-      return '<div class="card center">' +
-        '<p class="eyebrow">5 · 4 · 3 · 2 · 1</p>' +
-        '<div id="groundNum" style="font-size:clamp(3rem,16vw,5rem);font-weight:800;line-height:1">5</div>' +
-        '<p class="breath-phase" id="groundSense">things you can see</p>' +
-        '<p class="muted" id="groundTip" style="max-width:44ch;margin:0 auto">Look around slowly. Name each one out loud or in your head.</p>' +
-        '<div class="row" style="justify-content:center;gap:8px;margin-top:16px" id="groundDots" aria-hidden="true">' +
-          GROUND.map(function (g, i) {
-            return '<span style="width:8px;height:8px;border-radius:50%;background:' +
-              (i === 0 ? "var(--mint)" : "color-mix(in srgb, var(--ink) 22%, transparent)") + '"></span>';
-          }).join("") +
-        "</div>" +
-        '<div class="row" style="justify-content:center;gap:10px;margin-top:18px">' +
-          '<button type="button" class="btn" id="groundBack" disabled>Back</button>' +
-          '<button type="button" class="btn primary" id="groundNext">Next</button>' +
-        "</div>" +
-        '<p class="tiny muted" style="margin-top:16px">If five feels too many, start at three.</p>' +
+      var scene = groundSceneData();
+      var step = scene.steps[groundStep] || scene.steps[0];
+      var picks = groundPicksFor();
+      var sceneChips = GROUND_SCENES.map(function (s) {
+        var on = s.id === scene.id;
+        return '<button type="button" class="chip' + (on ? " is-on" : "") + '" data-ground-scene="' + s.id +
+          '" aria-pressed="' + on + '">' + s.emoji + " " + esc(s.name) + "</button>";
+      }).join("");
+
+      var body;
+      if (groundDone) {
+        body = '<div class="ground-done">' +
+          '<span class="ground-done-mark" aria-hidden="true">🌿</span>' +
+          '<h2 class="card-title">You looked, listened and noticed.</h2>' +
+          '<p class="card-sub" style="max-width:46ch;margin:8px auto 0">That is the whole exercise. If your body feels a little slower, it worked. ' +
+            "If not, nothing is broken - you can go again or move on." + "</p>" +
+          '<div class="row-wrap" style="justify-content:center;margin-top:16px">' +
+            '<button type="button" class="btn primary" data-ground-again="1">Go again</button>' +
+            '<button type="button" class="btn" data-ground-close="1">Back to the steps</button>' +
+          "</div></div>";
+      } else {
+        body = '<div class="ground-stage">' +
+          '<p class="eyebrow">' + esc(scene.name) + " · step " + (groundStep + 1) + " of " + scene.steps.length + "</p>" +
+          '<div class="ground-num" aria-hidden="true">' + step.n + "</div>" +
+          '<p class="breath-phase">' + esc(step.sense) + "</p>" +
+          '<p class="ground-tip">' + esc(step.tip) + "</p>" +
+          '<p class="label ground-pick-label">Soft ideas - tap any you find, or say your own out loud</p>' +
+          '<div class="ground-picks">' + step.picks.map(function (p, i) {
+            var on = picks.indexOf(i) > -1;
+            return '<button type="button" class="ground-pick' + (on ? " is-on" : "") + '" data-ground-pick="' + i +
+              '" aria-pressed="' + on + '">' +
+              '<span class="ground-pick-img" aria-hidden="true">' + p.e + "</span>" +
+              "<span>" + esc(p.l) + "</span>" +
+              '<span class="ground-tick" aria-hidden="true">' + (on ? "✓" : "") + "</span></button>";
+          }).join("") + "</div>" +
+          '<p class="tiny muted" id="groundFoundCount">' + groundCountText(picks.length, step.picks.length) + "</p>" +
+          '<div class="ground-dots" aria-hidden="true">' + scene.steps.map(function (_, i) {
+            return '<span' + (i === groundStep ? ' class="is-on"' : "") + "></span>";
+          }).join("") + "</div>" +
+          '<div class="row-wrap ground-nav">' +
+            '<button type="button" class="btn" id="groundBack"' + (groundStep === 0 ? " disabled" : "") + ">Back</button>" +
+            '<button type="button" class="btn primary" id="groundNext">' +
+              (groundStep === scene.steps.length - 1 ? "Finish" : "Next sense") + "</button>" +
+            '<button type="button" class="btn ghost sm" data-ground-reset="1">Start again</button>' +
+          "</div>" +
+        "</div>";
+      }
+
+      return '<div class="card ground-card">' +
+        '<div class="ground-top"><div><h2 class="card-title">Look around, slowly</h2>' +
+          '<p class="card-sub">A 5-4-3-2-1 grounding exercise with a place to start from. Pick where you are, then work through one sense at a time.</p></div>' +
+          '<span class="ground-badge">5 · 4 · 3 · 2 · 1</span></div>' +
+        '<div class="ground-how"><h3 class="mini-title">How this works</h3><ol>' +
+          "<li><strong>Pick where you are.</strong> At home, outside, in the car or in bed. The ideas change with the place, so it fits where you actually are.</li>" +
+          "<li><strong>One sense at a time.</strong> Look, listen, touch or sniff slowly. There is no need to rush, and you do not have to find all of them.</li>" +
+          "<li><strong>Tap a picture, or say your own.</strong> The pictures are only soft suggestions. Your answer can be anything you really notice.</li>" +
+        "</ol></div>" +
+        '<div class="chips" role="group" aria-label="Where are you?" style="margin-top:16px">' + sceneChips + "</div>" +
+        body +
+        '<p class="tiny muted center" style="margin-top:14px">If five of something feels too many, finding two is still doing it. You can stop after any step.</p>' +
       "</div>";
     }
 
     function bindGround() {
-      var step = 0;
-      var num = $("#groundNum"), sense = $("#groundSense"), tip = $("#groundTip");
-      var back = $("#groundBack"), next = $("#groundNext"), dots = $("#groundDots");
+      $$("[data-ground-scene]", view).forEach(function (chip) {
+        chip.addEventListener("click", function () {
+          groundScene = chip.getAttribute("data-ground-scene");
+          groundStep = 0;
+          groundDone = false;
+          render();
+        });
+      });
 
-      function paint() {
-        var g = GROUND[step];
-        if (num) num.textContent = String(g.n);
-        if (sense) sense.textContent = g.sense;
-        if (tip) tip.textContent = g.tip;
-        if (back) back.disabled = step === 0;
-        if (next) next.textContent = step === GROUND.length - 1 ? "Finish" : "Next";
-        if (dots) {
-          $$("span", dots).forEach(function (dot, i) {
-            dot.style.background = i === step ? "var(--mint)" : "color-mix(in srgb, var(--ink) 22%, transparent)";
-          });
-        }
-        AudioEngine.say(g.sense);
+      function resetGround() {
+        groundStep = 0;
+        groundDone = false;
+        groundFound = {};
       }
 
+      $$("[data-ground-reset]", view).forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          resetGround();
+          render();
+          toast("Back to the first sense.");
+        });
+      });
+      $$("[data-ground-again]", view).forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          resetGround();
+          render();
+        });
+      });
+      $$("[data-ground-close]", view).forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          groundDone = false;
+          render();
+        });
+      });
+
+      if (groundDone) return;
+
+      $$("[data-ground-pick]", view).forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var index = parseInt(btn.getAttribute("data-ground-pick"), 10);
+          var picks = groundPicksFor();
+          var at = picks.indexOf(index);
+          if (at > -1) picks.splice(at, 1); else picks.push(index);
+          var on = picks.indexOf(index) > -1;
+          btn.classList.toggle("is-on", on);
+          btn.setAttribute("aria-pressed", on ? "true" : "false");
+          var tick = btn.querySelector(".ground-tick");
+          if (tick) tick.textContent = on ? "✓" : "";
+          var count = $("#groundFoundCount");
+          if (count) count.textContent = groundCountText(picks.length, btn.parentNode.children.length);
+          AudioEngine.tick(on ? 0.55 : 0.3);
+        });
+      });
+
+      var back = $("#groundBack");
       if (back) back.addEventListener("click", function () {
-        if (step > 0) { step--; paint(); }
+        if (groundStep > 0) { groundStep--; render(); }
       });
+      var next = $("#groundNext");
       if (next) next.addEventListener("click", function () {
-        if (step < GROUND.length - 1) { step++; paint(); }
-        else { toast("That's all five. How do you feel now?"); }
+        if (groundStep < groundSceneData().steps.length - 1) { groundStep++; render(); }
+        else { groundDone = true; render(); }
       });
-      paint();
+
+      var step = groundSceneData().steps[groundStep];
+      if (step) AudioEngine.say(step.sense + ". " + step.tip);
     }
 
     render();
   };
 
-  var GROUND = [
-    { n: 5, sense: "things you can see", tip: "Look around slowly. Name each one out loud or in your head." },
-    { n: 4, sense: "things you can feel", tip: "Your feet on the floor, the chair, your sleeves, the air on your skin." },
-    { n: 3, sense: "things you can hear", tip: "Near sounds, far sounds, and your own breathing." },
-    { n: 2, sense: "things you can smell", tip: "Or two smells you like. Imagine them if you need to." },
-    { n: 1, sense: "thing you can taste", tip: "Or one thing you are looking forward to today." }
+  function groundSceneData() {
+    var found = null;
+    GROUND_SCENES.forEach(function (s) { if (s.id === groundScene) found = s; });
+    return found || GROUND_SCENES[0];
+  }
+
+  /* Four places, because "look around" lands differently in a car or in bed.
+     The pictures are soft prompts, never a checklist to complete. */
+  var GROUND_SCENES = [
+    {
+      id: "home", name: "At home", emoji: "🏠",
+      intro: "Any room will do. You do not need to move, tidy or find anything special.",
+      steps: [
+        { n: 5, sense: "things you can see", tip: "Start close to you, then let your eyes travel further. Corners and small things count too.",
+          picks: [{ e: "💡", l: "A lamp" }, { e: "🌱", l: "A plant" }, { e: "🖼️", l: "A picture" }, { e: "🚪", l: "A door" }] },
+        { n: 4, sense: "things you can touch", tip: "Press your feet into the floor. Notice your back on the chair, your sleeves, the air on your skin.",
+          picks: [{ e: "🧸", l: "Something soft" }, { e: "🛋️", l: "The sofa" }, { e: "👕", l: "Your sleeve" }, { e: "🦶", l: "Your feet" }] },
+        { n: 3, sense: "things you can hear", tip: "Listen for a near sound, a far sound, and then your own breathing. Nothing has to be named perfectly.",
+          picks: [{ e: "🕰️", l: "A clock" }, { e: "🚪", l: "A door" }, { e: "🐦", l: "A bird" }, { e: "🎵", l: "Music" }] },
+        { n: 2, sense: "things you can smell", tip: "Take one slow sniff. If you cannot smell anything, think of two smells you like instead.",
+          picks: [{ e: "🍞", l: "Toast" }, { e: "🧼", l: "Soap" }, { e: "🌸", l: "Flowers" }, { e: "☕", l: "A drink" }] },
+        { n: 1, sense: "thing you can taste", tip: "Or one thing you are looking forward to today. A sip of water counts.",
+          picks: [{ e: "💧", l: "Water" }, { e: "🍎", l: "An apple" }, { e: "🍫", l: "Chocolate" }, { e: "🥛", l: "Milk" }] }
+      ]
+    },
+    {
+      id: "outside", name: "Outside", emoji: "🌳",
+      intro: "In a garden, on a walk or waiting at the gate. Cold, wet and windy days count.",
+      steps: [
+        { n: 5, sense: "things you can see", tip: "Look up, look down, then look far away. Clouds and cracks in the pavement are both allowed.",
+          picks: [{ e: "🌳", l: "A tree" }, { e: "☁️", l: "A cloud" }, { e: "🐦", l: "A bird" }, { e: "🌸", l: "A flower" }] },
+        { n: 4, sense: "things you can feel", tip: "The wind, the sun, your coat, the ground under your shoes. Notice which one you feel first.",
+          picks: [{ e: "🌬️", l: "The wind" }, { e: "☀️", l: "The sun" }, { e: "🧥", l: "Your coat" }, { e: "🌿", l: "A leaf" }] },
+        { n: 3, sense: "things you can hear", tip: "Near traffic, far traffic, birds, footsteps. Let the sounds come to you rather than hunting for them.",
+          picks: [{ e: "🍃", l: "Leaves" }, { e: "🚗", l: "Traffic" }, { e: "🐕", l: "A dog" }, { e: "🌧️", l: "Rain" }] },
+        { n: 2, sense: "things you can smell", tip: "Wet grass, flowers, a bakery, fresh air. One slow breath is plenty.",
+          picks: [{ e: "🌸", l: "Flowers" }, { e: "🌿", l: "Grass" }, { e: "🍞", l: "A bakery" }, { e: "🌧️", l: "Rain" }] },
+        { n: 1, sense: "thing you can taste", tip: "A drink, a snack, or the cold air on your tongue. Anything you can actually taste.",
+          picks: [{ e: "💧", l: "Water" }, { e: "🍦", l: "Ice cream" }, { e: "🍎", l: "A snack" }, { e: "🍬", l: "A sweet" }] }
+      ]
+    },
+    {
+      id: "car", name: "In the car", emoji: "🚗",
+      intro: "On a journey, waiting to set off, or parked somewhere. You can do this without touching anything.",
+      steps: [
+        { n: 5, sense: "things you can see", tip: "Look through the window and around the inside of the car. Lights, trees and clouds all count.",
+          picks: [{ e: "🚗", l: "A car" }, { e: "🚦", l: "Lights" }, { e: "🌳", l: "Trees" }, { e: "☁️", l: "Clouds" }] },
+        { n: 4, sense: "things you can feel", tip: "Your seat, the air from a vent, your coat, your own hands in your lap.",
+          picks: [{ e: "🚗", l: "Your seat" }, { e: "🌬️", l: "The air" }, { e: "🧥", l: "Your coat" }, { e: "✋", l: "Your hands" }] },
+        { n: 3, sense: "things you can hear", tip: "The engine, the radio, rain on the roof, a bird outside. Pick the quietest one you can find.",
+          picks: [{ e: "🎵", l: "The radio" }, { e: "🌧️", l: "Rain" }, { e: "🚗", l: "The engine" }, { e: "🐦", l: "Birds" }] },
+        { n: 2, sense: "things you can smell", tip: "Fresh air from the window, a drink, a snack. If nothing smells strong, that is an answer too.",
+          picks: [{ e: "🌿", l: "Fresh air" }, { e: "🍊", l: "A freshener" }, { e: "☕", l: "A drink" }, { e: "🍞", l: "Snacks" }] },
+        { n: 1, sense: "thing you can taste", tip: "A sip of water, a sweet, or the taste of the air. Anything you can notice.",
+          picks: [{ e: "💧", l: "Water" }, { e: "🍬", l: "A sweet" }, { e: "🍎", l: "A snack" }, { e: "🍫", l: "Chocolate" }] }
+      ]
+    },
+    {
+      id: "bed", name: "In bed", emoji: "🛏️",
+      intro: "For the end of the day, or a lie-down in the afternoon. You can stay exactly where you are.",
+      steps: [
+        { n: 5, sense: "things you can see", tip: "Let your eyes move slowly around the room. Shapes in the dark count, and so does the ceiling.",
+          picks: [{ e: "🌙", l: "The moon" }, { e: "⭐", l: "Stars" }, { e: "🧸", l: "Teddy" }, { e: "💡", l: "A night light" }] },
+        { n: 4, sense: "things you can touch", tip: "The mattress under you, the quilt, your pillow, your own feet. Let each one take a slow breath.",
+          picks: [{ e: "🛏️", l: "Your bed" }, { e: "🧸", l: "Teddy" }, { e: "🧶", l: "Blanket" }, { e: "👣", l: "Your feet" }] },
+        { n: 3, sense: "things you can hear", tip: "Rain, a clock, quiet music, the wind. Near sounds first, then far ones if you can.",
+          picks: [{ e: "🌧️", l: "Rain" }, { e: "🕰️", l: "A clock" }, { e: "🎵", l: "Quiet music" }, { e: "🌬️", l: "The wind" }] },
+        { n: 2, sense: "things you can smell", tip: "Soap, fresh sheets, a warm drink. Two slow sniffs, then let your shoulders drop.",
+          picks: [{ e: "🧼", l: "Soap" }, { e: "🛏️", l: "Fresh sheets" }, { e: "🌸", l: "Flowers" }, { e: "☕", l: "A warm drink" }] },
+        { n: 1, sense: "thing you can taste", tip: "A sip of water, a mint, or one thing you are looking forward to tomorrow.",
+          picks: [{ e: "💧", l: "Water" }, { e: "🍬", l: "Mint" }, { e: "🍎", l: "A snack" }, { e: "🥛", l: "Milk" }] }
+      ]
+    }
   ];
 
   /* ---- Now & Next ---- */
@@ -1672,7 +1850,7 @@
           }).join("") + "</div>"
         : "") +
 
-      '<p class="tiny muted center" style="margin-top:12px">Tap <strong>Done</strong> when a thing is finished — ' +
+      '<p class="tiny muted center" style="margin-top:12px">Tap <strong>Done</strong> when a thing is finished - ' +
         "the next one moves up on its own.</p>" +
 
       '<div class="row-wrap" style="margin-top:14px">' +
@@ -1979,15 +2157,15 @@
       '<div class="grid grid-2" style="margin-top:14px">' +
         '<div class="card tight"><h2 class="card-title">Ways to use it</h2>' +
           '<ul class="stack" style="margin-top:10px;color:var(--ink-2);font-size:0.94rem">' +
-            "<li>🍽️ Tea, snack or takeaway — the wheel decides, not the argument.</li>" +
+            "<li>🍽️ Tea, snack or takeaway - the wheel decides, not the argument.</li>" +
             "<li>🎮 Which game next, when nobody can agree.</li>" +
             "<li>🌳 What to do outside, when 'I&rsquo;m bored' arrives.</li>" +
-            "<li>🫁 A slow one: breathe out each time it passes the top.</li>" +
+            "<li>🌬️ A slow one: breathe out each time it passes the top.</li>" +
           "</ul>" +
         "</div>" +
         '<div class="card tight"><h2 class="card-title">Make it feel nice</h2>' +
           '<p class="card-sub">Sit comfortably. Let your shoulders drop. Spin it as fast or slow as you like.</p>' +
-          '<p class="tiny muted" style="margin-top:10px">No result is a bad result. If the wheel picks something you cannot do, spin again — that is allowed too.</p>' +
+          '<p class="tiny muted" style="margin-top:10px">No result is a bad result. If the wheel picks something you cannot do, spin again - that is allowed too.</p>' +
         "</div>" +
       "</div>";
     }
@@ -2026,7 +2204,7 @@
         '<div class="whack-legend">' +
           '<span>' + theme.bonus + " Gold <strong>5</strong></span>" +
           '<span>' + theme.mover + " Mover <strong>2</strong></span>" +
-          '<span>' + theme.grump + " Grump <strong>−1</strong> — leave it</span>" +
+          '<span>' + theme.grump + " Grump <strong>−1</strong> - leave it</span>" +
         "</div>" +
         '<div class="whack-grid" style="margin-top:12px">' + holes + "</div>" +
         '<div class="whack-picks">' +
@@ -2038,7 +2216,7 @@
           '<span class="tiny muted">Top 5, on this device</span></div>' +
         '<div id="whackBoard">' + whackBoardHTML() + "</div>" +
         '<p class="tiny muted" style="margin-top:12px">Nothing is lost if you miss one. ' +
-          "Gold is worth 5, movers are worth 2, and the grump costs you one — so leave it be.</p>" +
+          "Gold is worth 5, movers are worth 2, and the grump costs you one - so leave it be.</p>" +
       "</div>";
     }
 
@@ -2116,6 +2294,8 @@
   var moodPick = 0;
   var triggerPicks = [];
   var helpPicks = [];
+  /* Which saved entry is open for editing, and the working choices while it is open. */
+  var journalEdit = null;
 
   VIEWS.journal = function (view) {
     function render() {
@@ -2162,11 +2342,14 @@
       return '<div class="chart" role="img" aria-label="Average mood for each of the last seven days">' + cols + "</div>";
     }
 
-    function moodEntriesHTML(list, withDelete) {
+    function moodEntriesHTML(list, withManage) {
       if (!list.length) {
         return '<div class="empty"><strong>Nothing saved yet.</strong>Check-ins you save will be kept here.</div>';
       }
       return '<div class="timeline">' + list.map(function (e) {
+        if (withManage && journalEdit && journalEdit.kind === "mood" && journalEdit.id === e.id) {
+          return '<article class="entry entry-editing">' + moodEditHTML(e) + "</article>";
+        }
         var note = e.note ? '<p class="entry-note">' + esc(e.note) + "</p>" : "";
         return '<article class="entry">' +
           '<span class="entry-face">' + D.face(e.v) + "</span>" +
@@ -2174,11 +2357,32 @@
             '<span class="entry-mood">' + esc(D.mood(e.v).label) + "</span>" +
             '<span class="entry-time">' + dateLabel(e.ts) + "</span></div>" + note +
           "</div>" +
-          (withDelete
-            ? '<button type="button" class="icon-btn" data-del-mood="' + e.id + '" aria-label="Delete this entry">' + icon("trash") + "</button>"
+          (withManage
+            ? '<div class="entry-actions">' +
+                '<button type="button" class="icon-btn sm" data-edit-mood="' + e.id + '" aria-label="Edit this check-in">' + icon("sliders") + "</button>" +
+                '<button type="button" class="icon-btn sm" data-del-mood="' + e.id + '" aria-label="Delete this check-in">' + icon("trash") + "</button>" +
+              "</div>"
             : "") +
         "</article>";
       }).join("") + "</div>";
+    }
+
+    function moodEditHTML(e) {
+      var picked = journalEdit && typeof journalEdit.v === "number" ? journalEdit.v : e.v;
+      return '<div class="entry-body entry-edit">' +
+        '<p class="entry-mood">Edit check-in <span class="entry-time">' + dateLabel(e.ts) + "</span></p>" +
+        '<div class="field"><span class="label">How did it feel?</span>' +
+          '<div class="chips" role="group" aria-label="Mood">' + D.moods.map(function (m) {
+            var on = m.v === picked;
+            return '<button type="button" class="chip sm' + (on ? " is-on" : "") + '" data-edit-mood-v="' + m.v +
+              '" aria-pressed="' + on + '">' + esc(m.label) + "</button>";
+          }).join("") + "</div></div>" +
+        '<div class="field"><label class="label" for="editMoodNote">What happened?</label>' +
+          '<textarea class="textarea" id="editMoodNote" maxlength="240" placeholder="Optional.">' + esc(e.note || "") + "</textarea></div>" +
+        '<div class="row-wrap">' +
+          '<button type="button" class="btn primary sm" data-save-mood="' + e.id + '">Save changes</button>' +
+          '<button type="button" class="btn ghost sm" data-cancel-edit="1">Cancel</button>' +
+        "</div>";
     }
 
     function moodPanel() {
@@ -2189,7 +2393,7 @@
           '<div class="composer" style="margin-top:12px">' +
             '<div class="mood-picker" role="group" aria-label="Mood">' + moodButtons(moodPick) + "</div>" +
             '<div class="field"><label class="label" for="moodNote">What happened?</label>' +
-              '<textarea class="textarea" id="moodNote" maxlength="240" placeholder="Optional — a sentence is enough."></textarea></div>' +
+              '<textarea class="textarea" id="moodNote" maxlength="240" placeholder="Optional - a sentence is enough."></textarea></div>' +
             '<button type="button" class="btn primary" id="saveMood">Save check-in</button>' +
           "</div>" +
         "</div>" +
@@ -2198,7 +2402,7 @@
           '<p class="card-sub">Average mood per day. A mixed week is still a week.</p>' +
           '<div style="margin-top:14px">' + weekChart() + "</div>" +
           '<hr class="divider">' +
-          '<p class="tiny muted">Earlier notes are tucked away on the Grown-ups tab, so they are not on show.</p>' +
+          '<p class="tiny muted">Earlier notes - and the buttons to edit or delete them - are on the Grown-ups tab, so they are not on show.</p>' +
         "</div>" +
       "</div>" +
       (state.settings.showHistory
@@ -2215,7 +2419,7 @@
           '<p class="card-sub">Earlier check-ins, notes and the buttons to manage them live here. ' +
             "The weekly average stays on the other tabs either way.</p>" +
           '<button type="button" class="btn primary" id="journalUnlock">Press and hold to open</button>' +
-          '<p class="tiny muted" style="margin-top:10px">Hold for a second or two. It is a pause, not a password — ' +
+          '<p class="tiny muted" style="margin-top:10px">Hold for a second or two. It is a pause, not a password - ' +
             "but it keeps hard moments out of a child's eyeline.</p>" +
         "</div>";
       }
@@ -2293,6 +2497,8 @@
 
       var exp = $("#journalExport", view);
       if (exp) exp.addEventListener("click", downloadData);
+
+      bindEditors();
 
       var clearMoods = $("#clearMoods", view);
       if (clearMoods) clearMoods.addEventListener("click", function () {
@@ -2372,6 +2578,109 @@
       });
     }
 
+    /* Editing works on the saved entry itself. The working copy lives in
+       journalEdit, so cancelling really does put it back as it was. */
+    function bindEditors() {
+      $$("[data-edit-mood]", view).forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var id = btn.getAttribute("data-edit-mood");
+          var entry = null;
+          state.moods.forEach(function (m) { if (m.id === id) entry = m; });
+          if (!entry) return;
+          journalEdit = { kind: "mood", id: id, v: entry.v };
+          render();
+        });
+      });
+
+      $$("[data-edit-beh]", view).forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var id = btn.getAttribute("data-edit-beh");
+          var entry = null;
+          state.behaviour.forEach(function (b) { if (b.id === id) entry = b; });
+          if (!entry) return;
+          journalEdit = {
+            kind: "behaviour", id: id,
+            triggers: (entry.triggers || []).slice(),
+            helps: (entry.helps || []).slice()
+          };
+          render();
+        });
+      });
+
+      $$("[data-cancel-edit]", view).forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          journalEdit = null;
+          render();
+        });
+      });
+
+      $$("[data-edit-mood-v]", view).forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          if (!journalEdit) return;
+          journalEdit.v = parseInt(btn.getAttribute("data-edit-mood-v"), 10);
+          $$("[data-edit-mood-v]", view).forEach(function (b) {
+            var on = b === btn;
+            b.classList.toggle("is-on", on);
+            b.setAttribute("aria-pressed", on ? "true" : "false");
+          });
+        });
+      });
+
+      ["edit-trig", "edit-help"].forEach(function (attr) {
+        $$("[data-" + attr + "]", view).forEach(function (chip) {
+          chip.addEventListener("click", function () {
+            if (!journalEdit) return;
+            var key = attr === "edit-trig" ? "triggers" : "helps";
+            var name = chip.getAttribute("data-" + attr);
+            var list = journalEdit[key] || (journalEdit[key] = []);
+            var i = list.indexOf(name);
+            if (i > -1) list.splice(i, 1); else list.push(name);
+            var on = list.indexOf(name) > -1;
+            chip.classList.toggle("is-on", on);
+            chip.setAttribute("aria-pressed", on ? "true" : "false");
+          });
+        });
+      });
+
+      $$("[data-save-mood]", view).forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          if (!journalEdit) return;
+          var id = btn.getAttribute("data-save-mood");
+          var ta = $("#editMoodNote", view);
+          var v = journalEdit.v;
+          state.moods = state.moods.map(function (m) {
+            if (m.id !== id) return m;
+            return Object.assign({}, m, { v: v, note: ta ? ta.value.trim().slice(0, 240) : m.note });
+          });
+          journalEdit = null;
+          save();
+          render();
+          toast("Check-in updated.");
+        });
+      });
+
+      $$("[data-save-beh]", view).forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          if (!journalEdit) return;
+          var id = btn.getAttribute("data-save-beh");
+          var ta = $("#editBehNote", view);
+          var next = {
+            triggers: (journalEdit.triggers || []).slice(),
+            helps: (journalEdit.helps || []).slice(),
+            note: ta ? ta.value.trim().slice(0, 300) : ""
+          };
+          state.behaviour = state.behaviour.map(function (b) {
+            if (b.id !== id) return b;
+            return Object.assign({}, b, next);
+          });
+          journalEdit = null;
+          save();
+          render();
+          toast("Moment updated.");
+        });
+      });
+    }
+
     function chipRow(list, picks, attr) {
       return list.map(function (name) {
         var on = picks.indexOf(name) > -1;
@@ -2380,11 +2689,14 @@
       }).join("");
     }
 
-    function momentEntriesHTML(list, withDelete) {
+    function momentEntriesHTML(list, withManage) {
       if (!list.length) {
         return '<div class="empty"><strong>Nothing logged.</strong>Moments you save will be kept here.</div>';
       }
       return '<div class="timeline">' + list.map(function (b) {
+        if (withManage && journalEdit && journalEdit.kind === "behaviour" && journalEdit.id === b.id) {
+          return '<article class="entry entry-editing">' + momentEditHTML(b) + "</article>";
+        }
         var tags = (b.triggers || []).map(function (t) {
           return '<span class="badge">' + esc(t) + "</span>";
         }).concat((b.helps || []).map(function (h) {
@@ -2397,11 +2709,31 @@
             '<span class="entry-time">' + dateLabel(b.ts) + "</span></div>" +
             (b.note ? '<p class="entry-note">' + esc(b.note) + "</p>" : "") +
             '<div class="entry-tags">' + tags + "</div></div>" +
-          (withDelete
-            ? '<button type="button" class="icon-btn" data-del-beh="' + b.id + '" aria-label="Delete this entry">' + icon("trash") + "</button>"
+          (withManage
+            ? '<div class="entry-actions">' +
+                '<button type="button" class="icon-btn sm" data-edit-beh="' + b.id + '" aria-label="Edit this moment">' + icon("sliders") + "</button>" +
+                '<button type="button" class="icon-btn sm" data-del-beh="' + b.id + '" aria-label="Delete this moment">' + icon("trash") + "</button>" +
+              "</div>"
             : "") +
         "</article>";
       }).join("") + "</div>";
+    }
+
+    function momentEditHTML(b) {
+      var triggers = journalEdit && journalEdit.triggers ? journalEdit.triggers : (b.triggers || []).slice();
+      var helps = journalEdit && journalEdit.helps ? journalEdit.helps : (b.helps || []).slice();
+      return '<div class="entry-body entry-edit">' +
+        '<p class="entry-mood">Edit moment <span class="entry-time">' + dateLabel(b.ts) + "</span></p>" +
+        '<div class="field"><span class="label">What set it off?</span>' +
+          '<div class="chips" role="group" aria-label="Triggers">' + chipRow(D.triggers, triggers, "edit-trig") + "</div></div>" +
+        '<div class="field"><span class="label">What helped?</span>' +
+          '<div class="chips" role="group" aria-label="What helped">' + chipRow(D.helps, helps, "edit-help") + "</div></div>" +
+        '<div class="field"><label class="label" for="editBehNote">Anything else?</label>' +
+          '<textarea class="textarea" id="editBehNote" maxlength="300">' + esc(b.note || "") + "</textarea></div>" +
+        '<div class="row-wrap">' +
+          '<button type="button" class="btn primary sm" data-save-beh="' + b.id + '">Save changes</button>' +
+          '<button type="button" class="btn ghost sm" data-cancel-edit="1">Cancel</button>' +
+        "</div>";
     }
 
     function behaviourPanel() {
@@ -2412,18 +2744,23 @@
         (b.triggers || []).forEach(function (t) { triggerCount[t] = (triggerCount[t] || 0) + 1; });
         (b.helps || []).forEach(function (h) { helpCount[h] = (helpCount[h] || 0) + 1; });
       });
-      function top(counts) {
-        var best = null;
-        Object.keys(counts).forEach(function (k) { if (!best || counts[k] > counts[best]) best = k; });
-        return best;
+      /* Counted, ranked and listed, so a pattern is visible rather than hidden
+         behind one "most common" label. Every saved moment is editable below. */
+      function topList(counts, cls, empty) {
+        var keys = Object.keys(counts).sort(function (a, b) {
+          return counts[b] - counts[a] || a.localeCompare(b);
+        });
+        if (!keys.length) return '<p class="tiny muted">' + esc(empty) + "</p>";
+        return '<ul class="top-list">' + keys.slice(0, 4).map(function (k) {
+          return '<li><span class="badge ' + cls + '">' + esc(k) + "</span>" +
+            '<span class="top-count">' + counts[k] + "×</span></li>";
+        }).join("") + "</ul>";
       }
-      var topTrigger = top(triggerCount);
-      var topHelp = top(helpCount);
 
       return '<div class="grid grid-2">' +
         '<div class="card">' +
           '<h2 class="card-title">Log a moment</h2>' +
-          '<p class="card-sub">No blame, no judgement — just the facts.</p>' +
+          '<p class="card-sub">No blame, no judgement - just the facts.</p>' +
           '<div class="composer" style="margin-top:12px">' +
             '<div><p class="label" style="margin-bottom:8px">What set it off?</p>' +
               '<div class="chips" role="group" aria-label="Triggers">' + chipRow(D.triggers, triggerPicks, "trig") + "</div></div>" +
@@ -2437,20 +2774,21 @@
         '<div class="card">' +
           '<h2 class="card-title">This week</h2>' +
           (week.length
-            ? '<div class="stack" style="margin-top:14px">' +
-                '<div class="saved-row"><span class="task-emoji">⚡</span><span class="task-name">Most common trigger</span>' +
-                  '<span class="badge coral">' + esc(topTrigger || "—") + "</span></div>" +
-                '<div class="saved-row"><span class="task-emoji">🛟</span><span class="task-name">Most helpful</span>' +
-                  '<span class="badge mint">' + esc(topHelp || "—") + "</span></div>" +
-                '<p class="tiny muted">' + week.length + " moment" + (week.length === 1 ? "" : "s") + " logged this week.</p>" +
-              "</div>"
+            ? '<p class="card-sub" style="margin-top:4px">' + week.length + " moment" + (week.length === 1 ? "" : "s") +
+                " logged this week. The full list is below, and every entry can be edited." + "</p>" +
+              '<div class="top-group"><h3 class="mini-title">What set things off</h3>' +
+                topList(triggerCount, "coral", "No triggers tagged yet.") + "</div>" +
+              '<div class="top-group"><h3 class="mini-title">What helped</h3>' +
+                topList(helpCount, "mint", "No helps tagged yet.") + "</div>" +
+              '<button type="button" class="btn sm" data-review-entries="1" style="margin-top:14px">' +
+                icon("sliders") + " Review and edit saved moments</button>"
             : '<p class="card-sub" style="margin-top:10px">Log a few moments and the patterns will appear here.</p>') +
           '<hr class="divider">' +
           '<p class="tiny muted">This journal is for your own notes. It is not a diagnosis.</p>' +
         "</div>" +
       "</div>" +
-      '<p class="tiny muted center" style="margin-top:16px">Earlier moments are kept on the <strong>Grown-ups</strong> tab, ' +
-        "so a child is not reading back over the hard ones.</p>";
+      '<p class="tiny muted center" style="margin-top:16px">Saved moments are kept on the <strong>Grown-ups</strong> tab, ' +
+        "where you can edit or delete them, so a child is not reading back over the hard ones.</p>";
     }
 
     function bindBehaviour() {
@@ -2472,6 +2810,12 @@
           chip.setAttribute("aria-pressed", helpPicks.indexOf(name) > -1 ? "true" : "false");
         });
       });
+      var review = $("[data-review-entries]", view);
+      if (review) review.addEventListener("click", function () {
+        journalTab = "grownups";
+        render();
+      });
+
       var saveBtn = $("#saveBeh");
       if (saveBtn) saveBtn.addEventListener("click", function () {
         var note = $("#behNote");
@@ -2714,7 +3058,7 @@
     function shelfHTML() {
       var shelves = [
         { id: "food", emoji: "🍎", label: "Nutrition" },
-        { id: "health", emoji: "🩺", label: "Health" },
+        { id: "health", emoji: "🌡️", label: "Health" },
         { id: "activity", emoji: "🤸", label: "Activities" },
         { id: "behaviour", emoji: "📝", label: "Behaviour" }
       ];
@@ -2823,7 +3167,7 @@
     function listHTML() {
       var found = C.entries.filter(matches);
       if (!found.length) {
-        return '<div class="empty"><strong>Nothing matched that.</strong>Try a shorter word — noise, sleep, school, waiting.</div>';
+        return '<div class="empty"><strong>Nothing matched that.</strong>Try a shorter word - noise, sleep, school, waiting.</div>';
       }
       var cats = compCat === "All" ? C.categories : C.categories.filter(function (c) { return c.id === compCat; });
       return cats.map(function (c) {
@@ -2852,7 +3196,7 @@
 
     function render() {
       view.innerHTML = pageHead("Compendium", "Everything, in one place",
-        C.entries.length + " short entries: what to try, why it works, and what to say. Built for ADHD, autism and both — no jargon, no lectures.") +
+        C.entries.length + " short entries: what to try, why it works, and what to say. Built for ADHD, autism and both - no jargon, no lectures.") +
         '<div class="comp-toolbar">' +
           '<label class="search-box">' + icon("search") +
             '<span class="sr-only">Search the compendium</span>' +
@@ -2871,7 +3215,7 @@
         '<p class="tiny muted comp-count" id="compCount"></p>' +
         '<div id="compList"></div>' +
         '<div class="card" style="margin-top:22px"><h2 class="card-title">Using this with a child</h2>' +
-          '<p class="card-sub">Pick one entry, try it for a week, then change one thing. Ten things at once is how plans fail. Everything here is general guidance — not a diagnosis or medical advice.</p></div>';
+          '<p class="card-sub">Pick one entry, try it for a week, then change one thing. Ten things at once is how plans fail. Everything here is general guidance - not a diagnosis or medical advice.</p></div>';
 
       paint();
 
@@ -2954,7 +3298,7 @@
     function listHTML() {
       var found = S.entries.filter(matches);
       if (!found.length) {
-        return '<div class="empty"><strong>Nothing matched that.</strong>Try a shorter word — sleep, school, meltdown, money.</div>';
+        return '<div class="empty"><strong>Nothing matched that.</strong>Try a shorter word - sleep, school, meltdown, money.</div>';
       }
       var topics = supTopic === "All" ? S.topics : S.topics.filter(function (t) { return t.id === supTopic; });
       return topics.map(function (t) {
@@ -3003,21 +3347,26 @@
         '<div id="supList"></div>' +
         '<div class="card sup-chat" style="margin-top:22px">' +
           '<h2 class="card-title">Just want a general chat?</h2>' +
-          '<p class="card-sub">ZenZac is made by one parent, not a clinic. If you want to compare notes, ask a question, ' +
-            "or just say that this is hard, you can email me directly. No forms, no newsletter, no automation.</p>" +
+          '<p class="card-sub">ZenZac is made by Craig, one parent, not a clinic. If you want to compare notes, ask a question, ' +
+            "or just say that this is hard, you can email him directly. No forms, no newsletter, no automation. " +
+            "Even if it is just a general chat, that is a good enough reason to write.</p>" +
           '<p class="sup-email"><a href="mailto:craigheggie@googlemail.com">craigheggie@googlemail.com</a></p>' +
-          '<p class="tiny muted">Replies are slow and honest. This is not a crisis service — if you or your child are at risk, ' +
+          '<div class="row-wrap" style="margin-top:12px">' +
+            '<a class="btn sm" href="mailto:craigheggie@googlemail.com">✉️ Email Craig</a>' +
+            '<a class="btn sm soft" href="https://buy.stripe.com/cNi14m8fK7lF8x35MX4wM05" target="_blank" rel="noopener">💙 Support ZenZac</a>' +
+          "</div>" +
+          '<p class="tiny muted" style="margin-top:12px">Replies are slow and honest. This is not a crisis service - if you or your child are at risk, ' +
             "call 999, or Samaritans on 116 123, free, any time.</p>" +
         "</div>" +
         '<div class="card" style="margin-top:14px">' +
           '<h2 class="card-title">If you need a person, not a page</h2>' +
           '<p class="card-sub">If you are worried about your child, start with your GP. For school problems, ask for the SENCO in writing.</p>' +
           '<div class="row-wrap" style="margin-top:12px">' +
-            '<a class="btn sm ghost" href="https://www.nhs.uk/conditions/attention-deficit-hyperactivity-disorder-adhd/" target="_blank" rel="noopener">NHS — ADHD</a>' +
+            '<a class="btn sm ghost" href="https://www.nhs.uk/conditions/attention-deficit-hyperactivity-disorder-adhd/" target="_blank" rel="noopener">NHS - ADHD</a>' +
             '<a class="btn sm ghost" href="https://www.autism.org.uk/" target="_blank" rel="noopener">National Autistic Society</a>' +
             '<a class="btn sm ghost" href="https://www.adhdfoundation.org.uk/" target="_blank" rel="noopener">ADHD Foundation</a>' +
-            '<a class="btn sm ghost" href="https://www.ipsea.org.uk/" target="_blank" rel="noopener">IPSEA — school rights</a>' +
-            '<a class="btn sm ghost" href="https://contact.org.uk/" target="_blank" rel="noopener">Contact — money &amp; support</a>' +
+            '<a class="btn sm ghost" href="https://www.ipsea.org.uk/" target="_blank" rel="noopener">IPSEA - school rights</a>' +
+            '<a class="btn sm ghost" href="https://contact.org.uk/" target="_blank" rel="noopener">Contact - money &amp; support</a>' +
           "</div>" +
           '<p class="tiny muted" style="margin-top:12px">General guidance for UK families. Not a diagnosis, not medical advice, ' +
             "and not a substitute for the professionals who know your child.</p>" +
@@ -3068,10 +3417,10 @@
 
   var STEP_SUBS = {
     who: "A first name or nickname is enough. You can leave anything blank, and nothing leaves this device.",
-    mode: "This changes what the app puts first. It is a starting point, not a label — and you can change it whenever you like.",
+    mode: "This changes what the app puts first. It is a starting point, not a label - and you can change it whenever you like.",
     hard: "Pick the ones that matter most. They become your shortcuts on Home.",
     helps: "Include the small things that work. The app will offer these first.",
-    sensory: "So the app can plan ahead and avoid surprises — never to label anyone.",
+    sensory: "So the app can plan ahead and avoid surprises - never to label anyone.",
     rules: "Short agreements for the whole household. Switch on what fits, and add your own in your own words.",
     look: "Six soft palettes, no harsh white. Your choice saves straight away.",
     done: "Nothing here is permanent. Change an answer whenever your child changes."
@@ -3135,7 +3484,7 @@
       var step = SETUP_STEPS[setupStep];
       if (step === "who") {
         return '<div class="setup-grid">' +
-          '<div class="field"><label class="label" for="setupName">First name or nickname — optional</label>' +
+          '<div class="field"><label class="label" for="setupName">First name or nickname - optional</label>' +
             '<input class="input input-lg" id="setupName" maxlength="24" autocomplete="off" placeholder="e.g. Zac" value="' + esc(state.settings.name) + '"></div>' +
           '<div class="field"><span class="label">Age band</span>' +
             '<div class="chip-row">' + D.ageBands.map(function (a) {
@@ -3161,13 +3510,13 @@
       if (step === "hard") {
         return '<div class="chip-row">' + chipButtons(D.hardBits, state.profile.hard, "hard") + "</div>" +
           '<p class="tiny muted" style="margin-top:12px">Tap to choose, tap again to undo. ' +
-          (state.profile.hard.length ? state.profile.hard.length + " chosen." : "Nothing chosen yet — that is fine.") + "</p>";
+          (state.profile.hard.length ? state.profile.hard.length + " chosen." : "Nothing chosen yet - that is fine.") + "</p>";
       }
 
       if (step === "helps") {
         return '<div class="chip-row">' + chipButtons(D.helpChips, state.profile.helps, "help") + "</div>" +
           '<p class="tiny muted" style="margin-top:12px">' +
-          (state.profile.helps.length ? state.profile.helps.length + " chosen." : "Nothing chosen yet — that is fine.") + "</p>";
+          (state.profile.helps.length ? state.profile.helps.length + " chosen." : "Nothing chosen yet - that is fine.") + "</p>";
       }
 
       if (step === "sensory") {
@@ -3460,11 +3809,11 @@
       "</div>" +
       '<div class="card" style="margin-top:18px">' +
         '<h2 class="card-title">About ZenZac</h2>' +
-        '<p class="card-sub">ZenZac is a small, quiet toolkit for children who find big feelings, routines and focus hard — and for the grown-ups beside them.</p>' +
+        '<p class="card-sub">ZenZac is a small, quiet toolkit for children who find big feelings, routines and focus hard - and for the grown-ups beside them.</p>' +
         '<hr class="divider">' +
         '<ul class="stack" style="color:var(--ink-2);font-size:0.92rem">' +
           "<li>🔒 Everything you type stays in this browser. No accounts, no tracking, no adverts.</li>" +
-          "<li>📶 Works offline once loaded — no fonts or icons fetched from the internet.</li>" +
+          "<li>📶 Works offline once loaded - no fonts or icons fetched from the internet.</li>" +
           "<li>🧩 Built to be used at 7am on a school morning, not in a lab.</li>" +
           "<li>⚠️ Not a medical device and not a diagnosis. Trust your instincts and ask for help early.</li>" +
         "</ul>" +
@@ -3526,13 +3875,31 @@
           "</div>" +
         "</div>" +
 
+        '<div class="section-head"><h2 class="section-title">Icons &amp; emoji</h2>' +
+          '<span class="tiny muted">Same pictures, four finishes. Saved straight away.</span></div>' +
+        '<div class="card"><div class="emoji-style-grid" role="group" aria-label="Icon style">' +
+          EMOJI_STYLES.map(function (st) {
+            var on = (state.settings.emojiStyle || "basic") === st.id;
+            return '<button type="button" class="emoji-style-btn s-' + st.id + (on ? " is-on" : "") +
+              '" data-pick-emoji="' + st.id + '" aria-pressed="' + on + '">' +
+              '<span class="emoji-style-sample" aria-hidden="true"><span>🧸</span><span>🌿</span><span>⭐</span></span>' +
+              '<span class="emoji-style-name">' + esc(st.name) + "</span>" +
+              '<span class="emoji-style-note">' + esc(st.note) + "</span></button>";
+          }).join("") +
+        '</div><p class="tiny muted" style="margin-top:12px">Soft, Matt and Gloss pick up the tint of whichever colour palette you choose. Basic uses the plain emoji your device draws.</p></div>' +
+
         '<div class="section-head"><h2 class="section-title">Colours</h2>' +
-          '<span class="tiny muted">Soft, low-glare palettes. Saved straight away.</span></div>' +
+          '<span class="tiny muted">Six low-glare palettes, shown as they will look. Saved straight away.</span></div>' +
         '<div class="card"><div class="theme-grid" role="group" aria-label="Colour theme">' +
           D.themes.map(function (t) {
             var on = state.settings.theme === t.id;
             return '<button type="button" class="theme-btn' + (on ? " is-on" : "") + '" data-pick-theme="' + t.id +
-              '" aria-pressed="' + (on ? "true" : "false") + '">' +
+              '" aria-pressed="' + (on ? "true" : "false") + '" aria-label="' + esc(t.name) + ": " + esc(t.note) + '">' +
+              '<span class="theme-mini" aria-hidden="true" style="background:' + t.sw[0] + ";color:" + t.ink + '">' +
+                '<span class="theme-mini-row"><span class="theme-mini-title">Aa</span>' +
+                  '<span class="theme-mini-pill" style="background:' + t.sw[1] + ";color:" + t.accentInk + '">Start</span></span>' +
+                '<span class="theme-mini-copy" style="color:' + t.mute + '">A calm corner</span>' +
+              "</span>" +
               '<span class="theme-swatch" aria-hidden="true">' + t.sw.map(function (c) {
                 return '<i style="background:' + c + '"></i>';
               }).join("") + "</span>" +
@@ -3555,13 +3922,29 @@
 
         '<div class="card" style="margin-top:14px">' +
           '<div class="row-between"><div><h2 class="card-title">More help than the app can give</h2>' +
-            '<p class="card-sub">Scripts for hard moments, school meetings, sleep, money and your own wellbeing — written for the grown-ups.</p></div>' +
+            '<p class="card-sub">Scripts for hard moments, school meetings, sleep, money and your own wellbeing - written for the grown-ups.</p></div>' +
             '<a class="btn sm" href="#/support">Parent support</a></div>' +
+        "</div>" +
+
+        '<div class="section-head"><h2 class="section-title">Creator</h2>' +
+          '<span class="tiny muted">Made by a parent, for parents.</span></div>' +
+        '<div class="card creator-card">' +
+          '<div class="creator-head">' +
+            '<span class="creator-avatar" aria-hidden="true">💙</span>' +
+            '<div><h2 class="card-title">Craig Heggie</h2>' +
+              '<p class="card-sub">Parent, builder of ZenZac, and someone who knows the hard mornings.</p></div>' +
+          "</div>" +
+          '<p class="creator-story">I am a parent, not a clinician. I built ZenZac after too many mornings where the shoes were missing, everyone was already at the end of their rope and I had no idea what to try next. ADHD and autism are part of my family life, so most of what is in here is what I actually use at home. If any of that sounds familiar and you want to compare notes - or just have a general chat - you can email me directly. No forms, no newsletter, no automation.</p>' +
+          '<div class="creator-links">' +
+            '<a class="btn sm" href="mailto:craigheggie@googlemail.com">✉️ craigheggie@googlemail.com</a>' +
+            '<a class="btn sm soft" href="https://buy.stripe.com/cNi14m8fK7lF8x35MX4wM05" target="_blank" rel="noopener">💙 Support ZenZac</a>' +
+          "</div>" +
+          '<p class="tiny muted" style="margin-top:12px">ZenZac stays free: no adverts, no accounts and nothing to sign up to. A one-off contribution helps with hosting and the hours behind it, and it is never expected. Replies are slow and honest. This is not a crisis service - if you or your child are at risk, call 999.</p>' +
         "</div>" +
 
         '<div class="card" style="margin-top:14px">' +
           '<h2 class="card-title">About</h2>' +
-          '<p class="card-sub">ZenZac v2 — rebuilt as one calm, offline-friendly app. Built for real mornings. Not a medical device.</p>' +
+          '<p class="card-sub">ZenZac v2 - rebuilt as one calm, offline-friendly app by Craig Heggie. Built for real mornings. Not a medical device.</p>' +
         "</div>";
 
       bind();
@@ -3589,6 +3972,20 @@
             b.setAttribute("aria-pressed", on ? "true" : "false");
           });
           toast("Colours changed.");
+        });
+      });
+
+      $$("[data-pick-emoji]", view).forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          state.settings.emojiStyle = btn.getAttribute("data-pick-emoji");
+          save();
+          applyChrome();
+          $$("[data-pick-emoji]", view).forEach(function (b) {
+            var on = b === btn;
+            b.classList.toggle("is-on", on);
+            b.setAttribute("aria-pressed", on ? "true" : "false");
+          });
+          toast("Icon style changed.");
         });
       });
 

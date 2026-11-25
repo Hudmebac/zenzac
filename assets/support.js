@@ -1,7 +1,7 @@
 /* ==========================================================================
-   ZenZac — support.js
+   ZenZac - support.js
    The long version, for the grown-ups: scripts, explanations and practical
-   detail. Content only — the app renders it. No network needed.
+   detail. Content only - the app renders it. No network needed.
 
    Everything here is general guidance, not medical advice, and not a
    diagnosis. Written for UK families where a system is named.
@@ -15,11 +15,11 @@ window.ZenSupport = {
     { id: "sleep", name: "Sleep", emoji: "🌙", blurb: "Wind-downs, 11pm energy and 5am wake-ups." },
     { id: "food", name: "Food", emoji: "🍎", blurb: "Safe foods, pressure, and when it needs a professional." },
     { id: "siblings", name: "Siblings & family", emoji: "🧸", blurb: "Fairness, one-to-one time, and the child who copes." },
-    { id: "you", name: "You", emoji: "🫖", blurb: "Burnout, respite, and your own wiring." },
+    { id: "you", name: "You", emoji: "☕", blurb: "Burnout, respite, and your own wiring." },
     { id: "help", name: "Getting help", emoji: "🧭", blurb: "GP, school, money and the paper trail that gets things done." },
     { id: "words", name: "What to say", emoji: "💬", blurb: "Telling your child, and words they can use for themselves." },
-    { id: "nutrition", name: "Food & growth", emoji: "🍽️", blurb: "Eating, growth and the long game — without turning dinner into a fight." },
-    { id: "health", name: "Health & medication", emoji: "🩺", blurb: "Getting heard by the GP, and the questions worth asking about medication." },
+    { id: "nutrition", name: "Food & growth", emoji: "🍽️", blurb: "Eating, growth and the long game - without turning dinner into a fight." },
+    { id: "health", name: "Health & medication", emoji: "🌡️", blurb: "Getting heard by the GP, and the questions worth asking about medication." },
     { id: "activity", name: "Activities & energy", emoji: "🤸", blurb: "Burning it off, joining clubs, and surviving birthday parties." }
   ],
   entries: []
@@ -37,7 +37,7 @@ window.ZenSupport.entries.push(
       { h: "What this changes day to day", list: [
         "Assume the skill is missing and teach it, rather than assuming the will is missing and punishing it.",
         "Change the environment before you change the child: fewer things in sight, one instruction at a time, a place for everything.",
-        "Praise the attempt out loud, not just the result — effort is the part that needs fuel.",
+        "Praise the attempt out loud, not just the result - effort is the part that needs fuel.",
         "Expect the same task to be easy on Tuesday and impossible on Thursday. That is the condition, not a choice."
       ] },
       { h: "Autism is not a behaviour problem", p: [
@@ -47,17 +47,17 @@ window.ZenSupport.entries.push(
     ]
   },
   {
-    topic: "understanding", emoji: "🌪️", title: "Meltdown or tantrum — and why the difference matters",
+    topic: "understanding", emoji: "🌪️", title: "Meltdown or tantrum - and why the difference matters",
     summary: "One is a nervous system overflowing. The other is a negotiating strategy. They need opposite responses.",
     sections: [
       { h: "A meltdown", list: [
-        "Triggered by overload — sensory, emotional, or too many demands at once.",
+        "Triggered by overload - sensory, emotional, or too many demands at once.",
         "Has no goal. It does not stop when you give in, because there is nothing to give in to.",
         "May not want to be touched, looked at, or spoken to. May not be able to answer questions.",
         "Needs safety, space, quiet and time. Reasoning, bargaining and consequences all make it longer."
       ] },
       { h: "A tantrum", list: [
-        "Has a goal — a thing, an exit, attention, or a delay.",
+        "Has a goal - a thing, an exit, attention, or a delay.",
         "Audience-aware. Often pauses to check whether it is working.",
         "Stops when the goal is met, or when it clearly will not be.",
         "Can be discussed afterwards, and the boundary can hold."
@@ -80,10 +80,10 @@ window.ZenSupport.entries.push(
         "Food first. Blood sugar and dehydration do more to behaviour than any conversation.",
         "Twenty minutes of no questions. Not 'how was school?' Not 'what did you do?'",
         "Offer movement or quiet, whichever fits: trampoline, walk, bath, blanket, headphones.",
-        "Ask about the day later, sideways — in the car, at bedtime, while doing something else."
+        "Ask about the day later, sideways - in the car, at bedtime, while doing something else."
       ] },
       { h: "Say this", say: [
-        "You held it together all day. You can let go now — I've got you.",
+        "You held it together all day. You can let go now - I've got you.",
         "You don't have to tell me about it. I'm just glad you're home."
       ] }
     ]
@@ -93,7 +93,7 @@ window.ZenSupport.entries.push(
     summary: "For some children an ordinary request lands like a threat. The fight is not about the shoes.",
     sections: [
       { h: "What it looks like", list: [
-        "Instant refusal to small, easy requests — especially ones they were about to do anyway.",
+        "Instant refusal to small, easy requests - especially ones they were about to do anyway.",
         "Delay, distraction, negotiation, or suddenly needing the loo.",
         "Doing it happily once nobody is watching, or once it was their idea.",
         "Big reactions to being told, corrected, or rushed."
@@ -118,7 +118,7 @@ window.ZenSupport.entries.push(
       { h: "Hyper-aroused", p: "Fight or flight: shouting, running, hitting, climbing, silly and loud. Reasoning will not land. Reduce input, stay calm, keep everyone safe." },
       { h: "Hypo-aroused", p: "Shutdown: silent, flat, curled up, 'I don't know', unable to move or speak. Do not fill the silence with questions. Sit nearby, lower your voice, wait." },
       { h: "The practical rule", p: [
-        "Teach and plan in the top zone. Keep safe in the middle. Reconnect in the bottom. Most parenting advice assumes the child is always in the top zone — which is why it fails on the days you need it."
+        "Teach and plan in the top zone. Keep safe in the middle. Reconnect in the bottom. Most parenting advice assumes the child is always in the top zone - which is why it fails on the days you need it."
       ] }
     ]
   },
@@ -129,11 +129,11 @@ window.ZenSupport.entries.push(
       { h: "Reduce everything", list: [
         "Noise off. Lights down if you can. Bystanders out of the room, including siblings.",
         "One adult speaks. Two adults giving different instructions is noise.",
-        "Get low — sit or crouch — and stay further away than feels natural.",
+        "Get low - sit or crouch - and stay further away than feels natural.",
         "Fewer words than you want to use. Three is plenty."
       ] },
       { h: "Keep everyone safe, not compliant", p: [
-        "Move hazards rather than moving the child. Do not restrain unless there is immediate danger — restraint usually escalates and can hurt both of you.",
+        "Move hazards rather than moving the child. Do not restrain unless there is immediate danger - restraint usually escalates and can hurt both of you.",
         "If they are running, follow at a distance rather than chasing. If they are hitting, protect your body and theirs and give space."
       ] },
       { h: "Say this", say: ["I'm here.", "You're safe.", "I'm not going anywhere.", "Take your time."] }
@@ -144,11 +144,11 @@ window.ZenSupport.entries.push(
     summary: "Every one of these is said with love. Every one raises the temperature.",
     sections: [
       { h: "The five worst", list: [
-        "'Calm down.' — Naming a state they cannot reach adds shame to overload.",
-        "'You're fine.' — Contradicts their body. They are not fine, and now they know you cannot tell.",
-        "'Look at me.' — Eye contact is effortful for many autistic children, and harder mid-meltdown.",
-        "'Why did you do that?' — The thinking brain is offline. There is no answer available.",
-        "'If you don't stop, I'll…' — Adds a second threat to a child already in threat mode."
+        "'Calm down.' - Naming a state they cannot reach adds shame to overload.",
+        "'You're fine.' - Contradicts their body. They are not fine, and now they know you cannot tell.",
+        "'Look at me.' - Eye contact is effortful for many autistic children, and harder mid-meltdown.",
+        "'Why did you do that?' - The thinking brain is offline. There is no answer available.",
+        "'If you don't stop, I'll…' - Adds a second threat to a child already in threat mode."
       ] },
       { h: "Instead", p: [
         "Describe, do not judge: 'You're having a really hard time.' Then wait. Silence from a calm adult is a regulating tool, not a failure to parent."
@@ -181,7 +181,7 @@ window.ZenSupport.entries.push(
     summary: "The lesson lands in the calm, not in the crash. And it lands better in one sentence than in ten.",
     sections: [
       { h: "Within the hour", list: [
-        "Food, water, a shower, a walk — physical reset before any talking.",
+        "Food, water, a shower, a walk - physical reset before any talking.",
         "Say one true thing about your own part: 'I shouted. I'm sorry.'",
         "Do not require an apology on the spot. A forced sorry teaches performance, not repair.",
         "Do not bring up the whole week. One incident, one conversation."
@@ -206,7 +206,7 @@ window.ZenSupport.entries.push(
         "Call another adult if you are on your own. Call 999 if anyone is in danger."
       ] },
       { h: "Do not", list: [
-        "Restrain during a meltdown unless there is immediate danger — it often escalates and can injure both of you.",
+        "Restrain during a meltdown unless there is immediate danger - it often escalates and can injure both of you.",
         "Block the exit, corner them, or stand over them.",
         "Shout, threaten, or physically punish. It stops the moment, not the pattern."
       ] },
@@ -223,13 +223,13 @@ window.ZenSupport.entries.push(
     summary: "A list of five things is a wall. Two things is a step.",
     sections: [
       { h: "The rule", p: [
-        "Show one thing that is happening now and one thing that comes after. Everything else waits out of sight — in a written list, a drawer, or the app's Then section.",
+        "Show one thing that is happening now and one thing that comes after. Everything else waits out of sight - in a written list, a drawer, or the app's Then section.",
         "This is not dumbing down. Working memory is the bottleneck, and two items fit through it when five do not."
       ] },
       { h: "Make it visible", list: [
         "Say it and point at it: 'Now: shoes. Then: car.'",
         "Use the Now & Next page, or two cards on the fridge.",
-        "Put the first thing in the child's hands where possible — shoes on the floor, bag by the door.",
+        "Put the first thing in the child's hands where possible - shoes on the floor, bag by the door.",
         "Change it only when the first thing is finished, not before."
       ] },
       { h: "Try this", try: [
@@ -247,11 +247,11 @@ window.ZenSupport.entries.push(
       ] },
       { h: "What works better", list: [
         "Anchor to an event: 'when this song ends', 'after the next advert', 'when the kettle boils'.",
-        "Use a visual timer they can watch — the Now & Next timer or a sand timer.",
+        "Use a visual timer they can watch - the Now & Next timer or a sand timer.",
         "Warn once at the start, once at the last chunk, once at the end. Not on a loop.",
         "Give the end a job: 'when it goes off, you put the lid on and bring it to me'."
       ] },
-      { h: "Say this", say: ["Two minutes, then shoes. I'll set the timer so you can see it.", "When the music stops, that's the end — not because I say so, because the music says so."] }
+      { h: "Say this", say: ["Two minutes, then shoes. I'll set the timer so you can see it.", "When the music stops, that's the end - not because I say so, because the music says so."] }
     ]
   },
   {
@@ -265,7 +265,7 @@ window.ZenSupport.entries.push(
         "One job per child, named, visible, and the same every day."
       ] },
       { h: "In the morning", list: [
-        "Dress in the order the clothes are stacked — no choosing.",
+        "Dress in the order the clothes are stacked - no choosing.",
         "Do the hardest thing first, while the day still has goodwill in it.",
         "Leave ten minutes earlier than you think you need. The buffer is the intervention.",
         "Have a transition object ready: a toy in the pocket, headphones, a snack for the car."
@@ -277,10 +277,10 @@ window.ZenSupport.entries.push(
   },
   {
     topic: "transitions", emoji: "🎮", title: "Screen handover",
-    summary: "The hardest transition in most houses. It is not about the game — it is about the stop.",
+    summary: "The hardest transition in most houses. It is not about the game - it is about the stop.",
     sections: [
       { h: "Set it up before the handover", list: [
-        "Agree the end point at the start: a level, a match, a save point — not a clock in the middle of something.",
+        "Agree the end point at the start: a level, a match, a save point - not a clock in the middle of something.",
         "Use the console or app timer if it has one, so the device is the bad guy, not you.",
         "Warn at the last chunk, not every five minutes.",
         "Have the next thing ready and visible: dinner on the table, shoes by the door, the dog on the lead."
@@ -292,7 +292,7 @@ window.ZenSupport.entries.push(
         "Offer a bridge: a snack, a shower, a walk, or ten minutes of something together."
       ] },
       { h: "If it always ends in tears", p: [
-        "Shorten the session, or end on a natural break. Some children cope better with three twenty-minute sessions than one hour. Write down what the last five minutes looked like — the pattern is usually the clue."
+        "Shorten the session, or end on a natural break. Some children cope better with three twenty-minute sessions than one hour. Write down what the last five minutes looked like - the pattern is usually the clue."
       ] }
     ]
   },
@@ -302,14 +302,14 @@ window.ZenSupport.entries.push(
     sections: [
       { h: "Say it early, say it plainly", list: [
         "Tell them as soon as you know, not on the way.",
-        "Name the change and the reason in one sentence: 'Swimming is cancelled — the pool is closed.'",
+        "Name the change and the reason in one sentence: 'Swimming is cancelled - the pool is closed.'",
         "Say what stays the same: 'We still get chips afterwards.'",
         "Allow the reaction without trying to talk them out of it."
       ] },
       { h: "Build a plan B habit", list: [
         "Keep one small 'if plans change' card with two acceptable alternatives.",
         "Practise a change on a good day: swap a snack, change the route home, and praise the recovery.",
-        "Avoid surprises as a kindness, not as a weakness — announcing is not the same as asking permission."
+        "Avoid surprises as a kindness, not as a weakness - announcing is not the same as asking permission."
       ] },
       { h: "Say this", say: ["This is different from what I told you. That's allowed to be annoying.", "Here's what is still happening."] }
     ]
@@ -389,7 +389,7 @@ window.ZenSupport.entries.push(
       { h: "What helps", list: [
         "A graded return: part days, a safe base, one lesson at a time.",
         "A named adult to meet them at the gate.",
-        "No punishment for the days they cannot — it deepens the fear.",
+        "No punishment for the days they cannot - it deepens the fear.",
         "Ask the school for a reintegration plan in writing, and involve the GP if it lasts more than two weeks."
       ] },
       { h: "What to say to school", say: ["He is not refusing school. He is unable to get in the building at the moment. What is the plan for a graded return?"] }
@@ -401,12 +401,12 @@ window.ZenSupport.entries.push(
     sections: [
       { h: "The ladder", list: [
         "SEN support: the school's own adjustments, led by the SENCO. No diagnosis needed.",
-        "EHCP: an Education, Health and Care Plan — a legal document, for children whose needs cannot be met from the school's ordinary budget.",
+        "EHCP: an Education, Health and Care Plan - a legal document, for children whose needs cannot be met from the school's ordinary budget.",
         "You can request an EHCP assessment yourself. The local authority must decide within six weeks and the whole process should take 20 weeks.",
         "If the LA refuses, you can appeal to the SEND Tribunal. Independent advice is free: SENDIASS, IPSEA, Contact."
       ] },
       { h: "What to bring", list: [
-        "Reports from school, GP, speech and language, occupational therapy, CAMHS — anything in writing.",
+        "Reports from school, GP, speech and language, occupational therapy, CAMHS - anything in writing.",
         "Your own dated notes of what happens at home.",
         "The child's views, in their words if possible.",
         "A clear list of needs and the support you think is required."
@@ -433,7 +433,7 @@ window.ZenSupport.entries.push(
         "Dark, cool, quiet, and as free of 'things to do' as you can manage.",
         "Weighted blanket only with advice if the child is young or has breathing difficulties.",
         "White noise or an audiobook can be the thing that stops the brain racing.",
-        "A clock they can read, or none at all — whichever creates less worry."
+        "A clock they can read, or none at all - whichever creates less worry."
       ] },
       { h: "What to avoid", p: [
         "Long goodnight conversations. They are lovely and they teach the brain that bedtime is when the talking happens. Two minutes, then out."
@@ -468,13 +468,13 @@ window.ZenSupport.entries.push(
       { h: "At night", list: [
         "Keep it boring: low light, few words, no screens, no negotiation.",
         "Walk them back to bed rather than lying down with them, if that is the goal.",
-        "A 'yes' box by the bed — water, a book, a torch — reduces the reasons to get up.",
+        "A 'yes' box by the bed - water, a book, a torch - reduces the reasons to get up.",
         "Co-sleeping is not a failure. If it is what your family needs to function, it is allowed."
       ] },
       { h: "Early waking", list: [
         "A toddler clock or a simple 'not before 6' rule with a reward that is not food.",
         "Blackout blinds, and check the room for light and noise at 4:30am.",
-        "If they wake happy and ready, consider an earlier bedtime — overtired children often wake earlier."
+        "If they wake happy and ready, consider an earlier bedtime - overtired children often wake earlier."
       ] },
       { h: "When to ask for help", p: [
         "If sleep is affecting the whole family for more than a few weeks, or the child snores, stops breathing, or is exhausted in the day, ask the GP. Sleep apnoea and iron deficiency both look like ADHD."
@@ -487,7 +487,7 @@ window.ZenSupport.entries.push(
     sections: [
       { h: "Why pressure fails", list: [
         "New foods are sensory unknowns: texture, smell, temperature, colour, and the sound of chewing.",
-        "Pressure — 'one bite', bargaining, hiding vegetables — reliably narrows the list further.",
+        "Pressure - 'one bite', bargaining, hiding vegetables - reliably narrows the list further.",
         "A safe food on the plate is better than a balanced meal they will not touch.",
         "Eating the same breakfast for three years is common and not a moral failure."
       ] },
@@ -515,12 +515,12 @@ window.ZenSupport.entries.push(
         "Whether to try anything new. Always."
       ] },
       { h: "In practice", p: [
-        "Serve one meal with at least one safe item on the table. If they eat only that, the meal is over and nobody comments. This is not giving in — it is removing the pressure that keeps the list short."
+        "Serve one meal with at least one safe item on the table. If they eat only that, the meal is over and nobody comments. This is not giving in - it is removing the pressure that keeps the list short."
       ] }
     ]
   },
   {
-    topic: "food", emoji: "🩺", title: "When food needs a professional",
+    topic: "food", emoji: "🌡️", title: "When food needs a professional",
     summary: "Fussy eating is common. A shrinking list, weight loss or a child who is frightened of food needs more than patience.",
     sections: [
       { h: "Ask for help if", list: [
@@ -531,7 +531,7 @@ window.ZenSupport.entries.push(
         "They are tired, pale, or low in energy."
       ] },
       { h: "Who to ask", list: [
-        "GP first — ask about growth, iron and vitamin levels.",
+        "GP first - ask about growth, iron and vitamin levels.",
         "Ask for a referral to a paediatric dietitian with experience in ARFID or sensory feeding.",
         "Speech and language therapy can help with chewing and swallowing difficulties.",
         "School can record what is eaten at lunch, which is useful evidence."
@@ -552,7 +552,7 @@ window.ZenSupport.entries.push(
         "Give them permission to have needs that take priority sometimes."
       ] },
       { h: "Practical fairness", list: [
-        "One-to-one time on a schedule, not only when there is spare time — there never is.",
+        "One-to-one time on a schedule, not only when there is spare time - there never is.",
         "A door that locks, and headphones, and a place that is theirs.",
         "Do not always ask them to be the flexible one.",
         "Celebrate their things as loudly as you celebrate the other child's progress."
@@ -571,17 +571,17 @@ window.ZenSupport.entries.push(
         "If it gets missed, say so and reschedule. Do not pretend it did not matter."
       ] },
       { h: "Why it works", p: [
-        "Children get attention one way or another. Ten minutes of undivided, non-judgemental attention reduces the need to get it by other means — and it is the quickest way back after a rupture."
+        "Children get attention one way or another. Ten minutes of undivided, non-judgemental attention reduces the need to get it by other means - and it is the quickest way back after a rupture."
       ] },
       { h: "Try this", try: ["Put it in the calendar as if it were a dentist appointment. It is the one that gets cancelled first."] }
     ]
   },
   {
-    topic: "siblings", emoji: "🫂", title: "The sibling who copes",
+    topic: "siblings", emoji: "🤗", title: "The sibling who copes",
     summary: "The child who never causes trouble is often the one carrying the most.",
     sections: [
       { h: "Watch for", list: [
-        "Being unusually good, quiet, or helpful — parentification in slow motion.",
+        "Being unusually good, quiet, or helpful - parentification in slow motion.",
         "Anxiety, perfectionism, or sudden school refusal.",
         "Hiding their own feelings to protect you.",
         "Being teased at school about their sibling, and not telling you."
@@ -589,7 +589,7 @@ window.ZenSupport.entries.push(
       { h: "What helps", list: [
         "Ask about their day first sometimes, before the crisis of the moment.",
         "Give them language: 'My brother is autistic' is theirs to share or not.",
-        "Sibling groups and young carer support exist — ask the school or local offer.",
+        "Sibling groups and young carer support exist - ask the school or local offer.",
         "Tell them, regularly, that they are not responsible for keeping the peace."
       ] },
       { h: "Say this", say: ["You don't have to look after him. That's my job.", "What do you need that you haven't asked for?"] }
@@ -599,7 +599,7 @@ window.ZenSupport.entries.push(
 
 window.ZenSupport.entries.push(
   {
-    topic: "you", emoji: "🫖", title: "You are allowed to be exhausted",
+    topic: "you", emoji: "☕", title: "You are allowed to be exhausted",
     summary: "Parenting a child with additional needs is a second job with no days off. Burnout is an occupational hazard, not a character flaw.",
     sections: [
       { h: "What burnout looks like", list: [
@@ -624,14 +624,14 @@ window.ZenSupport.entries.push(
     summary: "In the UK, support for the carer is a separate thing from support for the child. Ask for it by name.",
     sections: [
       { h: "What exists", list: [
-        "A carer's assessment from your local authority — for you, not the child.",
+        "A carer's assessment from your local authority - for you, not the child.",
         "Short breaks and sitting services, sometimes called 'respite' or 'short breaks'.",
         "Family Fund grants for equipment, breaks and household items.",
         "Charities specific to the condition: ADHD Foundation, National Autistic Society, Contact."
       ] },
       { h: "How to ask", list: [
         "Phone the local authority and say: 'I would like a carer's assessment.'",
-        "Ask the school if they know of local parent groups — they usually do.",
+        "Ask the school if they know of local parent groups - they usually do.",
         "Ask your GP to note that you are a carer. It appears on your record and opens doors.",
         "Say yes to specific offers. 'Let me know if you need anything' is not an offer; 'I'll take them Saturday morning' is."
       ] },
@@ -644,13 +644,13 @@ window.ZenSupport.entries.push(
     sections: [
       { h: "Right now", list: [
         "Put the child somewhere safe and step outside the room for two minutes.",
-        "Call someone — a partner, a friend, a parent, a neighbour.",
+        "Call someone - a partner, a friend, a parent, a neighbour.",
         "If you or your child are in immediate danger, call 999.",
         "If you feel you might harm yourself, call Samaritans on 116 123, free, any time. Or NHS 111 and choose the mental health option."
       ] },
       { h: "This week", list: [
         "Tell your GP how you are actually sleeping, eating and feeling. Ask for support for you.",
-        "Ask the school for a meeting about the child — you should not be managing this alone.",
+        "Ask the school for a meeting about the child - you should not be managing this alone.",
         "Ask about a carer's assessment and local crisis support.",
         "Tell one person the unedited version."
       ] },
@@ -660,7 +660,7 @@ window.ZenSupport.entries.push(
     ]
   },
   {
-    topic: "help", emoji: "🩺", title: "Start with the GP",
+    topic: "help", emoji: "🌡️", title: "Start with the GP",
     summary: "The GP is the front door to most UK referrals, and a letter from them carries weight with school.",
     sections: [
       { h: "Before the appointment", list: [
@@ -676,7 +676,7 @@ window.ZenSupport.entries.push(
         "Ask for the referral to be copied to you in writing."
       ] },
       { h: "Worth knowing", p: [
-        "Waiting lists for ADHD and autism assessment are long in most of the UK. Ask to be referred anyway, and ask the school to put support in place now — support does not need a diagnosis."
+        "Waiting lists for ADHD and autism assessment are long in most of the UK. Ask to be referred anyway, and ask the school to put support in place now - support does not need a diagnosis."
       ] }
     ]
   },
@@ -688,7 +688,7 @@ window.ZenSupport.entries.push(
         "Will my GP accept this report and add it to the record?",
         "Will the school and local authority accept it for SEN support or an EHCP?",
         "Which professional is doing it, and what are their qualifications?",
-        "What happens after diagnosis — medication, follow-up, shared care?"
+        "What happens after diagnosis - medication, follow-up, shared care?"
       ] },
       { h: "Red flags", list: [
         "A diagnosis in one appointment with no school or nursery evidence.",
@@ -706,14 +706,14 @@ window.ZenSupport.entries.push(
     summary: "There is money and support available that nobody tells you about. It is not charity; it is what the system is for.",
     sections: [
       { h: "Money", list: [
-        "Disability Living Allowance (DLA) for under-16s — based on care and supervision needs, not diagnosis.",
+        "Disability Living Allowance (DLA) for under-16s - based on care and supervision needs, not diagnosis.",
         "Carer's Allowance if you care for someone 35+ hours a week and earn under the limit.",
         "Universal Credit carer element, and help with childcare costs.",
         "Family Fund grants for families with a disabled or seriously ill child.",
         "Local authority short breaks, and sometimes a direct payment."
       ] },
       { h: "Practical", list: [
-        "A local offer website lists services in your area — search '(your council) local offer'.",
+        "A local offer website lists services in your area - search '(your council) local offer'.",
         "SENDIASS gives free, independent advice about school.",
         "Contact and IPSEA have free helplines and template letters.",
         "Your GP can add 'carer' to your record; the school can add 'young carer' for a sibling."
@@ -811,7 +811,7 @@ window.ZenSupport.entries.push(
     summary: "A narrow diet is usually about safety and sensory certainty, not defiance. Pressure makes the list shorter.",
     sections: [
       { h: "What is actually happening", p: [
-        "Many autistic and ADHD children eat a small range of foods because those foods are predictable: same brand, same texture, same colour, same crunch. A new food is not just a new taste — it is an unknown quantity in a body that already feels unreliable.",
+        "Many autistic and ADHD children eat a small range of foods because those foods are predictable: same brand, same texture, same colour, same crunch. A new food is not just a new taste - it is an unknown quantity in a body that already feels unreliable.",
         "The instinct to negotiate, hide vegetables or withhold pudding is understandable. It also teaches the child that eating is a contest, and contests are exhausting for everyone."
       ] },
       { h: "What helps more than pressure", list: [
@@ -840,7 +840,7 @@ window.ZenSupport.entries.push(
         "The meltdown at 4pm is often a blood-sugar and dehydration problem wearing a behaviour costume."
       ] },
       { h: "Plan the landing", list: [
-        "Have food ready before they walk in — something with protein and carbohydrate, not just a biscuit.",
+        "Have food ready before they walk in - something with protein and carbohydrate, not just a biscuit.",
         "Offer a drink first. Two hours without a drink is enough to make anyone brittle.",
         "Do not ask about the day until they have eaten. Questions before food rarely go well.",
         "If dinner becomes impossible afterwards, make the after-school snack the substantial meal and keep dinner small and low-pressure.",
@@ -853,7 +853,7 @@ window.ZenSupport.entries.push(
     ]
   },
   {
-    topic: "health", emoji: "🩺", title: "Getting the GP to hear you",
+    topic: "health", emoji: "🌡️", title: "Getting the GP to hear you",
     summary: "Appointments are short. A page of facts and one clear ask gets you further than a long story.",
     sections: [
       { h: "Before the appointment", list: [
@@ -865,7 +865,7 @@ window.ZenSupport.entries.push(
       ] },
       { h: "In the room", p: [
         "Lead with the pattern and the impact, not the diagnosis you have researched. 'For six weeks he has woken at 5am, and he has missed eleven days of school' lands harder than 'I think it might be ADHD'.",
-        "It is fair to ask directly: 'What is the referral pathway, and how long is the wait?' and 'What should we do in the meantime?' Ask for the answer in writing — a text or a letter is fine."
+        "It is fair to ask directly: 'What is the referral pathway, and how long is the wait?' and 'What should we do in the meantime?' Ask for the answer in writing - a text or a letter is fine."
       ] },
       { h: "If you are not heard", list: [
         "Ask for the practice's policy on referrals, and for the GP's reason for not referring to be recorded.",
@@ -888,13 +888,13 @@ window.ZenSupport.entries.push(
         "What is it, what is it meant to change, and how will we know it is working?",
         "What time should it be taken, and what happens if we forget or it is refused?",
         "What are the common side effects, and which ones mean we should call someone?",
-        "What do we monitor — appetite, sleep, height, weight, mood, blood pressure — and how often?",
+        "What do we monitor - appetite, sleep, height, weight, mood, blood pressure - and how often?",
         "Who reviews the dose, how do we reach them, and what is the plan for weekends and holidays?"
       ] },
       { h: "The first two weeks", p: [
         "Keep a simple daily note: time taken, appetite at lunch and dinner, bedtime, sleep, and one word for mood. It takes a minute and it is the difference between a useful review and a vague one.",
         "Appetite usually drops most at lunchtime. A substantial breakfast before the dose and a planned after-school snack are practical, not fussy.",
-        "Never adjust or stop a dose without advice. If you are worried, phone the team that prescribed it — that is what they are there for."
+        "Never adjust or stop a dose without advice. If you are worried, phone the team that prescribed it - that is what they are there for."
       ] },
       { h: "A word about 'holidays'", p: [
         "Some families use medication only on school days; others use it every day. Both can be reasonable, but the decision should come from the prescriber who knows your child, not from a forum. Ask the question directly and get the answer recorded."
@@ -911,7 +911,7 @@ window.ZenSupport.entries.push(
     sections: [
       { h: "Move before the demand", p: [
         "Movement works best as a warm-up, not a reward. Ten minutes of heavy work before homework does more than an hour of running afterwards.",
-        "Heavy work — pushing, pulling, carrying, wall presses — is calming for most children. Fast spinning and running are alerting, which is useful in the morning and unhelpful at bedtime."
+        "Heavy work - pushing, pulling, carrying, wall presses - is calming for most children. Fast spinning and running are alerting, which is useful in the morning and unhelpful at bedtime."
       ] },
       { h: "The ten-minute rule", list: [
         "Pick movement that needs no changing, no equipment and no adult energy: stairs, wall pushes, animal walks, a balloon.",
@@ -938,7 +938,7 @@ window.ZenSupport.entries.push(
         "For clubs, ask for a trial session before paying for a block, and tell the coach one thing that helps."
       ] },
       { h: "During", p: [
-        "Arrive early or late on purpose — whichever is quieter. The crowded doorway is often the hardest part.",
+        "Arrive early or late on purpose - whichever is quieter. The crowded doorway is often the hardest part.",
         "Find one job or one person. A child with a role to play does not have to improvise social contact.",
         "Do not insist on joining in. Watching from the edge is participation, and it often comes before joining."
       ] },

@@ -1,6 +1,6 @@
 # ZenZac
 
-A calm, offline toolkit for children with ADHD, autism, or both — and the grown-ups beside them. No accounts, no adverts, no tracking, no network calls.
+A calm, offline toolkit for children with ADHD, autism, or both - and the grown-ups beside them. No accounts, no adverts, no tracking, no network calls.
 
 Open `index.html` in a browser. Everything works from a double-click; a local server is optional.
 
@@ -10,21 +10,27 @@ Open `index.html` in a browser. Everything works from a double-click; a local se
 | --- | --- |
 | **Home** | Greeting, mood check-in, "start here today" suggestions from the child's plan, house rules, today's numbers. |
 | **Set-up** | Seven short questions: name, age band, mode (ADHD / autism / both / not sure), what is hard, what helps, sensory notes, house rules, colours. Every answer can be changed later. |
-| **Calm** | Guided breathing (three patterns), six ambient sounds, grounding exercises. |
+| **Calm** | Guided breathing (three patterns), six ambient sounds, and a 5-4-3-2-1 grounding exercise with four places (home, outside, car, bed), step-by-step guidance and soft answer pictures to tap. |
 | **Now & Next** | Two-slot routine with timer, task queue, stickers, and the house rules kept in view. |
 | **Focus** | Choice wheel with themed sets (foods, sports, colours, animals, computer, silly), Wac-A-Zac with gold/mover/grump targets and a best-rounds board, focus timer. |
-| **Journal** | Private feelings check-ins, behaviour notes, weekly chart. |
+| **Journal** | Private feelings check-ins, behaviour notes, weekly chart, ranked trigger/help lists, and full edit or delete of every saved entry in the grown-ups area. |
 | **Play** | Knock-knock jokes with a knock-at-the-door sound, and the fart machine. |
-| **Compendium** | 89 practical entries in 15 categories — including nutrition, health, activities and behaviour tracking — searchable and filterable, plus links into the matching app tool. |
+| **Compendium** | 89 practical entries in 15 categories - including nutrition, health, activities and behaviour tracking - searchable and filterable, plus links into the matching app tool. |
 | **Learn** | Thirteen longer guides for grown-ups, plus official guidance and charity links (NHS, NICE, NAS, ADHD Foundation, IPSEA, Contact). |
 | **Parent support** | The long version: 45 entries across 13 topics, searchable, with scripts, a GP appointment guide, medication questions and a direct email contact. |
-| **Settings** | Name, sound, spoken cues, calm motion, bigger text, six soft palettes, plan summary, export and delete. |
+| **Settings** | Name, sound, spoken cues, calm motion, bigger text, four icon finishes (Basic, Soft, Matt, Gloss), six soft palettes with live previews, creator contact and support link, plan summary, export and delete. |
 
 ## The plan
 
 The set-up wizard builds a local profile and a **house rules** set. The profile is a starting point, not a label: it changes what Home puts first and which shortcuts appear. Rules are short agreements shown on Home and Now & Next, and they can be toggled, rewritten or added to at any time.
 
-Six palettes are included — three light (Meadow, Blossom, Sea glass) and three low-glare dark (Dusk, Twilight, Forest). No pure white, no external fonts, no CDN icons.
+Six palettes are included - three light (Meadow, Blossom, Sea glass) and three low-glare dark (Dusk, Twilight, Forest). No pure white, no external fonts, no CDN icons. Body, secondary and muted text all clear WCAG AA contrast in every palette, and the Settings cards preview each palette before you choose it.
+
+Emoji can be shown in four finishes - **Basic**, **Soft**, **Matt** or **Gloss**. Soft, Matt and Gloss take their tint from the active palette. The icon set was reviewed for meaning and for older devices, so the newest or easily-misread pictograms were swapped for clearer alternatives.
+
+## Creator
+
+ZenZac is built by Craig Heggie, a parent of children with ADHD and autism. The Settings page has a Creator section with a direct email address (`craigheggie@googlemail.com`) and an optional one-off support link. The app stays free, with no adverts and no accounts.
 
 ## Files
 

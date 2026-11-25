@@ -1,4 +1,4 @@
-/* ZenZac content — plain data + tiny helpers. No network needed. */
+/* ZenZac content - plain data + tiny helpers. No network needed. */
 window.ZenData = (function () {
   "use strict";
 
@@ -46,7 +46,7 @@ window.ZenData = (function () {
 
   var routineChips = [
     { name: "Wake up",      emoji: "☀️" },
-    { name: "Brush teeth",  emoji: "🪥" },
+    { name: "Brush teeth",  emoji: "🦷" },
     { name: "Get dressed",  emoji: "👕" },
     { name: "Breakfast",    emoji: "🥣" },
     { name: "Pack bag",     emoji: "🎒" },
@@ -154,7 +154,7 @@ window.ZenData = (function () {
       summary: "Long, slow breaths out tell the body it is safe. That is the whole trick.",
       points: [
         "Breathe in through the nose for about 4 seconds.",
-        "Out through the mouth for 6 — longer out than in is what calms the nervous system.",
+        "Out through the mouth for 6 - longer out than in is what calms the nervous system.",
         "Two minutes is plenty. Little and often beats one big session.",
         "Count on your fingers, or trace up and down each finger, if counting in your head is hard.",
         "If breathing games make your child dizzy or anxious, stop and try cold hands, a stretch or a walk instead."
@@ -167,7 +167,7 @@ window.ZenData = (function () {
         "Watch for hands over ears, squinting, rocking, going very quiet or very wriggly.",
         "Reduce input first: dim lights, turn off background noise, move to a smaller space.",
         "Use fewer words. Short sentences, one instruction at a time.",
-        "Offer a choice of two things — choice returns a sense of control.",
+        "Offer a choice of two things - choice returns a sense of control.",
         "Keep a calm corner with a cushion, ear defenders and one familiar toy."
       ]
     },
@@ -176,21 +176,21 @@ window.ZenData = (function () {
       summary: "Same order, same time, dim lights. Predictability does more than any gadget.",
       points: [
         "Start 45 minutes before bed, and keep the last 20 minutes screen-free.",
-        "Do the same three steps every night — bath, pyjamas, story.",
+        "Do the same three steps every night - bath, pyjamas, story.",
         "Use a visual now-and-next strip so bedtime is not a surprise.",
         "No screens in the bedroom; a dim lamp is better than a bright ceiling light.",
-        "If sleep is a persistent problem, talk to your GP or health visitor — it is a common ADHD and autism issue and there is help."
+        "If sleep is a persistent problem, talk to your GP or health visitor - it is a common ADHD and autism issue and there is help."
       ]
     },
     {
       emoji: "🍎", tag: "Food", title: "Food and mood",
       summary: "Steady fuel steadies behaviour. Blood sugar dips look a lot like 'bad behaviour'.",
       points: [
-        "Try to include protein at breakfast — eggs, yoghurt, beans, nut butter.",
+        "Try to include protein at breakfast - eggs, yoghurt, beans, nut butter.",
         "Regular snacks beat one big meal for most children, especially after school.",
         "Keep water visible and refilled; thirst masquerades as grumpiness.",
         "New foods are easier alongside a safe food, without pressure to eat.",
-        "Never use pudding as a reward for eating vegetables — it teaches that the veg is the punishment."
+        "Never use pudding as a reward for eating vegetables - it teaches that the veg is the punishment."
       ]
     },
     {
@@ -209,7 +209,7 @@ window.ZenData = (function () {
       summary: "Movement changes how a body feels faster than talking does.",
       points: [
         "Wall pushes: hands on the wall, push for ten slow counts.",
-        "Animal walks across the room — bear, crab, frog.",
+        "Animal walks across the room - bear, crab, frog.",
         "Carry something heavy and safe from one room to another.",
         "Blow a cotton ball across the table with a straw.",
         "Star jumps, then shake out arms and legs like wet noodles."
@@ -220,7 +220,7 @@ window.ZenData = (function () {
       summary: "Working memory and processing speed vary hugely day to day. Make the ask smaller.",
       points: [
         "Say the child's name, wait for eye contact, then give one instruction.",
-        "Ask them to repeat it back — 'what's the plan?'",
+        "Ask them to repeat it back - 'what's the plan?'",
         "Use 'first… then…' instead of 'if you don't…'.",
         "Put the instruction somewhere visible: a whiteboard, a sticky note, a picture.",
         "Praise the effort you can see, not just the result."
@@ -234,7 +234,7 @@ window.ZenData = (function () {
         "Say the true thing out loud: 'I need a minute, I'm getting cross.'",
         "Step out of the room if it is safe, and breathe where you cannot see the trigger.",
         "Drop the lesson for now. Repair later, when you are both calm.",
-        "Log what happened afterwards in the Journal — patterns are easier to spot than single incidents."
+        "Log what happened afterwards in the Journal - patterns are easier to spot than single incidents."
       ]
     },
     {
@@ -245,7 +245,7 @@ window.ZenData = (function () {
         "Add a cushion, a blanket, ear defenders, a fidget and one book.",
         "Practise using it when calm, so it is familiar before it is needed.",
         "Never use it as a punishment, or it stops being safe.",
-        "Let them leave when they are ready — that is the point."
+        "Let them leave when they are ready - that is the point."
       ]
     },
     {
@@ -253,17 +253,17 @@ window.ZenData = (function () {
       summary: "Reward the behaviour you want repeated, immediately and specifically.",
       points: [
         "Describe what you saw: 'you put your shoes on when I asked'.",
-        "Small and often beats big and rare — a sticker now, not a trip next month.",
+        "Small and often beats big and rare - a sticker now, not a trip next month.",
         "Reward starting, not just finishing, if starting is the hard part.",
         "Never remove a reward already earned; that teaches the system is unfair.",
-        "Keep the reward close to the behaviour — same day, ideally within minutes."
+        "Keep the reward close to the behaviour - same day, ideally within minutes."
       ]
     },
     {
       emoji: "🍽️", tag: "Food", title: "The plate that actually gets eaten",
       summary: "Nutrition advice fails when it assumes a calm, hungry child at a table. Start from what they will eat.",
       points: [
-        "Aim for a protein, a carbohydrate and a fruit or vegetable across the day — not on every plate.",
+        "Aim for a protein, a carbohydrate and a fruit or vegetable across the day - not on every plate.",
         "Keep one safe food on the plate every time. New food sits beside it, never instead of it.",
         "Water on the table before anything else. A thirsty child reads as a grumpy one.",
         "Regular times matter as much as contents: blood sugar dips look exactly like bad behaviour.",
@@ -275,14 +275,14 @@ window.ZenData = (function () {
       summary: "Two minutes of movement, several times a day, beats one big workout nobody agrees to.",
       points: [
         "Put movement before the demand, not after: ten star jumps, then homework.",
-        "Heavy work calms faster than running — pushing, carrying, pulling, wall presses.",
+        "Heavy work calms faster than running - pushing, carrying, pulling, wall presses.",
         "Keep a short list on the fridge: five things that take under two minutes.",
         "Join in for the first minute. A child is far more likely to move if you are moving too.",
-        "Finish with something slow — a stretch, a drink, a lie-down — so the body knows it is over."
+        "Finish with something slow - a stretch, a drink, a lie-down - so the body knows it is over."
       ]
     },
     {
-      emoji: "🩺", tag: "Grown-ups", title: "What to say to the GP",
+      emoji: "🌡️", tag: "Grown-ups", title: "What to say to the GP",
       summary: "Ten minutes goes further with dates, examples and one clear ask written down first.",
       points: [
         "Take three examples with dates: what happened, how long it lasted, what you tried.",
@@ -313,7 +313,7 @@ window.ZenData = (function () {
       { e: "🔴", n: "Red" }, { e: "🟠", n: "Orange" }, { e: "🟡", n: "Yellow" },
       { e: "🟢", n: "Green" }, { e: "🔵", n: "Blue" }, { e: "🟣", n: "Purple" },
       { e: "🟤", n: "Brown" }, { e: "⚫", n: "Black" }, { e: "⚪", n: "White" },
-      { e: "🩷", n: "Pink" }, { e: "🩵", n: "Aqua" }, { e: "🟥", n: "Scarlet" }
+      { e: "💗", n: "Pink" }, { e: "🟦", n: "Aqua" }, { e: "🟥", n: "Scarlet" }
     ] },
     { id: "animals", name: "Animals", emoji: "🦊", note: "Eight animals, one winner.", items: [
       { e: "🐶", n: "Dog" }, { e: "🐱", n: "Cat" }, { e: "🦊", n: "Fox" },
@@ -330,7 +330,7 @@ window.ZenData = (function () {
     { id: "silly", name: "Silly", emoji: "🤪", note: "Nonsense, on purpose.", items: [
       { e: "🧦", n: "Sock" }, { e: "🍌", n: "Banana" }, { e: "🫧", n: "Bubbles" },
       { e: "🟩", n: "Slime" }, { e: "🥔", n: "Potato" }, { e: "🦄", n: "Unicorn" },
-      { e: "🎈", n: "Balloon" }, { e: "🥒", n: "Pickle" }, { e: "🪀", n: "Yo-yo" },
+      { e: "🎈", n: "Balloon" }, { e: "🥒", n: "Pickle" }, { e: "🪁", n: "Yo-yo" },
       { e: "🐙", n: "Octopus" }, { e: "🦶", n: "Stinky foot" }, { e: "🌈", n: "Rainbow" }
     ] }
   ];
@@ -341,10 +341,10 @@ window.ZenData = (function () {
     {
       group: "Health & diagnosis",
       items: [
-        { name: "NHS — ADHD", url: "https://www.nhs.uk/conditions/attention-deficit-hyperactivity-disorder-adhd/", note: "Symptoms, assessment and treatment, in plain English." },
-        { name: "NHS — Autism", url: "https://www.nhs.uk/conditions/autism/", note: "What autism is, signs, and how to ask for an assessment." },
-        { name: "NICE NG87 — ADHD", url: "https://www.nice.org.uk/guidance/ng87", note: "The clinical guidance NHS teams and schools work from." },
-        { name: "NICE CG170 — Autism", url: "https://www.nice.org.uk/guidance/cg170", note: "Support and management for autistic children and young people." }
+        { name: "NHS - ADHD", url: "https://www.nhs.uk/conditions/attention-deficit-hyperactivity-disorder-adhd/", note: "Symptoms, assessment and treatment, in plain English." },
+        { name: "NHS - Autism", url: "https://www.nhs.uk/conditions/autism/", note: "What autism is, signs, and how to ask for an assessment." },
+        { name: "NICE NG87 - ADHD", url: "https://www.nice.org.uk/guidance/ng87", note: "The clinical guidance NHS teams and schools work from." },
+        { name: "NICE CG170 - Autism", url: "https://www.nice.org.uk/guidance/cg170", note: "Support and management for autistic children and young people." }
       ]
     },
     {
@@ -369,10 +369,10 @@ window.ZenData = (function () {
     {
       group: "Everyday health",
       items: [
-        { name: "NHS — The Eatwell Guide", url: "https://www.nhs.uk/live-well/eat-well/food-guidelines-and-food-labels/the-eatwell-guide/", note: "What a balanced day of food looks like." },
-        { name: "NHS — Sleep and tiredness", url: "https://www.nhs.uk/live-well/sleep-and-tiredness/", note: "How much sleep children need, and what helps." },
-        { name: "NHS — Vitamins for children", url: "https://www.nhs.uk/live-well/vitamin-supplements/vitamins-for-children/", note: "Which vitamins, who needs them, and how much." },
-        { name: "NHS — Physical activity guidelines", url: "https://www.nhs.uk/live-well/exercise/exercise-guidelines/physical-activity-guidelines-children-and-young-people/", note: "How much movement children need at each age." }
+        { name: "NHS - The Eatwell Guide", url: "https://www.nhs.uk/live-well/eat-well/food-guidelines-and-food-labels/the-eatwell-guide/", note: "What a balanced day of food looks like." },
+        { name: "NHS - Sleep and tiredness", url: "https://www.nhs.uk/live-well/sleep-and-tiredness/", note: "How much sleep children need, and what helps." },
+        { name: "NHS - Vitamins for children", url: "https://www.nhs.uk/live-well/vitamin-supplements/vitamins-for-children/", note: "Which vitamins, who needs them, and how much." },
+        { name: "NHS - Physical activity guidelines", url: "https://www.nhs.uk/live-well/exercise/exercise-guidelines/physical-activity-guidelines-children-and-young-people/", note: "How much movement children need at each age." }
       ]
     },
   ];
@@ -382,12 +382,12 @@ window.ZenData = (function () {
   /* ------------------------- profiles & themes ------------------------- */
 
   var themes = [
-    { id: "dusk",     name: "Dusk",      note: "Deep blue with mint. Low glare for evenings.",  sw: ["#0b1422", "#4fe3c1", "#8fb4ff"] },
-    { id: "meadow",   name: "Meadow",    note: "Soft daylight, sage and cream. The gentlest light.", sw: ["#f7f2e8", "#2f8f78", "#a9c7a0"] },
-    { id: "blossom",  name: "Blossom",   note: "Warm blush and lilac. Quiet, not babyish.", sw: ["#fbf1f2", "#a4597a", "#b79ad6"] },
-    { id: "seaglass", name: "Sea glass", note: "Cool aqua and pale sand. Easy on bright days.", sw: ["#eef6f5", "#2b7f8c", "#8fbccb"] },
-    { id: "twilight", name: "Twilight",  note: "Plum and lavender. Dim, soft and low-contrast.", sw: ["#141021", "#c9b6ff", "#ffb3c7"] },
-    { id: "forest",   name: "Forest",    note: "Deep green with moss and amber. Very low glare.", sw: ["#0d1712", "#8fd8a8", "#e6c07a"] }
+    { id: "dusk",     name: "Dusk",      note: "Deep blue with mint. Low glare for evenings.",  sw: ["#0b1422", "#4fe3c1", "#8fb4ff", "#f2f7fb", "#a4b6cc"], ink: "#f2f7fb", mute: "#a4b6cc", accentInk: "#062421", panel: "#142235" },
+    { id: "meadow",   name: "Meadow",    note: "Soft daylight, sage and cream. The gentlest light.", sw: ["#f7f2e8", "#2f8f78", "#a9c7a0", "#28322c", "#55625a"], ink: "#28322c", mute: "#55625a", accentInk: "#0e2a23", panel: "#fffdf7" },
+    { id: "blossom",  name: "Blossom",   note: "Warm blush and lilac. Quiet, not babyish.", sw: ["#fbf1f2", "#a4597a", "#b79ad6", "#3a2c33", "#665059"], ink: "#3a2c33", mute: "#665059", accentInk: "#2c1420", panel: "#fffafa" },
+    { id: "seaglass", name: "Sea glass", note: "Cool aqua and pale sand. Easy on bright days.", sw: ["#edf5f4", "#2b7f8c", "#8fbccb", "#233437", "#51686d"], ink: "#233437", mute: "#51686d", accentInk: "#06272b", panel: "#fcfefe" },
+    { id: "twilight", name: "Twilight",  note: "Plum and lavender. Dim, soft and low-contrast.", sw: ["#15111f", "#c9b6ff", "#ffb3c7", "#f4efff", "#b5a8cb"], ink: "#f4efff", mute: "#b5a8cb", accentInk: "#211636", panel: "#241e33" },
+    { id: "forest",   name: "Forest",    note: "Deep green with moss and amber. Very low glare.", sw: ["#0d1712", "#9adcb0", "#e6c07a", "#eef7ef", "#adc0b1"], ink: "#eef7ef", mute: "#adc0b1", accentInk: "#0c2318", panel: "#16241c" }
   ];
 
   var modes = [
@@ -402,7 +402,7 @@ window.ZenData = (function () {
     return null;
   }
 
-  var ageBands = ["4–6", "7–9", "10–12", "13–15", "16+", "For me (adult)"];
+  var ageBands = ["4-6", "7-9", "10-12", "13-15", "16+", "For me (adult)"];
 
   var hardBits = [
     { id: "morning",  label: "Mornings",       emoji: "🌅" },
@@ -430,7 +430,7 @@ window.ZenData = (function () {
     { id: "routine",  label: "Routine",         emoji: "📋" },
     { id: "reward",   label: "Rewards",         emoji: "⭐" },
     { id: "music",    label: "Music",           emoji: "🎵" },
-    { id: "pressure", label: "Deep pressure",   emoji: "🫂" },
+    { id: "pressure", label: "Deep pressure",   emoji: "🤗" },
     { id: "drawing",  label: "Drawing",         emoji: "✏️" }
   ];
 

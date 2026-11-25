@@ -1,23 +1,23 @@
 /* ==========================================================================
-   ZenZac — compendium.js
+   ZenZac - compendium.js
    The reference shelf: short, practical entries grouped by what is hard,
-   not by diagnosis. Content only — the app renders it. No network needed.
+   not by diagnosis. Content only - the app renders it. No network needed.
    ========================================================================== */
 window.ZenCompendium = {
   categories: [
     { id: "regulation", name: "Big feelings & regulation", emoji: "🌊", blurb: "What to do in the first minute, and what to do afterwards." },
     { id: "sensory",     name: "Sensory needs",            emoji: "🎧", blurb: "Noise, light, touch, movement and the senses nobody talks about." },
     { id: "routine",     name: "Routines & transitions",   emoji: "📋", blurb: "Predictability, warnings and getting out of the door." },
-    { id: "focus",       name: "Focus, homework & waiting",emoji: "🎯", blurb: "Starting, sticking and stopping — in child-sized pieces." },
+    { id: "focus",       name: "Focus, homework & waiting",emoji: "🎯", blurb: "Starting, sticking and stopping - in child-sized pieces." },
     { id: "communication", name: "Communication",          emoji: "💬", blurb: "Fewer words, more time, and other things that actually land." },
     { id: "sleep",       name: "Sleep & evenings",         emoji: "🌙", blurb: "Wind-downs, night waking and the 6am start." },
     { id: "food",        name: "Food & nutrition",         emoji: "🍎", blurb: "What goes on the plate, safe foods, and when to ask for help." },
     { id: "school",      name: "School & learning",        emoji: "🏫", blurb: "Scripts, profiles and adjustments worth asking for." },
     { id: "out",         name: "Out & about",              emoji: "🚌", blurb: "Trips, shops, haircuts and birthday parties." },
     { id: "connection",  name: "Play & connection",        emoji: "🧸", blurb: "Ten minutes that do more than an hour of talking." },
-    { id: "grownups",    name: "For grown-ups",            emoji: "🫖", blurb: "You are part of the system too. These are for you." },
+    { id: "grownups",    name: "For grown-ups",            emoji: "☕", blurb: "You are part of the system too. These are for you." },
     { id: "understand",  name: "Understanding & rights",   emoji: "🧭", blurb: "What is happening, why it is not naughtiness, and what you can ask for." },
-    { id: "health",      name: "Health & body",             emoji: "🩺", blurb: "Tummies, headaches, ears, medication and growing up." },
+    { id: "health",      name: "Health & body",             emoji: "🌡️", blurb: "Tummies, headaches, ears, medication and growing up." },
     { id: "activity",    name: "Activities & movement",     emoji: "🤸", blurb: "How to burn energy, by age, in a small house or a big park." },
     { id: "behaviour",   name: "Behaviour & tracking",      emoji: "📝", blurb: "ABC notes, patterns and records that get taken seriously." },
   ],
@@ -29,7 +29,7 @@ window.ZenCompendium = {
       summary: "When a child is already flooded, logic does not work. Connection, then a body fix, then words.",
       steps: [
         "Get low and close, and say one short true thing: 'I'm here.' Nothing else yet.",
-        "Change the body first — a drink, a walk, a heavy blanket, slow breathing out, or simply sitting down together.",
+        "Change the body first - a drink, a walk, a heavy blanket, slow breathing out, or simply sitting down together.",
         "Only when the storm has passed, ask one question: 'What would help now?' Not 'why did you do that?'",
         "Save the teaching for later. A flooded brain is not taking notes."
       ],
@@ -39,18 +39,18 @@ window.ZenCompendium = {
       cat: "regulation", emoji: "🤝", title: "Co-regulation comes before self-regulation",
       summary: "Children borrow calm from the adults around them long before they can make it themselves.",
       steps: [
-        "Slow your own breathing and drop your voice lower than usual — it is contagious in both directions.",
+        "Slow your own breathing and drop your voice lower than usual - it is contagious in both directions.",
         "Sit beside rather than opposite. Side-by-side takes the pressure off eye contact.",
         "Do something rhythmic together: stacking, drawing, walking, folding washing.",
         "Name your own state honestly: 'I'm getting cross, so I'm going to breathe for a minute.'"
       ]
     },
     {
-      cat: "regulation", emoji: "🏷️", title: "Name it to tame it — but keep it small",
+      cat: "regulation", emoji: "🏷️", title: "Name it to tame it - but keep it small",
       summary: "A feeling with a word is easier to carry than a feeling with no shape.",
       steps: [
         "Offer a guess, not a diagnosis: 'That looks like really cross' or 'That was a shock.'",
-        "Let them correct you. Being wrong is useful — it hands them the label.",
+        "Let them correct you. Being wrong is useful - it hands them the label.",
         "Keep it to one or two words when things are hot. Save the full vocabulary for calm times.",
         "Use the mood faces on Home as a low-pressure way to check in without a conversation."
       ],
@@ -60,7 +60,7 @@ window.ZenCompendium = {
       cat: "regulation", emoji: "🗺️", title: "Write a calm-down plan while everyone is calm",
       summary: "A plan made in the middle of a meltdown is a plan made by the meltdown.",
       steps: [
-        "Pick three steps that have worked before — for example: quiet room, ear defenders, then a drink.",
+        "Pick three steps that have worked before - for example: quiet room, ear defenders, then a drink.",
         "Name one person and one place. Write them down where the child can see.",
         "Practise it on a good day, all the way through, so the route is familiar.",
         "Review it after a hard week. Cross out what has stopped working without judgement."
@@ -92,7 +92,7 @@ window.ZenCompendium = {
       steps: [
         "Keep the goodbye short, warm and identical every day. Long goodbyes teach that leaving is dangerous.",
         "Give a concrete return point: 'After lunch, I'll be at the gate.'",
-        "Ask the school for a job at the door — putting the register out beats standing in the corridor.",
+        "Ask the school for a job at the door - putting the register out beats standing in the corridor.",
         "Do not sneak away. Being left without a goodbye is worse than being left after one."
       ]
     },
@@ -101,7 +101,7 @@ window.ZenCompendium = {
       summary: "Underneath most explosive behaviour is a need, a boundary, a sensory problem or a missing skill.",
       steps: [
         "Ask four questions afterwards: was it too loud, too sudden, too hard, or too much?",
-        "Look for the pattern across a week rather than a single incident — use the Journal.",
+        "Look for the pattern across a week rather than a single incident - use the Journal.",
         "Fix the environment before you try to fix the child.",
         "Teach the missing skill in peacetime, in one-minute rehearsals, not mid-conflict."
       ],
@@ -113,7 +113,7 @@ window.ZenCompendium = {
       cat: "sensory", emoji: "🎧", title: "Ear defenders: when and how",
       summary: "They are a tool, not a crutch. Used well they prevent overload; used all day they can mask the problem.",
       steps: [
-        "Use them for predictable loud events — assemblies, supermarkets, fireworks, hand dryers.",
+        "Use them for predictable loud events - assemblies, supermarkets, fireworks, hand dryers.",
         "Take them off in quiet periods so the child stays connected to conversation.",
         "Let the child control them. Having the option is often enough to make a place survivable.",
         "Pair them with a plan: 'defenders on at the door, off at the car.'"
@@ -121,10 +121,10 @@ window.ZenCompendium = {
     },
     {
       cat: "sensory", emoji: "🔊", title: "Noise hurts before it annoys",
-      summary: "For many autistic children, sound is not preference — it is physical pain or static that never stops.",
+      summary: "For many autistic children, sound is not preference - it is physical pain or static that never stops.",
       steps: [
         "Notice the build-up: hands over ears, a fixed stare, going very still or very wriggly.",
-        "Turn off background sources first — the TV nobody is watching is still input.",
+        "Turn off background sources first - the TV nobody is watching is still input.",
         "Choose quieter times and quieter routes rather than avoiding the place entirely.",
         "Give warning before unavoidable noise: 'The bell goes in one minute.'"
       ]
@@ -134,7 +134,7 @@ window.ZenCompendium = {
       summary: "A bright, busy room costs attention before a single instruction is given.",
       steps: [
         "Swap overhead lighting for a lamp where you can. Fluorescent flicker is a common trigger.",
-        "Clear one surface completely — the table where homework happens is a good start.",
+        "Clear one surface completely - the table where homework happens is a good start.",
         "Use one colour of storage, and put things away by category, not by mood.",
         "Let the child choose a dimmer, warmer setup for their own room."
       ]
@@ -146,12 +146,12 @@ window.ZenCompendium = {
         "Wall pushes for ten slow counts, hands flat at shoulder height.",
         "Carry the shopping, the laundry basket, or a bag of books from room to room.",
         "Animal walks across the floor: bear, crab, frog, seal.",
-        "Do it before the hard thing, not after the explosion — it is prevention, not punishment."
+        "Do it before the hard thing, not after the explosion - it is prevention, not punishment."
       ],
       link: { href: "#/focus", label: "Movement tools" }
     },
     {
-      cat: "sensory", emoji: "🫀", title: "Interoception: the sense nobody mentions",
+      cat: "sensory", emoji: "💓", title: "Interoception: the sense nobody mentions",
       summary: "Noticing hunger, thirst, a full bladder or a rising heart rate is a sense, and it can be delayed.",
       steps: [
         "Build in regular drink and toilet prompts rather than waiting to be asked.",
@@ -166,7 +166,7 @@ window.ZenCompendium = {
       steps: [
         "Cut tags out, or buy seamless and label-free where you can.",
         "Let the child try clothes on for ten minutes at home before a full day.",
-        "Wash new clothes twice — sizing and softness both change.",
+        "Wash new clothes twice - sizing and softness both change.",
         "Offer two acceptable outfits, not the whole wardrobe. Choice within limits."
       ]
     },
@@ -174,7 +174,7 @@ window.ZenCompendium = {
       cat: "sensory", emoji: "🌀", title: "Stimming is regulation",
       summary: "Rocking, flapping, humming and spinning are doing a job. Stop them only if they are unsafe.",
       steps: [
-        "Ask what it is helping with — excitement, overwhelm, concentration, pain?",
+        "Ask what it is helping with - excitement, overwhelm, concentration, pain?",
         "Protect the time and space for it, especially after school.",
         "Replace unsafe stims with a safer version of the same movement rather than banning it.",
         "Never shame it. A child who is embarrassed about regulating loses the tool."
@@ -189,18 +189,18 @@ window.ZenCompendium = {
         "Keep it to the next three or four things, not the whole day.",
         "Use photos of your own house and your own things where possible.",
         "Move the card together, so the change is something the child does, not something done to them.",
-        "Put it where the transition happens — by the door, not in a folder."
+        "Put it where the transition happens - by the door, not in a folder."
       ],
       link: { href: "#/routine", label: "Build a now & next" }
     },
     {
-      cat: "routine", emoji: "1️⃣", title: "First–then, not if–then",
+      cat: "routine", emoji: "1️⃣", title: "First-then, not if-then",
       summary: "'First shoes, then iPad' is a sequence. 'If you don't put your shoes on…' is a threat.",
       steps: [
         "Keep the first thing small and certain: 'First shoes.'",
         "Name the second thing the child actually wants, not a reward you invented.",
-        "Show it rather than say it — two pictures, two words.",
-        "Follow through calmly. A first–then that sometimes happens is just noise."
+        "Show it rather than say it - two pictures, two words.",
+        "Follow through calmly. A first-then that sometimes happens is just noise."
       ]
     },
     {
@@ -208,7 +208,7 @@ window.ZenCompendium = {
       summary: "Time is abstract. A countdown makes it visible and gives the brain a chance to switch.",
       steps: [
         "Give a five-minute warning, then a two-minute one, then a one-minute one.",
-        "Use a visible timer where you can — the child should not have to trust your sense of time.",
+        "Use a visible timer where you can - the child should not have to trust your sense of time.",
         "Say what is ending and what is starting: 'Two minutes of game, then bath.'",
         "For big changes, warn in days, not minutes. Cross them off a calendar."
       ]
@@ -219,7 +219,7 @@ window.ZenCompendium = {
       steps: [
         "Decide the one thing that must happen now, and the one thing after it.",
         "Put a time on the now task and let a timer end it, not you.",
-        "Celebrate the finish with a sticker or a chime — the ending needs to feel like something.",
+        "Celebrate the finish with a sticker or a chime - the ending needs to feel like something.",
         "Reset the strip at the same point each day so it becomes part of the furniture."
       ],
       link: { href: "#/routine", label: "Open Now & Next" }
@@ -231,7 +231,7 @@ window.ZenCompendium = {
         "Keep wake, meals and bed within an hour of the weekday times.",
         "Plan one anchor in the morning and one in the afternoon, and leave the middle loose.",
         "Write the day's two or three things on the same board you use in the week.",
-        "Build in a quiet hour after anything exciting — recovery is part of the plan."
+        "Build in a quiet hour after anything exciting - recovery is part of the plan."
       ]
     },
     {
@@ -251,7 +251,7 @@ window.ZenCompendium = {
       summary: "Most of the effort is in starting. Make the first chunk hilariously small.",
       steps: [
         "Agree ten minutes on a visible timer. The child may stop when it rings.",
-        "Sit nearby without supervising — presence, not pressure.",
+        "Sit nearby without supervising - presence, not pressure.",
         "At the bell, offer a two-minute movement break before deciding whether to continue.",
         "Write down what got done. Finishing is easier when you can see progress."
       ],
@@ -259,7 +259,7 @@ window.ZenCompendium = {
     },
     {
       cat: "focus", emoji: "👥", title: "Body doubling",
-      summary: "Working alongside someone — even silently — makes starting much easier for many ADHD brains.",
+      summary: "Working alongside someone - even silently - makes starting much easier for many ADHD brains.",
       steps: [
         "Do your own quiet task at the same table, not theirs.",
         "Agree the deal in advance: 'I'll do emails, you do maths, ten minutes.'",
@@ -282,7 +282,7 @@ window.ZenCompendium = {
       summary: "Waiting is a skill, not a personality trait. It is built in seconds, not minutes.",
       steps: [
         "Start with five seconds and a visual cue, then build slowly.",
-        "Give the hands something to do — a fidget, a job, holding the list.",
+        "Give the hands something to do - a fidget, a job, holding the list.",
         "Narrate the wait: 'Two more minutes, then it's your turn.'",
         "Never use waiting as a test. If it fails, the step was too big."
       ]
@@ -294,7 +294,7 @@ window.ZenCompendium = {
         "Cover everything except the current question with a blank sheet.",
         "Number the questions and do them out of order if that helps.",
         "Use a coloured overlay or larger print if reading is effortful.",
-        "Put the finished page away immediately — visible backlog is demoralising."
+        "Put the finished page away immediately - visible backlog is demoralising."
       ]
     },
     {
@@ -316,7 +316,7 @@ window.ZenCompendium = {
         "Get attention first: name, wait, then speak.",
         "Use one instruction per sentence, and no more than two sentences.",
         "Pause for at least ten seconds after asking. Silence is processing time, not defiance.",
-        "Repeat the same words rather than rephrasing — new words mean starting again."
+        "Repeat the same words rather than rephrasing - new words mean starting again."
       ]
     },
     {
@@ -341,11 +341,11 @@ window.ZenCompendium = {
     },
     {
       cat: "communication", emoji: "🖐️", title: "Pictures, signs and AAC",
-      summary: "Speech is one channel, not the only one. Offering another does not stop talking — it reduces frustration.",
+      summary: "Speech is one channel, not the only one. Offering another does not stop talking - it reduces frustration.",
       steps: [
         "Keep a few core pictures where the child spends most time: help, stop, more, break.",
         "Model the pictures yourself as you speak, so they are normal rather than a last resort.",
-        "Accept pointing, signing, leading you by the hand, or a device — all count as communication.",
+        "Accept pointing, signing, leading you by the hand, or a device - all count as communication.",
         "Never remove a communication method as a reward or withhold it during a meltdown."
       ]
     },
@@ -366,7 +366,7 @@ window.ZenCompendium = {
         "Stop asking questions. Offer presence, water, a blanket, or a quiet space.",
         "Use yes/no or a thumbs up if you need to check something.",
         "Do not insist on an apology or an explanation while the words are gone.",
-        "Afterwards, ask what would make talking easier next time — a note, a text, a drawing."
+        "Afterwards, ask what would make talking easier next time - a note, a text, a drawing."
       ]
     },
 
@@ -382,10 +382,10 @@ window.ZenCompendium = {
       ]
     },
     {
-      cat: "sleep", emoji: "🫁", title: "Breathing for sleep without the performance",
+      cat: "sleep", emoji: "🌬️", title: "Breathing for sleep without the performance",
       summary: "Breathing exercises can create pressure. Try them as a story, not a task.",
       steps: [
-        "Lie down and put a toy on the tummy. Watch it rise and fall — no counting required.",
+        "Lie down and put a toy on the tummy. Watch it rise and fall - no counting required.",
         "Breathe out for longer than in, through the mouth, with a soft 'shh' sound.",
         "Try five rounds, then stop whether or not it worked.",
         "If it becomes a fight, drop it and read aloud in a low voice instead."
@@ -409,7 +409,7 @@ window.ZenCompendium = {
         "Keep the wake time fixed and move bedtime 15 minutes earlier for a week at a time.",
         "Make the room boring at dawn: blackout where safe, nothing to play with.",
         "Use a simple 'okay to get up' clock or lamp the child can read without you.",
-        "If sleep problems persist for months, ask the GP or health visitor — this is a recognised issue with real help available."
+        "If sleep problems persist for months, ask the GP or health visitor - this is a recognised issue with real help available."
       ]
     },
 
@@ -438,7 +438,7 @@ window.ZenCompendium = {
       cat: "food", emoji: "🍳", title: "Steady fuel for a steady brain",
       summary: "Blood sugar dips look exactly like bad behaviour: tears, rage, inability to cope.",
       steps: [
-        "Aim for protein at breakfast — eggs, yoghurt, beans, nut butter.",
+        "Aim for protein at breakfast - eggs, yoghurt, beans, nut butter.",
         "Add a scheduled snack after school before homework, not after the argument.",
         "Keep water visible and refill it without asking.",
         "Notice the 4pm pattern. If it is always the same time, it is often fuel."
@@ -480,7 +480,7 @@ window.ZenCompendium = {
       cat: "school", emoji: "📚", title: "Homework that fits the child",
       summary: "The point is learning, not endurance. Ask for the version that proves the learning.",
       steps: [
-        "Agree a time cap — often 20 minutes is plenty — and let the school know it was used.",
+        "Agree a time cap - often 20 minutes is plenty - and let the school know it was used.",
         "Ask for typed work, fewer questions, or a photograph of practical work instead.",
         "Do not do it for them. Do help them start and stop.",
         "If homework causes distress most nights, that is data for a conversation, not a discipline problem."
@@ -491,7 +491,7 @@ window.ZenCompendium = {
       summary: "Unstructured time with noise and crowds is often harder than lessons.",
       steps: [
         "Ask about a quieter club or a supervised room at break.",
-        "A lunchtime job — library helper, equipment monitor — gives structure without stigma.",
+        "A lunchtime job - library helper, equipment monitor - gives structure without stigma.",
         "Check where the child actually goes, not where they are supposed to go.",
         "Ask for a named adult to check in once at the start of lunch."
       ]
@@ -500,7 +500,7 @@ window.ZenCompendium = {
       cat: "school", emoji: "📝", title: "Exams and access arrangements",
       summary: "Extra time, a quiet room and rest breaks are reasonable adjustments, not advantages.",
       steps: [
-        "Ask the SENCO early — access arrangements often need evidence and deadlines.",
+        "Ask the SENCO early - access arrangements often need evidence and deadlines.",
         "Typical options: extra time, a separate room, rest breaks, a reader or a scribe.",
         "Practise the arrangement before the real exam so it is familiar.",
         "In the UK, talk to the school about SEN Support and, if needs are ongoing, an EHCP needs assessment."
@@ -513,7 +513,7 @@ window.ZenCompendium = {
       summary: "Knowing what will happen removes most of the fear of the unknown.",
       steps: [
         "Write four or five short sentences in the first person: where, what, how long, what if.",
-        "Include the boring bits — the queue, the toilet, the way back.",
+        "Include the boring bits - the queue, the toilet, the way back.",
         "Read it the night before and again in the car.",
         "Bring the story with you so the plan is available when anxiety rises."
       ]
@@ -576,7 +576,7 @@ window.ZenCompendium = {
       steps: [
         "Invent one small routine that is only yours: a silly handshake, a word, a song.",
         "Use it at reunions, not just at bedtime.",
-        "Keep it going through hard weeks — especially hard weeks.",
+        "Keep it going through hard weeks - especially hard weeks.",
         "Let the child change it. Rituals that cannot evolve become rules."
       ],
       link: { href: "#/play", label: "Jokes & play" }
@@ -587,17 +587,17 @@ window.ZenCompendium = {
       steps: [
         "Say what you saw: 'You got your shoes when I asked.'",
         "Praise starting as well as finishing, if starting is the hard part.",
-        "Keep it small and often — a sticker now, not a trip next month.",
+        "Keep it small and often - a sticker now, not a trip next month.",
         "Never take back a reward already earned. It teaches the system is unfair."
       ]
     },
 
     /* ---------------- grownups ---------------- */
     {
-      cat: "grownups", emoji: "🫖", title: "You cannot pour from empty",
+      cat: "grownups", emoji: "☕", title: "You cannot pour from empty",
       summary: "Parental burnout is common, real, and not a character flaw.",
       steps: [
-        "Pick one thing to drop this week. Not improve — drop.",
+        "Pick one thing to drop this week. Not improve - drop.",
         "Tell one other adult the truth about how you are, not the polite version.",
         "Ask your GP about support for yourself, including carer support and talking therapy.",
         "Lower the bar on the days that are already too full. Nobody is grading the house."
@@ -628,7 +628,7 @@ window.ZenCompendium = {
       summary: "Three columns for two weeks beats a year of trying to remember.",
       steps: [
         "Log the time, what happened before, and how long recovery took.",
-        "Add sleep, food and sensory notes — those are usually the real causes.",
+        "Add sleep, food and sensory notes - those are usually the real causes.",
         "Look for repeats once a week, not after every incident.",
         "Take the log to school or the GP. Patterns are evidence; stories are not."
       ],
@@ -648,7 +648,7 @@ window.ZenCompendium = {
     /* ---------------- understand ---------------- */
     {
       cat: "understand", emoji: "⚡", title: "ADHD is not naughtiness",
-      summary: "It is a difference in attention, impulse and time perception — not a choice or a discipline gap.",
+      summary: "It is a difference in attention, impulse and time perception - not a choice or a discipline gap.",
       steps: [
         "Expect inconsistency. A skill that works on Tuesday may vanish on Friday.",
         "Externalise memory: lists, timers, pictures and alarms, not reminders alone.",
@@ -668,7 +668,7 @@ window.ZenCompendium = {
     },
     {
       cat: "understand", emoji: "🚧", title: "Demand avoidance, in plain terms",
-      summary: "For some children, an instruction triggers a genuine threat response — even a wanted one.",
+      summary: "For some children, an instruction triggers a genuine threat response - even a wanted one.",
       steps: [
         "Reduce the number of direct demands and offer more choices.",
         "Use indirect language: 'The bin is full' instead of 'Empty the bin'.",
@@ -701,7 +701,7 @@ window.ZenCompendium = {
       summary: "Support is not a favour. It is an adjustment to remove a barrier.",
       steps: [
         "Start with the SENCO and put the request in writing.",
-        "Name the barrier and the adjustment: 'Noise at lunch — a quiet room, please.'",
+        "Name the barrier and the adjustment: 'Noise at lunch - a quiet room, please.'",
         "Ask for outcomes to be recorded and reviewed, not just agreed verbally.",
         "If needs are long-term and complex, ask the local authority for an EHC needs assessment."
       ]
@@ -712,11 +712,11 @@ window.ZenCompendium = {
       cat: "food", emoji: "🍽️", title: "What a balanced day looks like",
       summary: "You do not need a perfect plate. You need a shape to the day that survives a tired child.",
       steps: [
-        "Base meals on starchy carbohydrates — bread, pasta, rice, potatoes — and choose wholegrain when it is accepted.",
+        "Base meals on starchy carbohydrates - bread, pasta, rice, potatoes - and choose wholegrain when it is accepted.",
         "Aim for five portions of fruit and vegetables across the day, not five at dinner. Juice counts once.",
         "Include beans, pulses, fish, eggs, meat or another protein at two meals if you can.",
         "Dairy or a fortified alternative gives calcium. Children over one need about 10 micrograms of vitamin D a day.",
-        "Six to eight drinks a day, water first. Sweets and crisps are fine in small amounts — they are not a moral failure."
+        "Six to eight drinks a day, water first. Sweets and crisps are fine in small amounts - they are not a moral failure."
       ]
     },
     {
@@ -724,7 +724,7 @@ window.ZenCompendium = {
       summary: "A sugary breakfast peaks fast and crashes by assembly. Protein flattens the curve.",
       steps: [
         "Easy wins: eggs, Greek yoghurt, beans on toast, peanut butter, cheese, or last night's leftovers.",
-        "Pair carbohydrate with protein rather than removing the carbohydrate — the combination is what sustains.",
+        "Pair carbohydrate with protein rather than removing the carbohydrate - the combination is what sustains.",
         "If breakfast is refused, offer a protein snack at break instead of fighting at 7am.",
         "Keep the same two or three breakfasts on rotation. Decision-making is expensive in the morning.",
         "Watch the 10am meltdown: if it happens most days, breakfast is the first thing to change."
@@ -732,13 +732,13 @@ window.ZenCompendium = {
     },
     {
       cat: "food", emoji: "💧", title: "Water, before anything else",
-      summary: "Mild dehydration looks like grumpiness, headache and poor concentration — not thirst.",
+      summary: "Mild dehydration looks like grumpiness, headache and poor concentration - not thirst.",
       steps: [
         "Put a named bottle where the child can see it, and refill it at the same times each day.",
         "Offer a drink with every snack and every transition, not only with meals.",
         "Fizzy, squash and juice all count as fluid, but water is the one that does not add sugar.",
         "More in heat, and more after sport. A headache after school is often a water problem.",
-        "If a child barely drinks, try a straw, a special cup, or ice — the method matters more than the lecture."
+        "If a child barely drinks, try a straw, a special cup, or ice - the method matters more than the lecture."
       ]
     },
     {
@@ -746,7 +746,7 @@ window.ZenCompendium = {
       summary: "Low iron is common and mimics ADHD symptoms: tired, foggy, irritable, unable to settle.",
       steps: [
         "Iron-rich foods: red meat, beans, lentils, fortified cereal, dark green vegetables, eggs.",
-        "Vitamin C with the meal helps absorption — a glass of orange juice or some fruit alongside.",
+        "Vitamin C with the meal helps absorption - a glass of orange juice or some fruit alongside.",
         "Tea and coffee block iron. Keep them well away from meals for children.",
         "Persistent tiredness, pallor or breathlessness deserves a GP conversation and a blood test.",
         "Do not start iron supplements without advice; too much is harmful."
@@ -760,7 +760,7 @@ window.ZenCompendium = {
         "Children over one, and adults, should consider 10 micrograms of vitamin D daily, especially in autumn and winter.",
         "Avoid mega-doses and 'focus' blends. Check with a pharmacist before combining products.",
         "If a child eats a very limited range of foods, ask the GP or dietitian rather than guessing.",
-        "Keep all supplements out of reach — iron tablets in particular are dangerous to children."
+        "Keep all supplements out of reach - iron tablets in particular are dangerous to children."
       ]
     },
     {
@@ -780,7 +780,7 @@ window.ZenCompendium = {
       steps: [
         "Keep a two-week note of what is actually eaten, not what is offered. Patterns beat memory.",
         "Ask the GP about a dietitian referral if the range is shrinking, or if whole food groups have gone.",
-        "Ask specifically about ARFID — avoidant/restrictive food intake disorder — if fear or sensory distress is driving it.",
+        "Ask specifically about ARFID - avoidant/restrictive food intake disorder - if fear or sensory distress is driving it.",
         "Do not remove safe foods to force variety. That reliably makes the list shorter.",
         "Growth, energy and weight matter more than the colour of the plate. Say so at appointments."
       ]
@@ -788,32 +788,32 @@ window.ZenCompendium = {
 
     /* ---------------- health & body ---------------- */
     {
-      cat: "health", emoji: "🩺", title: "When to ask the GP",
+      cat: "health", emoji: "🌡️", title: "When to ask the GP",
       summary: "You do not need a diagnosis in mind to book. Persistent change is reason enough.",
       steps: [
         "Book if something lasts weeks, keeps returning, or is changing school, sleep or eating.",
         "Write three examples with dates before you go: what happened, how long, what you tried.",
-        "Say the impact out loud — missed school, no sleep, family falling apart — not just the symptom.",
+        "Say the impact out loud - missed school, no sleep, family falling apart - not just the symptom.",
         "Ask one clear question: what happens next, who decides, and when should we come back?",
         "You can ask for a second opinion, and you can take someone with you. Both are allowed."
       ]
     },
     {
-      cat: "health", emoji: "🫄", title: "Tummy aches and constipation",
-      summary: "Recurring tummy pain in children is often constipation — even when parents are sure it is not.",
+      cat: "health", emoji: "🩹", title: "Tummy aches and constipation",
+      summary: "Recurring tummy pain in children is often constipation - even when parents are sure it is not.",
       steps: [
         "Ask about poo: how often, what it looks like, and whether it hurts. Water and fibre help, but so does routine.",
         "Toilet time after meals, feet supported, no rush and no audience. A stool softener may be needed.",
         "Keep a note of pain, food, poo and mood for two weeks. It is far more useful than a description.",
         "See the GP if there is blood, weight loss, fever, pain that wakes them, or pain in a fixed spot.",
-        "Tummy aches that appear before school every day are worth taking seriously in both directions — body and worry."
+        "Tummy aches that appear before school every day are worth taking seriously in both directions - body and worry."
       ]
     },
     {
       cat: "health", emoji: "🤕", title: "Headaches: the boring checklist first",
       summary: "Most childhood headaches are fluid, food, sleep and screens. Check those before worrying.",
       steps: [
-        "Water, a proper meal, and an earlier night for three days — then judge.",
+        "Water, a proper meal, and an earlier night for three days - then judge.",
         "Screens close to the face and late at night are a common trigger. Try a screen curfew for a week.",
         "Note time of day, what was eaten, and how much sleep. Bring the note to the GP.",
         "See the GP if headaches wake the child, happen most days, or come with sickness, vision changes or weakness.",
@@ -824,7 +824,7 @@ window.ZenCompendium = {
       cat: "health", emoji: "👂", title: "Ears, eyes and hearing",
       summary: "A child who cannot hear the instruction is not ignoring it. Rule it out.",
       steps: [
-        "Glue ear is common and fluctuating — behaviour can look worse on bad hearing days.",
+        "Glue ear is common and fluctuating - behaviour can look worse on bad hearing days.",
         "Ask for a hearing test if speech is unclear, the TV is always loud, or they watch faces intently.",
         "A vision check matters too: headaches, squinting, and losing their place when reading.",
         "In the UK, NHS sight tests are free for children, and school hearing checks happen at reception age.",
@@ -839,7 +839,7 @@ window.ZenCompendium = {
         "What about appetite, sleep, headaches, mood and growth? What do we monitor, and how often?",
         "Who reviews the dose, how do we reach them, and what do we do on a day we forget?",
         "Can we stop for weekends or holidays, and what does the guidance say about that?",
-        "Ask for the plan in writing. This is general information — not advice to start or stop anything."
+        "Ask for the plan in writing. This is general information - not advice to start or stop anything."
       ]
     },
     {
@@ -847,7 +847,7 @@ window.ZenCompendium = {
       summary: "Autistic and ADHD children often need the facts earlier, more literally, and in smaller pieces.",
       steps: [
         "Start before the changes, not after. Short, factual sentences beat one big talk.",
-        "Build a private, repeatable routine: shower, deodorant, clean clothes — same order every day.",
+        "Build a private, repeatable routine: shower, deodorant, clean clothes - same order every day.",
         "Prepare for periods, wet dreams and body hair with plain language and visual supports.",
         "Mood changes are real, but do not attribute everything to hormones. Keep the usual supports.",
         "Ask the GP or school nurse about puberty resources if you are not sure where to start."
@@ -868,10 +868,10 @@ window.ZenCompendium = {
     },
     {
       cat: "activity", emoji: "🧱", title: "Heavy work in five minutes",
-      summary: "Pushing, pulling and carrying calms a body faster than running does — and needs no equipment.",
+      summary: "Pushing, pulling and carrying calms a body faster than running does - and needs no equipment.",
       steps: [
         "Wall presses: hands flat, push for ten slow counts, three times.",
-        "Carry something safe and heavy from one room to another — a bag of books, a water bottle crate.",
+        "Carry something safe and heavy from one room to another - a bag of books, a water bottle crate.",
         "Push the shopping trolley, or help carry the laundry basket up the stairs.",
         "Cushion sandwich: roll the child in a blanket and press gently along arms and legs, if they like it.",
         "Do it before the demand, not as a punishment after. Movement is the warm-up, not the consequence."
@@ -881,7 +881,7 @@ window.ZenCompendium = {
       cat: "activity", emoji: "⚡", title: "Movement snacks",
       summary: "Two minutes, several times a day, keeps the wriggles from turning into a crisis.",
       steps: [
-        "Ten star jumps, ten wall pushes, or ten squats between lessons — count out loud together.",
+        "Ten star jumps, ten wall pushes, or ten squats between lessons - count out loud together.",
         "Animal walks across the room: bear, crab, frog, frog with a jump.",
         "Blow a cotton ball across the table with a straw. Slow, hard breathing is the point.",
         "Dance one song, then stop. A defined end makes starting much easier.",
@@ -894,7 +894,7 @@ window.ZenCompendium = {
       steps: [
         "Ask for a trial session before paying for a block of anything.",
         "Check the practical things: noise, waiting time, changing rooms, one named coach.",
-        "Tell the coach what helps — a warning before transitions, a job to do while waiting.",
+        "Tell the coach what helps - a warning before transitions, a job to do while waiting.",
         "Have an exit plan agreed before the first session: a signal, and no shame in leaving early.",
         "One activity at a time. Three clubs is a schedule, not a childhood."
       ]
@@ -914,7 +914,7 @@ window.ZenCompendium = {
       cat: "activity", emoji: "🚶", title: "The everyday movement nobody counts",
       summary: "The school run, the shop and the stairs do more than a formal exercise plan.",
       steps: [
-        "Walk or scoot part of the journey rather than all of it — the last ten minutes counts.",
+        "Walk or scoot part of the journey rather than all of it - the last ten minutes counts.",
         "Give a carrying job on every trip. Purpose makes walking possible.",
         "Take the stairs, park further away, and let the child lead the route home.",
         "Use a visual timer for 'outside time' so it has a shape and an end.",
@@ -927,9 +927,9 @@ window.ZenCompendium = {
       cat: "behaviour", emoji: "📝", title: "ABC: the three columns",
       summary: "Antecedent, Behaviour, Consequence. Three columns turn a horrible afternoon into usable information.",
       steps: [
-        "Antecedent — what happened just before: hunger, noise, a transition, being told no, a change of plan.",
-        "Behaviour — what you actually saw: shouted, hit the door, ran upstairs, went silent. Describe, do not judge.",
-        "Consequence — what happened next: adult attention, removal, a snack, the demand dropped, a hug.",
+        "Antecedent - what happened just before: hunger, noise, a transition, being told no, a change of plan.",
+        "Behaviour - what you actually saw: shouted, hit the door, ran upstairs, went silent. Describe, do not judge.",
+        "Consequence - what happened next: adult attention, removal, a snack, the demand dropped, a hug.",
         "Log it the same day, in five minutes, or it will not happen. The Journal's Tricky moments tab does this.",
         "Look for the antecedent that repeats. That is usually the one you can actually change."
       ],
@@ -952,7 +952,7 @@ window.ZenCompendium = {
       steps: [
         "Frequency: how many times this week. A tally on the fridge is enough.",
         "Duration: roughly how long each one lasted. Minutes, not feelings.",
-        "Intensity: a simple 1 to 3 — needed a hug, needed a room, needed a professional.",
+        "Intensity: a simple 1 to 3 - needed a hug, needed a room, needed a professional.",
         "Track for two weeks before drawing a conclusion. One terrible Tuesday is not a pattern.",
         "Bring the numbers to school and GP meetings. They change the conversation immediately."
       ]
