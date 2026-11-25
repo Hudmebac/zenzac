@@ -1625,7 +1625,7 @@ html[data-emoji="gloss"] :is(.tile-ico, .section-title .emoji, .entry-face, .sou
 
 /* ---------- settings: icon style picker ---------- */
 
-.emoji-style-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.emoji-style-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }
 .emoji-style-btn {
   display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
   padding: 12px; text-align: left;
@@ -1639,10 +1639,11 @@ html[data-emoji="gloss"] :is(.tile-ico, .section-title .emoji, .entry-face, .sou
   border-color: color-mix(in srgb, var(--mint) 55%, transparent);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mint) 32%, transparent);
 }
-.emoji-style-sample { display: flex; gap: 8px; align-items: center; min-height: 46px; }
+.emoji-style-sample { display: flex; gap: 7px; align-items: center; min-height: 50px; }
 .emoji-style-sample span {
-  width: 44px; height: 44px; display: grid; place-items: center;
-  font-size: 1.3rem; line-height: 1; box-sizing: border-box;
+  flex: none;
+  width: 46px; height: 46px; display: grid; place-items: center;
+  font-size: 1.2rem; line-height: 1; box-sizing: border-box;
   border-radius: 12px;
 }
 .emoji-style-name { font-weight: 700; font-size: 0.9rem; }
@@ -1872,4 +1873,16 @@ html[data-font="friendly"] body { line-height: 1.6; letter-spacing: 0.006em; }
   .support-banner { grid-template-columns: 1fr; }
   .support-banner-img { order: -1; min-height: 140px; max-height: 160px; }
   .support-banner-copy { padding: 16px; }
+}
+
+/* Inline emoji paint their background around the text box, not the glyph.
+   Give them a square that is always larger than the drawn emoji, so nothing
+   spills over the edge of its tile. Fixed-size tiles are already big enough. */
+html:is([data-emoji="soft"], [data-emoji="matt"], [data-emoji="gloss"]) :is(
+    .section-title .emoji, .sound-emoji, .pad-emoji, .guide-emoji,
+    .comp-entry-emoji, .spin-result-emoji, .now-emoji, .slot-emoji,
+    .plan-emoji, .mode-emoji) {
+  min-width: 1.65em;
+  min-height: 1.65em;
+  padding: 0.08em;
 }
