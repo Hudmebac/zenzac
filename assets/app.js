@@ -60,7 +60,8 @@
 
   /* ------------------------------- state ------------------------------- */
 
-  var DEFAULT_MIX = { waves: 0.55, rain: 0.4, white: 0.35, breath: 0.5, tranquil: 0.35, wind: 0.35, whale: 0.3 };
+  var DEFAULT_MIX = { waves: 0.55, rain: 0.4, white: 0.35, breath: 0.5, tranquil: 0.35, wind: 0.35, whale: 0.3,
+    pink: 0.3, brown: 0.35, fan: 0.3, heart: 0.35 };
 
   var DEFAULTS = {
     version: 1,
@@ -188,6 +189,7 @@
     var oneShots = [];
     var ctx = null;
     var noiseBuf = null;
+    var synthBufs = {};
 
     function soundOn() { return state.settings.sound; }
     function master() { return clamp(state.settings.volume, 0, 1); }
@@ -237,22 +239,93 @@
       } catch (e) {}
     }
 
-    /* Rain is made in the browser from filtered noise, so it needs no file. */
+    /* Noise and heartbeat loops are generated in the browser, so they need
+       no downloads and still work offline. */
+    function synthBuffer(id) {
+      if (synthBufs[id]) return synthBufs[id];
+      var c = ctxOn();
+      if (!c) return null;
+      try {
+        var secs = id === "heart" ? 1.2 : 2;
+        var len = Math.floor(c.sampleRate * secs);
+        var buf = c.createBuffer(1, len, c.sampleRate);
+        var d = buf.getChannelData(0);
+        var i, w, t;
+
+        if (id === "pink") {
+          /* Paul Kellet's pink-noise filter: softer than white noise. */
+          var b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+          for (i = 0; i < len; i++) {
+            w = Math.random() * 2 - 1;
+            b0 = 0.99886 * b0 + w * 0.0555179;
+            b1 = 0.99332 * b1 + w * 0.0750759;
+            b2 = 0.96900 * b2 + w * 0.1538520;
+            b3 = 0.86650 * b3 + w * 0.3104856;
+            b4 = 0.55000 * b4 + w * 0.5329522;
+            b5 = -0.7616 * b5 - w * 0.0168980;
+            d[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + w * 0.5362) * 0.11;
+            b6 = w * 0.115926;
+          }
+        } else if (id === "brown") {
+          var last = 0;
+          for (i = 0; i < len; i++) {
+            w = Math.random() * 2 - 1;
+            last = (last + 0.02 * w) / 1.02;
+            d[i] = last * 2.6;
+          }
+        } else if (id === "fan") {
+          for (i = 0; i < len; i++) {
+            t = i / c.sampleRate;
+            d[i] = Math.sin(2 * Math.PI * 55 * t) * 0.16 +
+              Math.sin(2 * Math.PI * 110 * t) * 0.06 +
+              (Math.random() * 2 - 1) * 0.05;
+          }
+        } else if (id === "heart") {
+          var thump = function (start, amp) {
+            var from = Math.floor(start * c.sampleRate);
+            var to = Math.min(len, from + Math.floor(0.24 * c.sampleRate));
+            for (var j = from; j < to; j++) {
+              var x = (j - from) / c.sampleRate;
+              d[j] += Math.sin(2 * Math.PI * (58 - 22 * x) * x) * Math.exp(-x * 17) * amp;
+            }
+          };
+          thump(0.05, 0.6);
+          thump(0.3, 0.4);
+        }
+        synthBufs[id] = buf;
+        return buf;
+      } catch (e) { return null; }
+    }
+
     function makeSynth(id) {
-      var c = ctxOn(), buf = noiseBuffer();
-      if (!c || !buf) return null;
+      var c = ctxOn();
+      if (!c) return null;
       try {
         var src = c.createBufferSource();
-        src.buffer = buf;
-        src.loop = true;
-        var hp = c.createBiquadFilter();
-        hp.type = "highpass"; hp.frequency.value = 900;
-        var lp = c.createBiquadFilter();
-        lp.type = "lowpass"; lp.frequency.value = 6200;
         var gain = c.createGain();
         gain.gain.value = 0;
-        src.connect(hp); hp.connect(lp); lp.connect(gain); gain.connect(c.destination);
+        var lp = c.createBiquadFilter();
+        if (id === "rain") {
+          var buf = noiseBuffer();
+          if (!buf) return null;
+          src.buffer = buf;
+          src.loop = true;
+          var hp = c.createBiquadFilter();
+          hp.type = "highpass"; hp.frequency.value = 900;
+          lp.type = "lowpass"; lp.frequency.value = 6200;
+          src.connect(hp); hp.connect(lp);
+        } else {
+          var sBuf = synthBuffer(id);
+          if (!sBuf) return null;
+          src.buffer = sBuf;
+          src.loop = true;
+          lp.type = "lowpass";
+          lp.frequency.value = id === "pink" ? 7000 : id === "brown" ? 900 : id === "fan" ? 620 : 300;
+          src.connect(lp);
+        }
         src.start(0);
+        lp.connect(gain);
+        gain.connect(c.destination);
         synths[id] = { src: src, gain: gain };
         return synths[id];
       } catch (e) { return null; }
@@ -343,8 +416,9 @@
       stopOneShots();
       try {
         var el = new window.Audio(encodeURI(src));
-        el.volume = clamp((typeof vol === "number" ? vol : 0.8) * master(), 0, 1);
-        var shot = { el: el, onEnd: onEnd, done: false };
+        var level = clamp((typeof vol === "number" ? vol : 0.8) * master(), 0, 1);
+        el.volume = level;
+        var shot = { el: el, vol: vol, onEnd: onEnd, done: false };
         oneShots.push(shot);
         el.addEventListener("ended", function () { finishShot(shot); });
         var p = el.play();
@@ -463,7 +537,7 @@
 
     /* A question, not a statement. A higher pitch and a slower ending give
        the voice somewhere to rise; how much it rises depends on the device. */
-    function ask(text) {
+    function ask(text, after) {
       if (!soundOn()) return;
       if (!("speechSynthesis" in window)) return;
       try {
@@ -472,6 +546,23 @@
         u.lang = "en-GB";
         u.rate = 0.94;
         u.pitch = 1.35;
+        u.volume = clamp(master(), 0.2, 1);
+        if (after) u.onend = after;
+        window.speechSynthesis.speak(u);
+      } catch (e) {}
+    }
+
+    /* A normal telling voice, still gated on sound rather than the calm
+       spoken-cues setting, so joke punchlines are heard in Play. */
+    function tell(text) {
+      if (!soundOn()) return;
+      if (!("speechSynthesis" in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        var u = new window.SpeechSynthesisUtterance(text);
+        u.lang = "en-GB";
+        u.rate = 0.92;
+        u.pitch = 1.08;
         u.volume = clamp(master(), 0.2, 1);
         window.speechSynthesis.speak(u);
       } catch (e) {}
@@ -490,6 +581,9 @@
       Object.keys(synths).forEach(function (id) {
         if (active[id]) fadeTo(synths[id].gain, synthLevel(id), 0.2);
       });
+      oneShots.forEach(function (shot) {
+        try { shot.el.volume = clamp((shot.vol || 0.8) * master(), 0, 1); } catch (e) {}
+      });
     }
 
     return {
@@ -502,6 +596,7 @@
       chime: chime,
       say: say,
       ask: ask,
+      tell: tell,
       hush: hush,
       applyMaster: applyMaster,
       isPlaying: function (id) { return !!active[id]; }
@@ -3027,6 +3122,7 @@
           jokeDeck.pos = 0;
           jokeDeck.current = null;
           jokeDeck.stage = 0;
+          AudioEngine.hush();
           save();
           render();
         });
@@ -3041,7 +3137,9 @@
         render();
         if (!isKnock) return;
         if (stage === 0) AudioEngine.ask("Who's there?");
-        else if (j) AudioEngine.ask(j.setup + " who?");
+        else if (j) AudioEngine.ask(j.setup + " who?", function () {
+          if (jokeDeck.current === j) AudioEngine.tell(j.punchline);
+        });
       });
 
       var knock = $("#jokeKnock");
@@ -3065,6 +3163,7 @@
 
       var again = $("#jokeAgain");
       if (again) again.addEventListener("click", function () {
+        AudioEngine.hush();
         nextJoke();
         render();
       });
@@ -3083,38 +3182,80 @@
     }
 
     function soundsPanel() {
-      var backgrounds = D.ambience.map(function (a) {
+      var backgrounds = D.ambience.filter(function (a) { return !a.sensory; }).map(function (a) {
+        return padHTML(' data-amb="' + a.id + '"', a.emoji, a.name, AudioEngine.isPlaying(a.id));
+      }).join("");
+      var sensory = D.ambience.filter(function (a) { return a.sensory; }).map(function (a) {
         return padHTML(' data-amb="' + a.id + '"', a.emoji, a.name, AudioEngine.isPlaying(a.id));
       }).join("");
       var fartPads = D.farts.map(function (f, i) {
         return padHTML(' data-fart="' + i + '"', f.emoji, f.name);
       }).join("");
+      var volumePct = Math.round(clamp(state.settings.volume, 0, 1) * 100);
       return '<div class="card">' +
         '<div class="row-between"><div><h2 class="card-title">Sounds</h2>' +
-          '<p class="card-sub">Tap a pad. A new pad stops the last one; backgrounds can layer.</p></div>' +
+          '<p class="card-sub">Tap a pad. One sound plays at a time; tap it again to stop it.</p></div>' +
           '<button type="button" class="btn" id="stopSounds">' + icon("pause") + " Stop everything</button></div>" +
-        soundGroup("Background", "Calm and looping. Tap one again to stop it.", backgrounds) +
+        '<div class="sound-volume">' +
+          '<div class="row-between"><label class="label" for="soundVol">Volume</label>' +
+            '<span class="badge mint" id="soundVolOut">' + volumePct + "%</span></div>" +
+          '<input id="soundVol" type="range" min="0" max="1" step="0.05" value="' + state.settings.volume + '" aria-label="Sound volume">' +
+          '<p class="tiny muted" style="margin-top:2px">Shared with Calm, Play and the jokes.</p>' +
+        "</div>" +
+        soundGroup("Calming loops", "Tap a pad again to stop it. Choosing another one also stops it.", backgrounds) +
+        (sensory ? soundGroup("Noise & rhythm", "Steady sounds some people find easier for focus or settling.", sensory) : "") +
         soundGroup("Fart sounds 💨", "It is what it is. Tap a pad, or let the app surprise you.", fartPads) +
         soundGroup("Animals", "", padHTML(' id="animalSound"', "🐘", "Animal noises")) +
         '<div class="row-wrap" style="margin-top:16px">' +
           '<button type="button" class="btn primary" id="randomFart">' + icon("shuffle") + " Surprise me</button>" +
         "</div>" +
-        '<p class="tiny muted" style="margin-top:12px">Volume follows the sound setting. Turn sound off upstairs.</p>' +
+        '<p class="tiny muted" style="margin-top:12px">Sound off is the mute switch. Volume here is shared with every sound in ZenZac.</p>' +
       "</div>";
     }
 
+    function clearPlaying() {
+      $$(".pad.is-playing", view).forEach(function (p) { p.classList.remove("is-playing"); });
+      $$("[data-amb]", view).forEach(function (p) { p.setAttribute("aria-pressed", "false"); });
+    }
+
     function oneShot(pad, src, vol, message) {
-      /* Backgrounds keep running; only the one-off sounds hand over. */
-      $$(".pad.is-playing:not([data-amb])", view).forEach(function (p) { p.classList.remove("is-playing"); });
-      AudioEngine.playFile(src, vol, function () { pad.classList.remove("is-playing"); });
+      /* A one-shot pad hands over from anything else. Tap it while it is
+         still playing and it stops instead of restarting. */
+      var wasPlaying = pad.classList.contains("is-playing");
+      AudioEngine.stopAll();
+      clearPlaying();
+      if (wasPlaying) return;
+      var el = AudioEngine.playFile(src, vol, function () { pad.classList.remove("is-playing"); });
+      if (!el) return;
       pad.classList.add("is-playing");
       if (message) toast(message);
     }
 
     function bindSounds() {
+      var vol = $("#soundVol", view);
+      if (vol) {
+        var volOut = $("#soundVolOut", view);
+        var paintVol = function () {
+          if (volOut) volOut.textContent = Math.round(clamp(state.settings.volume, 0, 1) * 100) + "%";
+        };
+        vol.addEventListener("input", function () {
+          var v = parseFloat(vol.value);
+          state.settings.volume = clamp(isNaN(v) ? 0.8 : v, 0, 1);
+          paintVol();
+          AudioEngine.applyMaster();
+        });
+        vol.addEventListener("change", function () { save(); });
+      }
+
       $$("[data-amb]", view).forEach(function (pad) {
         pad.addEventListener("click", function () {
-          var on = AudioEngine.toggle(pad.getAttribute("data-amb"));
+          var id = pad.getAttribute("data-amb");
+          var wasOn = AudioEngine.isPlaying(id);
+          if (!wasOn) {
+            AudioEngine.stopAll();
+            clearPlaying();
+          }
+          var on = AudioEngine.toggle(id);
           pad.classList.toggle("is-playing", on);
           pad.setAttribute("aria-pressed", on ? "true" : "false");
         });
@@ -3138,8 +3279,7 @@
       var stop = $("#stopSounds", view);
       if (stop) stop.addEventListener("click", function () {
         AudioEngine.stopAll();
-        $$(".pad.is-playing", view).forEach(function (p) { p.classList.remove("is-playing"); });
-        $$("[data-amb]", view).forEach(function (p) { p.setAttribute("aria-pressed", "false"); });
+        clearPlaying();
         toast("All quiet.");
       });
     }

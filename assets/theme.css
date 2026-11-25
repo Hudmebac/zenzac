@@ -1896,3 +1896,14 @@ html:is([data-emoji="soft"], [data-emoji="matt"], [data-emoji="gloss"]) :is(
 /* Joke deck picker above the card, so the four sets are obvious at a glance. */
 .joke-decks { margin-bottom: 14px; }
 .joke-decks .chips { margin-top: 8px; }
+
+/* Shared volume control inside the Sounds tab. */
+.sound-volume {
+  margin: 16px 0 18px;
+  padding: 12px 14px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+.sound-volume .label { margin: 0; }
+.sound-volume input[type="range"] { margin-top: 6px; }
