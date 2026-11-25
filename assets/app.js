@@ -3804,7 +3804,7 @@
         tileHTML("#/setup", "🎛️", "Your plan", "Mode, answers and house rules.", "") +
         tileHTML("#/learn", "📚", "Learn", "Practical guides, no lectures.", "") +
         tileHTML("#/support", "💗", "Parent support", "Scripts, school, sleep and the long version.", "lilac") +
-        tileHTML("#/settings", "⚙️", "Settings", "Name, sound, bigger text, your data.", "sky") +
+        tileHTML("#/settings", "⚙️", "Settings", "Colours, icons, creator and your data.", "sky") +
         tileHTML("#/calm", "🫧", "Calm", "Breathing, sounds, grounding.", "mint") +
       "</div>" +
       '<div class="card" style="margin-top:18px">' +
@@ -3822,6 +3822,18 @@
           '<a class="btn ghost" href="#/settings">Settings &amp; data</a>' +
           '<a class="btn ghost" href="#/learn">Short guides</a>' +
         "</div>" +
+      "</div>" +
+      '<div class="card creator-card" style="margin-top:14px">' +
+        '<div class="creator-head">' +
+          '<span class="creator-avatar" aria-hidden="true">💙</span>' +
+          '<div><h2 class="card-title">Craig Heggie</h2>' +
+            '<p class="card-sub">Parent, builder of ZenZac, and someone who knows the hard mornings.</p></div>' +
+        "</div>" +
+        '<p class="creator-story">ZenZac is free to use and made by one parent. If you want to compare notes, ask a question or just have a general chat, email me. If you would like to help with the hosting and the hours, there is an optional one-off support link too.</p>' +
+        '<div class="creator-links">' +
+          '<a class="btn sm" href="mailto:craigheggie@googlemail.com">✉️ craigheggie@googlemail.com</a>' +
+          '<a class="btn sm soft" href="https://buy.stripe.com/cNi14m8fK7lF8x35MX4wM05" target="_blank" rel="noopener">💙 Support ZenZac</a>' +
+        "</div>" +
       "</div>";
   };
 
@@ -3831,6 +3843,12 @@
     function render() {
       view.innerHTML = pageHead("Settings", "Make it fit your family",
         "Changes are saved on this device straight away.") +
+        '<div class="settings-jump" role="group" aria-label="Jump to a settings section">' +
+          '<button type="button" class="chip sm" data-jump="setIcons">🧸 Icons &amp; emoji</button>' +
+          '<button type="button" class="chip sm" data-jump="setColours">🎨 Colours</button>' +
+          '<button type="button" class="chip sm" data-jump="setCreator">💙 Creator &amp; support</button>' +
+          '<button type="button" class="chip sm" data-jump="setData">🔒 Your data</button>' +
+        "</div>" +
         '<div class="card plan-card">' +
           '<div class="row-between"><div><h2 class="card-title">Your plan</h2>' +
             '<p class="card-sub">' + esc(planText()) + '</p></div>' +
@@ -3875,7 +3893,7 @@
           "</div>" +
         "</div>" +
 
-        '<div class="section-head"><h2 class="section-title">Icons &amp; emoji</h2>' +
+        '<div class="section-head"><h2 class="section-title" id="setIcons">Icons &amp; emoji</h2>' +
           '<span class="tiny muted">Same pictures, four finishes. Saved straight away.</span></div>' +
         '<div class="card"><div class="emoji-style-grid" role="group" aria-label="Icon style">' +
           EMOJI_STYLES.map(function (st) {
@@ -3888,7 +3906,7 @@
           }).join("") +
         '</div><p class="tiny muted" style="margin-top:12px">Soft, Matt and Gloss pick up the tint of whichever colour palette you choose. Basic uses the plain emoji your device draws.</p></div>' +
 
-        '<div class="section-head"><h2 class="section-title">Colours</h2>' +
+        '<div class="section-head"><h2 class="section-title" id="setColours">Colours</h2>' +
           '<span class="tiny muted">Six low-glare palettes, shown as they will look. Saved straight away.</span></div>' +
         '<div class="card"><div class="theme-grid" role="group" aria-label="Colour theme">' +
           D.themes.map(function (t) {
@@ -3908,7 +3926,7 @@
           }).join("") +
         "</div></div>" +
 
-        '<div class="section-head"><h2 class="section-title">Your data</h2></div>' +
+        '<div class="section-head"><h2 class="section-title" id="setData">Your data</h2></div>' +
         '<div class="card">' +
           '<p class="card-sub">Check-ins, notes and routines live in this browser only. Export a copy before clearing your browser data.</p>' +
           '<div class="row-wrap" style="margin-top:14px">' +
@@ -3926,7 +3944,7 @@
             '<a class="btn sm" href="#/support">Parent support</a></div>' +
         "</div>" +
 
-        '<div class="section-head"><h2 class="section-title">Creator</h2>' +
+        '<div class="section-head"><h2 class="section-title" id="setCreator">Creator</h2>' +
           '<span class="tiny muted">Made by a parent, for parents.</span></div>' +
         '<div class="card creator-card">' +
           '<div class="creator-head">' +
@@ -3961,6 +3979,16 @@
     }
 
     function bind() {
+      $$("[data-jump]", view).forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var target = document.getElementById(btn.getAttribute("data-jump"));
+          if (!target) return;
+          if (target.scrollIntoView) target.scrollIntoView({ behavior: "smooth", block: "start" });
+          target.setAttribute("tabindex", "-1");
+          if (target.focus) target.focus({ preventScroll: true });
+        });
+      });
+
       $$("[data-pick-theme]", view).forEach(function (btn) {
         btn.addEventListener("click", function () {
           state.settings.theme = btn.getAttribute("data-pick-theme");

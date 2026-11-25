@@ -1797,3 +1797,8 @@ html[data-emoji="gloss"] :is(.tile-ico, .section-title .emoji, .entry-face, .sou
   .ground-picks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .creator-links .btn { width: 100%; }
 }
+
+/* Settings quick navigation, so deeper sections are easy to find */
+.settings-jump { display: flex; flex-wrap: wrap; gap: 8px; margin: -6px 0 18px; }
+.settings-jump .chip { min-height: 36px; font-size: 0.82rem; padding: 4px 12px; }
+#setIcons, #setColours, #setCreator, #setData { scroll-margin-top: 92px; }
