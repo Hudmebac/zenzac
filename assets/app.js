@@ -468,11 +468,12 @@
     { id: "play", label: "Play", icon: "play" },
     { id: "compendium", label: "Compendium", icon: "book" },
     { id: "learn", label: "Learn", icon: "learn" },
+    { id: "support", label: "Parent support", short: "Support", icon: "heart" },
     { id: "settings", label: "Settings", icon: "settings" }
   ];
 
   var TABS = ["home", "calm", "play", "routine", "more"];
-  var MORE_ROUTES = ["more", "focus", "journal", "learn", "compendium", "setup", "settings"];
+  var MORE_ROUTES = ["more", "focus", "journal", "learn", "support", "compendium", "setup", "settings"];
 
   var TITLES = {
     home: "ZenZac — calm, routines & play",
@@ -483,6 +484,7 @@
     play: "Play · ZenZac",
     compendium: "Compendium · ZenZac",
     learn: "Learn · ZenZac",
+    support: "Parent support · ZenZac",
     setup: "Set up your plan · ZenZac",
     settings: "Settings · ZenZac",
     more: "More · ZenZac"
@@ -656,15 +658,21 @@
 
   /* ---------------------------- Now & Next ----------------------------- */
 
-  var timerState = { left: 0, total: 0, running: false, id: null, warned: false, endAt: 0 };
+  var timerState = { left: 0, total: 0, running: false, id: null, warned: false, endAt: 0, ended: false };
   var redraw = null;
 
   function timerMins() { return (state.routine.now && state.routine.now.mins) || 5; }
 
+  /* When the time runs out the clock stays at 00:00 until the task changes. */
+  function timerSecs() {
+    if (timerState.ended) return 0;
+    return (timerState.running || timerState.left > 0) ? timerState.left : timerMins() * 60;
+  }
+
   function paintClock() {
     var el = $("#routineClock");
     if (!el) return;
-    var secs = (timerState.running || timerState.left > 0) ? timerState.left : timerMins() * 60;
+    var secs = timerSecs();
     el.textContent = clockText(secs);
     if (secs <= 30) el.classList.add("is-low");
     else el.classList.remove("is-low");
@@ -679,6 +687,7 @@
     if (timerState.running) return;
     if (timerState.left <= 0) timerState.left = timerMins() * 60;
     timerState.running = true;
+    timerState.ended = false;
     timerState.warned = timerState.left <= 60;
     timerState.endAt = Date.now() + timerState.left * 1000;
     timerState.id = setInterval(timerTick, 250);
@@ -692,6 +701,7 @@
     timerState.left = left;
     paintClock();
     if (left <= 0) {
+      timerState.ended = true;
       timerPause();
       AudioEngine.chime();
       toast("Time's up.");
@@ -716,6 +726,7 @@
     timerState.total = 0;
     timerState.warned = false;
     timerState.endAt = 0;
+    timerState.ended = false;
     paintClock();
   }
 
@@ -1493,7 +1504,7 @@
           icon("plus") + " Add the first task</button></div>" +
       "</div>";
     }
-    var secs = (timerState.running || timerState.left > 0) ? timerState.left : timerMins() * 60;
+    var secs = timerSecs();
     var total = Math.max(1, timerMins() * 60);
     var pct = clamp(Math.round(secs / total * 100), 0, 100);
     return '<div class="now-card">' +
@@ -1799,19 +1810,23 @@
 
   /* ---- Focus ---- */
 
-  var focusTab = "spinner";
+  /* Energy first: the active game is the first thing a wired-up child meets. */
+  var focusTab = "whack";
 
   VIEWS.focus = function (view) {
     function render() {
       stopWhack();
       stopSpin();
       view.innerHTML = pageHead("Focus", "Busy hands, calmer head",
-        "Two quick things for restless moments: a spinning wheel you can drag, and a tap game.") +
+        "One to burn energy off, one to settle. Pick by what the moment needs, not by what looks tidiest.") +
         '<div class="pill-toggle" role="group" aria-label="Focus tools">' +
-          '<button type="button" data-ftab="spinner" aria-pressed="' + (focusTab === "spinner") + '">Spinner</button>' +
           '<button type="button" data-ftab="whack" aria-pressed="' + (focusTab === "whack") + '">Wac-A-Zac</button>' +
+          '<button type="button" data-ftab="spinner" aria-pressed="' + (focusTab === "spinner") + '">Spinner</button>' +
         "</div>" +
-        '<div style="margin-top:16px">' + (focusTab === "whack" ? whackPanel() : spinnerPanel()) + "</div>";
+        '<p class="calm-lead">' + (focusTab === "whack"
+          ? "For burning off energy. Standing up is allowed, and nothing is at stake."
+          : "For settling down, or busy hands that need something quiet to do.") + "</p>" +
+        '<div id="focusPanel">' + (focusTab === "whack" ? whackPanel() : spinnerPanel()) + "</div>";
 
       $$("[data-ftab]", view).forEach(function (btn) {
         btn.addEventListener("click", function () {
@@ -2342,9 +2357,9 @@
   VIEWS.play = function (view) {
     function render() {
       view.innerHTML = pageHead("Play", "Silly, on purpose",
-        "Laughter is a genuine reset. Nothing here is serious, and nothing is scored except the mole game.") +
+        "Laughter is a real reset, and there is nothing to get right here. Two tabs, no scores.") +
         '<div class="pill-toggle" role="group" aria-label="Play type">' +
-          '<button type="button" data-ptab="jokes" aria-pressed="' + (playTab === "jokes") + '">Knock knock</button>' +
+          '<button type="button" data-ptab="jokes" aria-pressed="' + (playTab === "jokes") + '">Jokes</button>' +
           '<button type="button" data-ptab="sounds" aria-pressed="' + (playTab === "sounds") + '">Sounds</button>' +
         "</div>" +
         '<div style="margin-top:16px">' + (playTab === "sounds" ? soundsPanel() : jokesPanel()) + "</div>";
@@ -2516,11 +2531,14 @@
         '<div style="margin-top:16px" id="guideList">' + guidesHTML() + "</div>" +
         '<div class="grid grid-2" style="margin-top:18px">' +
           '<div class="card tight"><h2 class="card-title">Need a hand now?</h2>' +
-            '<p class="card-sub">Breathing, sounds and grounding are on the Calm page.</p>' +
+            '<p class="card-sub">Breathing, sounds and a five-step settling exercise are on the Calm page.</p>' +
             '<a class="btn sm primary" href="#/calm" style="margin-top:12px">Open Calm</a></div>' +
-          '<div class="card tight"><h2 class="card-title">Worth knowing</h2>' +
-            '<p class="card-sub">ZenZac is a support tool, not a medical device or a diagnosis. If you are worried, speak to your GP, health visitor or school SENCO.</p></div>' +
-        "</div>";
+          '<div class="card tight"><h2 class="card-title">Need the long version?</h2>' +
+            '<p class="card-sub">Scripts, school meetings, sleep, money, and what to do when it gets physical.</p>' +
+            '<a class="btn sm" href="#/support" style="margin-top:12px">Parent support</a></div>' +
+        "</div>" +
+        '<p class="tiny muted" style="margin-top:12px">ZenZac is a support tool, not a medical device or a diagnosis. ' +
+          "If you are worried, speak to your GP, health visitor or school SENCO.</p>";
 
       $$("[data-tag]", view).forEach(function (btn) {
         btn.addEventListener("click", function () {
@@ -2606,13 +2624,13 @@
 
     function render() {
       view.innerHTML = pageHead("Compendium", "Everything, in one place",
-        "Sixty-five short entries: what to try, why it works, and what to say. Built for ADHD, autism and both — no jargon, no lectures.") +
+        C.entries.length + " short entries: what to try, why it works, and what to say. Built for ADHD, autism and both — no jargon, no lectures.") +
         '<div class="comp-toolbar">' +
           '<label class="search-box">' + icon("search") +
             '<span class="sr-only">Search the compendium</span>' +
             '<input type="search" id="compSearch" placeholder="Search: noise, bedtime, school, waiting…" value="' + esc(compQuery) + '">' +
           "</label>" +
-          '<a class="btn sm ghost" href="#/learn">Short guides</a>' +
+          '<a class="btn sm ghost" href="#/support">Parent support</a>' +
         "</div>" +
         '<div class="chips" role="group" aria-label="Filter by topic">' +
           '<button type="button" class="chip' + (compCat === "All" ? " is-on" : "") + '" data-cat="All" aria-pressed="' + (compCat === "All") + '">All</button>' +
@@ -2640,6 +2658,141 @@
       $$("[data-cat]", view).forEach(function (btn) {
         btn.addEventListener("click", function () {
           compCat = btn.getAttribute("data-cat");
+          render();
+        });
+      });
+    }
+
+    render();
+  };
+
+  /* ---- Parent support: the long version ---- */
+
+  var supQuery = "";
+  var supTopic = "All";
+
+  VIEWS.support = function (view) {
+    var S = window.ZenSupport;
+    if (!S || !S.entries || !S.entries.length) {
+      view.innerHTML = pageHead("Parent support", "The long version did not load",
+        "Check that assets/support.js sits next to the app.");
+      return;
+    }
+
+    function topicOf(id) {
+      for (var i = 0; i < S.topics.length; i++) if (S.topics[i].id === id) return S.topics[i];
+      return null;
+    }
+
+    function plain(s) {
+      var secs = s.sections.map(function (x) {
+        return (x.h || "") + " " + (x.p ? [].concat(x.p).join(" ") : "") + " " +
+          (x.list || []).join(" ") + " " + (x.say || []).join(" ") + " " + (x.try || []).join(" ");
+      }).join(" ");
+      return (s.title + " " + s.summary + " " + secs + " " + ((topicOf(s.topic) || {}).name || "")).toLowerCase();
+    }
+
+    function matches(e) {
+      if (supTopic !== "All" && e.topic !== supTopic) return false;
+      var q = supQuery.trim().toLowerCase();
+      if (!q) return true;
+      return plain(e).indexOf(q) > -1;
+    }
+
+    function blockHTML(sec) {
+      var paras = sec.p ? [].concat(sec.p) : [];
+      return '<div class="sup-block">' +
+        (sec.h ? "<h3>" + esc(sec.h) + "</h3>" : "") +
+        paras.map(function (t) { return "<p>" + esc(t) + "</p>"; }).join("") +
+        (sec.list ? '<ul class="sup-list">' + sec.list.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>" : "") +
+        (sec.say ? '<div class="sup-call"><strong>Say this</strong><ul>' +
+          sec.say.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul></div>" : "") +
+        (sec.try ? '<div class="sup-call sup-try"><strong>Try this</strong><ul>' +
+          sec.try.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul></div>" : "") +
+      "</div>";
+    }
+
+    function entryHTML(e) {
+      var t = topicOf(e.topic);
+      return '<details class="guide sup-entry">' +
+        "<summary><span class=\"guide-emoji\" aria-hidden=\"true\">" + e.emoji + "</span>" +
+          '<span class="sup-head"><strong>' + esc(e.title) + '</strong>' +
+            '<small class="sup-sum">' + esc(e.summary) + "</small></span>" +
+          (t ? '<span class="guide-tag">' + esc(t.name) + "</span>" : "") +
+        "</summary>" +
+        '<div class="guide-body">' + e.sections.map(blockHTML).join("") + "</div></details>";
+    }
+
+    function listHTML() {
+      var found = S.entries.filter(matches);
+      if (!found.length) {
+        return '<div class="empty"><strong>Nothing matched that.</strong>Try a shorter word — sleep, school, meltdown, money.</div>';
+      }
+      var topics = supTopic === "All" ? S.topics : S.topics.filter(function (t) { return t.id === supTopic; });
+      return topics.map(function (t) {
+        var items = found.filter(function (e) { return e.topic === t.id; });
+        if (!items.length) return "";
+        return '<section class="sup-section">' +
+          '<div class="comp-cat"><span class="comp-cat-ico" aria-hidden="true">' + t.emoji + "</span>" +
+            "<div><h2>" + esc(t.name) + "</h2><p>" + esc(t.blurb) + "</p></div>" +
+            '<span class="badge">' + items.length + "</span></div>" +
+          '<div class="stack">' + items.map(entryHTML).join("") + "</div></section>";
+      }).join("");
+    }
+
+    function paint() {
+      var list = $("#supList", view);
+      if (!list) return;
+      list.innerHTML = listHTML();
+      var found = S.entries.filter(matches).length;
+      var count = $("#supCount", view);
+      if (count) {
+        count.textContent = found + (found === 1 ? " entry" : " entries") +
+          (supQuery.trim() ? ' for "' + supQuery.trim() + '"' : "") +
+          (supTopic === "All" ? " for grown-ups" : " in " + ((topicOf(supTopic) || {}).name || ""));
+      }
+    }
+
+    function render() {
+      view.innerHTML = pageHead("Parent support", "The long version, for the grown-ups",
+        "Scripts, explanations and the practical detail that never fits on a school letter. General guidance, not medical advice.") +
+        '<div class="comp-toolbar">' +
+          '<label class="search-box">' + icon("search") +
+            '<span class="sr-only">Search parent support</span>' +
+            '<input type="search" id="supSearch" placeholder="Search: meltdown, school, sleep, money…" value="' + esc(supQuery) + '">' +
+          "</label>" +
+          '<a class="btn sm ghost" href="#/compendium">Compendium</a>' +
+        "</div>" +
+        '<div class="chips" role="group" aria-label="Filter by topic">' +
+          '<button type="button" class="chip' + (supTopic === "All" ? " is-on" : "") + '" data-suptopic="All" aria-pressed="' + (supTopic === "All") + '">All</button>' +
+          S.topics.map(function (t) {
+            var on = supTopic === t.id;
+            return '<button type="button" class="chip' + (on ? " is-on" : "") + '" data-suptopic="' + t.id + '" aria-pressed="' + on + '">' +
+              t.emoji + " " + esc(t.name) + "</button>";
+          }).join("") +
+        "</div>" +
+        '<p class="tiny muted comp-count" id="supCount"></p>' +
+        '<div id="supList"></div>' +
+        '<div class="card" style="margin-top:22px">' +
+          '<h2 class="card-title">If you need a person, not a page</h2>' +
+          '<p class="card-sub">If you are worried about your child, start with your GP. For school problems, ask for the SENCO in writing. ' +
+            "If you are in crisis, call 999, or Samaritans on 116 123 — free, any time.</p>" +
+          '<p class="tiny muted" style="margin-top:10px">General guidance for UK families. Not a diagnosis, not medical advice, ' +
+            "and not a substitute for the professionals who know your child.</p>" +
+        "</div>";
+
+      paint();
+
+      var input = $("#supSearch", view);
+      if (input) input.addEventListener("input", function () {
+        supQuery = input.value;
+        paint();
+      });
+
+      $$("[data-suptopic]", view).forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          supTopic = btn.getAttribute("data-suptopic");
+          supQuery = "";
           render();
         });
       });
@@ -3054,11 +3207,12 @@
       "The whole toolkit, in one place.") +
       '<div class="grid grid-auto">' +
         tileHTML("#/focus", "🎯", "Focus", "Fidget wheel and Wac-A-Zac.", "lilac") +
-        tileHTML("#/journal", "📔", "Journal", "Feelings check-ins and behaviour notes.", "amber") +
+        tileHTML("#/journal", "📔", "Journal", "Feelings check-ins and tricky moments.", "amber") +
         tileHTML("#/play", "😂", "Play", "Jokes and silly sounds.", "coral") +
         tileHTML("#/compendium", "📖", "Compendium", "65 tools and guides, searchable.", "mint") +
         tileHTML("#/setup", "🎛️", "Your plan", "Mode, answers and house rules.", "") +
         tileHTML("#/learn", "📚", "Learn", "Practical guides, no lectures.", "") +
+        tileHTML("#/support", "💗", "Parent support", "Scripts, school, sleep and the long version.", "lilac") +
         tileHTML("#/settings", "⚙️", "Settings", "Name, sound, bigger text, your data.", "sky") +
         tileHTML("#/calm", "🫧", "Calm", "Breathing, sounds, grounding.", "mint") +
       "</div>" +
@@ -3073,8 +3227,9 @@
           "<li>⚠️ Not a medical device and not a diagnosis. Trust your instincts and ask for help early.</li>" +
         "</ul>" +
         '<div class="row-wrap" style="margin-top:16px">' +
-          '<a class="btn" href="#/settings">Settings &amp; data</a>' +
-          '<a class="btn ghost" href="#/learn">Read the guides</a>' +
+          '<a class="btn" href="#/support">Parent support</a>' +
+          '<a class="btn ghost" href="#/settings">Settings &amp; data</a>' +
+          '<a class="btn ghost" href="#/learn">Short guides</a>' +
         "</div>" +
       "</div>";
   };
@@ -3153,7 +3308,13 @@
           "</div>" +
           '<hr class="divider">' +
           '<p class="tiny muted">' + state.moods.length + " check-ins · " + state.behaviour.length +
-            " behaviour notes · " + state.routines.length + " saved routines · " + (state.stickers || 0) + " stickers</p>" +
+            " tricky moments · " + state.routines.length + " saved lists · " + (state.stickers || 0) + " stickers</p>" +
+        "</div>" +
+
+        '<div class="card" style="margin-top:14px">' +
+          '<div class="row-between"><div><h2 class="card-title">More help than the app can give</h2>' +
+            '<p class="card-sub">Scripts for hard moments, school meetings, sleep, money and your own wellbeing — written for the grown-ups.</p></div>' +
+            '<a class="btn sm" href="#/support">Parent support</a></div>' +
         "</div>" +
 
         '<div class="card" style="margin-top:14px">' +
