@@ -72,6 +72,8 @@
       bigText: false,
       voice: false,
       theme: "dusk",
+      whackTheme: "aliens",
+      whackLevel: "normal",
       mix: DEFAULT_MIX
     },
     profile: { done: false, mode: "", age: "", hard: [], helps: [], sensory: [], updated: 0 },
@@ -81,7 +83,8 @@
     routine: { now: null, next: null, queue: [], done: [] },
     routines: [],
     stickers: 0,
-    bestWhack: 0
+    bestWhack: 0,
+    whackBest: {}
   };
 
   var state = load();
@@ -103,6 +106,8 @@
       base.settings.voice = !!s.voice;
       base.settings.mix = Object.assign({}, DEFAULT_MIX, s.mix || {});
       base.settings.theme = typeof s.theme === "string" && s.theme ? s.theme : "dusk";
+      base.settings.whackTheme = typeof s.whackTheme === "string" ? s.whackTheme : "aliens";
+      base.settings.whackLevel = typeof s.whackLevel === "string" ? s.whackLevel : "normal";
       var p = saved.profile || {};
       base.profile.done = !!p.done;
       base.profile.mode = typeof p.mode === "string" ? p.mode : "";
@@ -125,6 +130,11 @@
       base.routines = Array.isArray(saved.routines) ? saved.routines : [];
       base.stickers = typeof saved.stickers === "number" ? saved.stickers : 0;
       base.bestWhack = typeof saved.bestWhack === "number" ? saved.bestWhack : 0;
+      if (saved.whackBest && typeof saved.whackBest === "object") {
+        base.whackBest = saved.whackBest;
+      } else if (base.bestWhack) {
+        base.whackBest = { "zacs:normal": base.bestWhack };
+      }
     } catch (e) {
       return base;
     }
@@ -846,83 +856,157 @@
 
   /* ---------------------------- whack-a-mole --------------------------- */
 
-  var whack = { running: false, score: 0, left: 30, clock: null, next: null, hide: null };
+  /* ---------------------------- Wac-A-Zac ------------------------------ */
+
+  var WHACK_THEMES = [
+    { id: "aliens",   name: "Aliens",   emoji: "👽", bonus: "🛸", line: "Tap the aliens before they fly off." },
+    { id: "monsters", name: "Monsters", emoji: "👾", bonus: "⭐", line: "Tap the monsters before they bounce away." },
+    { id: "robots",   name: "Robots",   emoji: "🤖", bonus: "⚡", line: "Tap the robots before they power down." },
+    { id: "zacs",     name: "Zacs",     emoji: "🐹", bonus: "🌟", line: "Tap the Zacs before they duck." }
+  ];
+
+  var WHACK_LEVELS = [
+    { id: "calm",   name: "Calm",   secs: 45, gap: [900, 1500], up: 1500 },
+    { id: "normal", name: "Normal", secs: 30, gap: [560, 1000], up: 1000 },
+    { id: "quick",  name: "Quick",  secs: 20, gap: [360, 680],  up: 700 }
+  ];
+
+  var whack = { running: false, paused: false, score: 0, left: 30, clock: null, next: null };
+
+  function whackTheme() {
+    for (var i = 0; i < WHACK_THEMES.length; i++) {
+      if (WHACK_THEMES[i].id === state.settings.whackTheme) return WHACK_THEMES[i];
+    }
+    return WHACK_THEMES[0];
+  }
+
+  function whackLevel() {
+    for (var i = 0; i < WHACK_LEVELS.length; i++) {
+      if (WHACK_LEVELS[i].id === state.settings.whackLevel) return WHACK_LEVELS[i];
+    }
+    return WHACK_LEVELS[1];
+  }
+
+  function whackKey() { return state.settings.whackTheme + ":" + state.settings.whackLevel; }
+
+  function whackBest() {
+    var map = state.whackBest || {};
+    return map[whackKey()] || 0;
+  }
+
+  function whackSay(text) {
+    var msg = $("#whackMsg");
+    if (msg) msg.textContent = text;
+  }
+
+  function paintWhack() {
+    var score = $("#whackScore"); if (score) score.textContent = String(whack.score);
+    var time = $("#whackTime"); if (time) time.textContent = String(Math.max(0, whack.left));
+    var best = $("#whackBest"); if (best) best.textContent = String(whackBest());
+  }
+
+  function hideHole(hole) {
+    if (hole._whackTimer) { clearTimeout(hole._whackTimer); hole._whackTimer = null; }
+    hole.classList.remove("is-up", "is-bonus");
+  }
 
   function stopWhack() {
     whack.running = false;
+    whack.paused = false;
     if (whack.clock) { clearInterval(whack.clock); whack.clock = null; }
     if (whack.next) { clearTimeout(whack.next); whack.next = null; }
-    if (whack.hide) { clearTimeout(whack.hide); whack.hide = null; }
-    $$(".hole").forEach(function (h) { h.classList.remove("is-up", "is-hit"); });
+    $$(".hole").forEach(function (hole) {
+      hideHole(hole);
+      hole.classList.remove("is-hit");
+    });
+  }
+
+  function popWhack() {
+    if (!whack.running || whack.paused) return;
+    var free = $$(".hole").filter(function (h) { return !h.classList.contains("is-up"); });
+    if (free.length) {
+      var hole = free[Math.floor(Math.random() * free.length)];
+      var theme = whackTheme();
+      var bonus = Math.random() < 0.12;
+      var face = hole.querySelector(".mole");
+      if (face) face.textContent = bonus ? theme.bonus : theme.emoji;
+      hole.dataset.points = bonus ? "3" : "1";
+      hole.classList.toggle("is-bonus", bonus);
+      hole.classList.add("is-up");
+      hole._whackTimer = setTimeout(function () { hideHole(hole); }, whackLevel().up);
+    }
+    var gap = whackLevel().gap;
+    whack.next = setTimeout(popWhack, gap[0] + Math.random() * (gap[1] - gap[0]));
   }
 
   function startWhack() {
     stopWhack();
+    var level = whackLevel();
     whack.running = true;
     whack.score = 0;
-    whack.left = 30;
-    var score = $("#whackScore"); if (score) score.textContent = "0";
-    var time = $("#whackTime"); if (time) time.textContent = "30";
-    var msg = $("#whackMsg"); if (msg) msg.textContent = "Go! Tap the mole before it ducks.";
+    whack.left = level.secs;
+    paintWhack();
+    whackSay("Go! " + whackTheme().line);
     var btn = $("#whackStart");
-    if (btn) { btn.disabled = true; btn.textContent = "Playing…"; }
+    if (btn) { btn.disabled = true; btn.innerHTML = "Playing…"; }
+    var pause = $("#whackPause");
+    if (pause) { pause.hidden = false; pause.textContent = "Pause"; }
 
     whack.clock = setInterval(function () {
+      if (whack.paused) return;
       whack.left--;
-      var t = $("#whackTime");
-      if (t) t.textContent = String(Math.max(0, whack.left));
+      paintWhack();
       if (whack.left <= 0) endWhack();
     }, 1000);
+    popWhack();
+  }
 
-    function pop() {
-      if (!whack.running) return;
-      var holes = $$(".hole");
-      if (holes.length) {
-        var hole = holes[Math.floor(Math.random() * holes.length)];
-        hole.classList.add("is-up");
-        if (whack.hide) clearTimeout(whack.hide);
-        whack.hide = setTimeout(function () { hole.classList.remove("is-up"); }, 640);
-      }
-      whack.next = setTimeout(pop, 430 + Math.random() * 430);
+  function toggleWhackPause() {
+    if (!whack.running) return;
+    whack.paused = !whack.paused;
+    var pause = $("#whackPause");
+    if (pause) pause.textContent = whack.paused ? "Resume" : "Pause";
+    if (whack.paused) {
+      if (whack.next) { clearTimeout(whack.next); whack.next = null; }
+      $$(".hole").forEach(hideHole);
+      whackSay("Paused. Take your time.");
+    } else {
+      whackSay(whackTheme().line);
+      popWhack();
     }
-    pop();
   }
 
   function hitWhack(hole) {
-    if (!whack.running || !hole.classList.contains("is-up")) return;
-    whack.score++;
-    hole.classList.remove("is-up");
+    if (!whack.running || whack.paused || !hole.classList.contains("is-up")) return;
+    var points = parseInt(hole.dataset.points || "1", 10);
+    whack.score += points;
+    hideHole(hole);
     hole.classList.add("is-hit");
-    var score = $("#whackScore");
-    if (score) score.textContent = String(whack.score);
-    var pick = D.farts[Math.floor(Math.random() * D.farts.length)];
-    AudioEngine.playFile("Fart/" + pick.file, 0.5);
     setTimeout(function () { hole.classList.remove("is-hit"); }, 260);
+    paintWhack();
+    AudioEngine.tick(points > 1 ? 1 : 0.65);
   }
 
   function endWhack() {
-    var finalScore = whack.score;
+    var score = whack.score;
+    var theme = whackTheme();
     stopWhack();
-    var best = state.bestWhack || 0;
-    var isBest = finalScore > best;
-    if (isBest) {
-      state.bestWhack = finalScore;
-      save();
-      best = finalScore;
-    }
-    var msg = $("#whackMsg");
-    if (msg) {
-      msg.textContent = finalScore === 0
-        ? "Good try! Have another go."
-        : isBest
-          ? "New best score: " + finalScore + "! 🎉"
-          : "You scored " + finalScore + ". Best so far: " + best + ".";
-    }
+    var key = whackKey();
+    state.whackBest = state.whackBest || {};
+    var best = state.whackBest[key] || 0;
+    var isBest = score > best;
+    if (isBest) { state.whackBest[key] = score; save(); best = score; }
+    whackSay(score === 0
+      ? "Good try. Nothing lost — have another go."
+      : isBest
+        ? "New best for " + theme.name + ": " + score + "! 🎉"
+        : "You scored " + score + ". Best for " + theme.name + ": " + best + ".");
     var btn = $("#whackStart");
     if (btn) { btn.disabled = false; btn.innerHTML = icon("tri") + " Play again"; }
-    var bestEl = $("#whackBest");
-    if (bestEl) bestEl.textContent = String(best);
-    AudioEngine.chime();
+    var pause = $("#whackPause");
+    if (pause) pause.hidden = true;
+    paintWhack();
+    if (score > 0) AudioEngine.chime();
   }
 
   /* ------------------------------- views ------------------------------- */
@@ -935,30 +1019,13 @@
       (sub ? '<p class="page-sub">' + sub + "</p>" : "") + "</div>";
   }
 
-  /* The wordmark is drawn, not typed, so the pairs are literally one shape:
-     e and a share the first glyph, n and c share the second, and the second
-     letter of each pair starts half a turn round. Turn a letter and it becomes
-     its partner — that is what made the old logo work. */
-  var WM_GLYPHS = {
-    z: '<path d="M28 28h44L28 72h44"/>',
-    ae: '<path d="M74 28a26 26 0 1 0 0 44"/><path d="M24 50h26"/><path d="M76 50v26"/>',
-    nc: '<path d="M26 24v52"/><path d="M26 44a26 26 0 0 1 26 26v6"/>'
-  };
-
+  /* The wordmark is real type: Z-e-n-Z-e-n, one span per letter, each turning
+     on its own axis. An e upside down reads as an a, and an n reads as itself
+     or a u, so the word keeps folding between ZenZen and ZenZac as it turns. */
   function wordmarkHTML() {
-    var letters = [
-      { glyph: "z",  turn: 0,   phase: 0 },
-      { glyph: "ae", turn: 0,   phase: 1 },
-      { glyph: "nc", turn: 0,   phase: 2 },
-      { glyph: "z",  turn: 0,   phase: 3 },
-      { glyph: "ae", turn: 180, phase: 1 },
-      { glyph: "nc", turn: 180, phase: 2 }
-    ];
     return '<div class="wordmark" role="img" aria-label="ZenZac">' +
-      letters.map(function (l) {
-        return '<span class="wm-l" style="--p:' + l.phase + '">' +
-          '<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">' +
-          '<g transform="rotate(' + l.turn + ' 50 50)">' + WM_GLYPHS[l.glyph] + "</g></svg></span>";
+      ["Z", "e", "n", "Z", "e", "n"].map(function (ch, i) {
+        return '<span class="wm-l" style="--p:' + i + '">' + ch + "</span>";
       }).join("") + "</div>";
   }
 
@@ -1686,23 +1753,43 @@
     }
 
     function whackPanel() {
+      var theme = whackTheme();
+      var level = whackLevel();
       var holes = "";
       for (var i = 0; i < 9; i++) {
-        holes += '<button type="button" class="hole" data-hole="' + i + '" aria-label="Hole ' + (i + 1) + '">' +
-          '<span class="mole" aria-hidden="true">🐹</span></button>';
+        holes += '<button type="button" class="hole" data-hole="' + i + '" aria-label="Spot ' + (i + 1) + '">' +
+          '<span class="mole" aria-hidden="true">' + theme.emoji + "</span></button>";
       }
+      var themes = WHACK_THEMES.map(function (t) {
+        return '<button type="button" class="chip sm' + (t.id === theme.id ? " is-on" : "") +
+          '" data-whack-theme="' + t.id + '" aria-pressed="' + (t.id === theme.id) + '">' +
+          t.emoji + " " + esc(t.name) + "</button>";
+      }).join("");
+      var levels = WHACK_LEVELS.map(function (l) {
+        return '<button type="button" class="chip sm' + (l.id === level.id ? " is-on" : "") +
+          '" data-whack-level="' + l.id + '" aria-pressed="' + (l.id === level.id) + '">' +
+          esc(l.name) + " · " + l.secs + "s</button>";
+      }).join("");
       return '<div class="card">' +
         '<div class="whack-hud">' +
           '<div class="row" style="gap:18px">' +
             '<div class="stat"><span class="stat-num" id="whackScore">0</span><span class="stat-label">Score</span></div>' +
-            '<div class="stat"><span class="stat-num" id="whackTime">30</span><span class="stat-label">Seconds</span></div>' +
-            '<div class="stat"><span class="stat-num" id="whackBest">' + (state.bestWhack || 0) + '</span><span class="stat-label">Best</span></div>' +
+            '<div class="stat"><span class="stat-num" id="whackTime">' + level.secs + '</span><span class="stat-label">Seconds</span></div>' +
+            '<div class="stat"><span class="stat-num" id="whackBest">' + whackBest() + '</span><span class="stat-label">Best</span></div>' +
           "</div>" +
-          '<button type="button" class="btn primary" id="whackStart">' + icon("tri") + " Start</button>" +
+          '<div class="row" style="gap:8px">' +
+            '<button type="button" class="btn primary" id="whackStart">' + icon("tri") + " Play</button>" +
+            '<button type="button" class="btn ghost" id="whackPause" hidden>Pause</button>' +
+          "</div>" +
         "</div>" +
-        '<p class="card-sub" id="whackMsg">Tap the mole as it pops up. Silly sounds included.</p>' +
+        '<p class="card-sub" id="whackMsg" aria-live="polite">' + esc(theme.line) + "</p>" +
         '<div class="whack-grid" style="margin-top:14px">' + holes + "</div>" +
-        '<p class="tiny muted center" style="margin-top:14px">30 seconds a round. Best score is saved on this device.</p>' +
+        '<div class="whack-picks">' +
+          '<div class="row-wrap"><span class="label">Who</span>' + themes + "</div>" +
+          '<div class="row-wrap"><span class="label">How long</span>' + levels + "</div>" +
+        "</div>" +
+        '<p class="tiny muted center" style="margin-top:14px">Nothing is lost if you miss one. The ' +
+          theme.bonus + " is worth 3.</p>" +
       "</div>";
     }
 
@@ -1724,6 +1811,24 @@
       });
       var start = $("#whackStart");
       if (start) start.addEventListener("click", startWhack);
+      var pause = $("#whackPause");
+      if (pause) pause.addEventListener("click", toggleWhackPause);
+      $$("[data-whack-theme]", view).forEach(function (chip) {
+        chip.addEventListener("click", function () {
+          if (whack.running) { toast("Finish this round first."); return; }
+          state.settings.whackTheme = chip.getAttribute("data-whack-theme");
+          save();
+          render();
+        });
+      });
+      $$("[data-whack-level]", view).forEach(function (chip) {
+        chip.addEventListener("click", function () {
+          if (whack.running) { toast("Finish this round first."); return; }
+          state.settings.whackLevel = chip.getAttribute("data-whack-level");
+          save();
+          render();
+        });
+      });
     }
 
     render();
