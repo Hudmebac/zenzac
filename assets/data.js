@@ -2,12 +2,14 @@
 window.ZenData = (function () {
   "use strict";
 
+  /* Ordered best first on purpose: a child should meet the happiest face first,
+     not the cross one. Values stay the same so saved check-ins still read right. */
   var moods = [
-    { v: 1, key: "cross",  label: "Cross",  color: "#ff8f8a", hint: "Big feelings. Let's let some steam out." },
-    { v: 2, key: "wobbly", label: "Wobbly", color: "#ffb86b", hint: "A bit wobbly. A slow breath might help." },
-    { v: 3, key: "ok",     label: "OK",     color: "#ffd166", hint: "Right in the middle. That's okay." },
+    { v: 5, key: "happy",  label: "Happy",  color: "#5eead4", hint: "Lovely. Let's keep that feeling." },
     { v: 4, key: "calm",   label: "Calm",   color: "#7ee2c4", hint: "Nice and steady. Keep it going." },
-    { v: 5, key: "happy",  label: "Happy",  color: "#5eead4", hint: "Lovely. Let's keep that feeling." }
+    { v: 3, key: "ok",     label: "OK",     color: "#ffd166", hint: "Right in the middle. That's okay." },
+    { v: 2, key: "wobbly", label: "Wobbly", color: "#ffb86b", hint: "A bit wobbly. A slow breath might help." },
+    { v: 1, key: "cross",  label: "Cross",  color: "#ff8f8a", hint: "Big feelings. Let's let some steam out." }
   ];
 
   function mood(v) {

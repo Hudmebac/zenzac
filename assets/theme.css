@@ -364,7 +364,7 @@ strong { font-weight: 700; }
 .btn.icon-only { padding: 0; width: var(--tap); border-radius: 14px; }
 
 .pill-toggle {
-  display: inline-flex; padding: 4px; gap: 4px;
+  display: inline-flex; flex-wrap: wrap; padding: 4px; gap: 4px;
   border-radius: 999px; border: 1px solid var(--line);
   background: var(--inset);
 }
@@ -718,6 +718,19 @@ html[data-motion="calm"] .wordmark .wm-l { animation: none; }
 /* ---------- journal ---------- */
 
 .composer { display: flex; flex-direction: column; gap: 12px; }
+
+/* Grown-ups gate — a deliberate hold, not a password. */
+.journal-gate {
+  border-color: color-mix(in srgb, var(--lilac) 28%, var(--line));
+  background:
+    radial-gradient(420px 200px at 100% 0%, color-mix(in srgb, var(--lilac) 12%, transparent), transparent 70%),
+    var(--panel);
+}
+.journal-gate .btn { margin-top: 16px; }
+.btn.is-holding {
+  transform: scale(0.98);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--mint) 45%, transparent);
+}
 .mood-picker { display: flex; gap: 8px; flex-wrap: wrap; }
 .mood-picker .mood-btn { flex: 1 1 88px; }
 

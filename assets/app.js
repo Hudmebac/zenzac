@@ -72,6 +72,7 @@
       bigText: false,
       voice: false,
       theme: "dusk",
+      showHistory: false,
       whackTheme: "aliens",
       whackLevel: "normal",
       mix: DEFAULT_MIX
@@ -106,6 +107,7 @@
       base.settings.voice = !!s.voice;
       base.settings.mix = Object.assign({}, DEFAULT_MIX, s.mix || {});
       base.settings.theme = typeof s.theme === "string" && s.theme ? s.theme : "dusk";
+      base.settings.showHistory = s.showHistory === true;
       base.settings.whackTheme = typeof s.whackTheme === "string" ? s.whackTheme : "aliens";
       base.settings.whackLevel = typeof s.whackLevel === "string" ? s.whackLevel : "normal";
       var p = saved.profile || {};
@@ -428,6 +430,23 @@
 
   /* ------------------------------- toast ------------------------------- */
 
+  function downloadData() {
+    try {
+      var blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "zenzac-" + todayKey() + ".json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+      toast("A copy has been downloaded.");
+    } catch (e) {
+      toast("This browser would not let me download a copy.");
+    }
+  }
+
   var toastTimer = null;
   function toast(message) {
     var el = $("#toast");
@@ -516,6 +535,7 @@
     var id = (window.location.hash || "").replace(/^#\/?/, "").split("?")[0].split("/")[0] || "home";
     if (!VIEWS[id] && id !== "more") id = "home";
     if (id !== "setup") setupOpened = false;
+    if (id !== "journal") journalUnlocked = false;
     stopAllActivity();
     renderChrome(id);
     var view = $("#view");
@@ -1837,6 +1857,8 @@
   /* ---- Journal ---- */
 
   var journalTab = "mood";
+  var journalUnlocked = false;
+  var holdTimer = null;
   var moodPick = 0;
   var triggerPicks = [];
   var helpPicks = [];
@@ -1844,12 +1866,13 @@
   VIEWS.journal = function (view) {
     function render() {
       view.innerHTML = pageHead("Journal", "How is it really going?",
-        "Private notes for you and your child. Nothing leaves this device unless you export it.") +
+        "A quick way to notice how things are going. It stays on this device, and the detail is kept for grown-ups.") +
         '<div class="pill-toggle" role="group" aria-label="Journal type">' +
-          '<button type="button" data-jtab="mood" aria-pressed="' + (journalTab === "mood") + '">Feelings</button>' +
-          '<button type="button" data-jtab="behaviour" aria-pressed="' + (journalTab === "behaviour") + '">Behaviour</button>' +
+          '<button type="button" data-jtab="mood" aria-pressed="' + (journalTab === "mood") + '">How I feel</button>' +
+          '<button type="button" data-jtab="behaviour" aria-pressed="' + (journalTab === "behaviour") + '">Tricky moments</button>' +
+          '<button type="button" data-jtab="grownups" aria-pressed="' + (journalTab === "grownups") + '">Grown-ups</button>' +
         "</div>" +
-        '<div style="margin-top:16px">' + (journalTab === "behaviour" ? behaviourPanel() : moodPanel()) + "</div>";
+        '<div style="margin-top:16px">' + panelHTML() + "</div>";
 
       $$("[data-jtab]", view).forEach(function (btn) {
         btn.addEventListener("click", function () {
@@ -1859,7 +1882,14 @@
       });
 
       if (journalTab === "behaviour") bindBehaviour();
+      else if (journalTab === "grownups") bindGrownups();
       else bindMood();
+    }
+
+    function panelHTML() {
+      if (journalTab === "behaviour") return behaviourPanel();
+      if (journalTab === "grownups") return grownupsPanel();
+      return moodPanel();
     }
 
     function weekChart() {
@@ -1878,26 +1908,30 @@
       return '<div class="chart" role="img" aria-label="Average mood for each of the last seven days">' + cols + "</div>";
     }
 
-    function moodPanel() {
-      var entries = state.moods.slice().reverse();
-      var list = entries.length
-        ? entries.map(function (e) {
-            var note = e.note ? '<p class="entry-note">' + esc(e.note) + "</p>" : "";
-            return '<article class="entry">' +
-              '<span class="entry-face">' + D.face(e.v) + "</span>" +
-              '<div class="entry-body"><div class="entry-head">' +
-                '<span class="entry-mood">' + esc(D.mood(e.v).label) + "</span>" +
-                '<span class="entry-time">' + dateLabel(e.ts) + "</span></div>" + note +
-              "</div>" +
-              '<button type="button" class="icon-btn" data-del-mood="' + e.id + '" aria-label="Delete this entry">' +
-                icon("trash") + "</button></article>";
-          }).join("")
-        : '<div class="empty"><strong>No check-ins yet.</strong>Tap a face above, or use the one on Home.</div>';
+    function moodEntriesHTML(list, withDelete) {
+      if (!list.length) {
+        return '<div class="empty"><strong>Nothing saved yet.</strong>Check-ins you save will be kept here.</div>';
+      }
+      return '<div class="timeline">' + list.map(function (e) {
+        var note = e.note ? '<p class="entry-note">' + esc(e.note) + "</p>" : "";
+        return '<article class="entry">' +
+          '<span class="entry-face">' + D.face(e.v) + "</span>" +
+          '<div class="entry-body"><div class="entry-head">' +
+            '<span class="entry-mood">' + esc(D.mood(e.v).label) + "</span>" +
+            '<span class="entry-time">' + dateLabel(e.ts) + "</span></div>" + note +
+          "</div>" +
+          (withDelete
+            ? '<button type="button" class="icon-btn" data-del-mood="' + e.id + '" aria-label="Delete this entry">' + icon("trash") + "</button>"
+            : "") +
+        "</article>";
+      }).join("") + "</div>";
+    }
 
+    function moodPanel() {
       return '<div class="grid grid-2">' +
         '<div class="card">' +
           '<h2 class="card-title">Add a check-in</h2>' +
-          '<p class="card-sub">A face and a few words is plenty.</p>' +
+          '<p class="card-sub">A face is enough. A few words only if you feel like it.</p>' +
           '<div class="composer" style="margin-top:12px">' +
             '<div class="mood-picker" role="group" aria-label="Mood">' + moodButtons(moodPick) + "</div>" +
             '<div class="field"><label class="label" for="moodNote">What happened?</label>' +
@@ -1907,15 +1941,143 @@
         "</div>" +
         '<div class="card">' +
           '<h2 class="card-title">This week</h2>' +
-          '<p class="card-sub">Average mood per day — taller is brighter.</p>' +
+          '<p class="card-sub">Average mood per day. A mixed week is still a week.</p>' +
           '<div style="margin-top:14px">' + weekChart() + "</div>" +
           '<hr class="divider">' +
-          '<p class="tiny muted">Looking for patterns? Log the tricky moments on the Behaviour tab.</p>' +
+          '<p class="tiny muted">Earlier notes are tucked away on the Grown-ups tab, so they are not on show.</p>' +
         "</div>" +
       "</div>" +
-      '<div class="section-head"><h2 class="section-title">History</h2>' +
-        '<span class="tiny muted">' + entries.length + " entr" + (entries.length === 1 ? "y" : "ies") + "</span></div>" +
-      '<div class="timeline">' + list + "</div>";
+      (state.settings.showHistory
+        ? '<div class="section-head"><h2 class="section-title">Earlier check-ins</h2>' +
+            '<span class="tiny muted">' + state.moods.length + " kept</span></div>" +
+          moodEntriesHTML(state.moods.slice().reverse().slice(0, 10), false)
+        : "");
+    }
+
+    function grownupsPanel() {
+      if (!journalUnlocked) {
+        return '<div class="card journal-gate">' +
+          '<h2 class="card-title">Grown-ups area</h2>' +
+          '<p class="card-sub">Earlier check-ins, notes and the buttons to manage them live here. ' +
+            "The weekly average stays on the other tabs either way.</p>" +
+          '<button type="button" class="btn primary" id="journalUnlock">Press and hold to open</button>' +
+          '<p class="tiny muted" style="margin-top:10px">Hold for a second or two. It is a pause, not a password — ' +
+            "but it keeps hard moments out of a child's eyeline.</p>" +
+        "</div>";
+      }
+      var moods = state.moods.slice().reverse();
+      var moments = state.behaviour.slice().reverse();
+      return '<div class="card">' +
+        '<div class="row-between"><div><h2 class="card-title">Grown-ups</h2>' +
+          '<p class="card-sub">' + state.moods.length + " check-in" + (state.moods.length === 1 ? "" : "s") + " · " +
+            state.behaviour.length + " moment" + (state.behaviour.length === 1 ? "" : "s") + " stored on this device.</p></div>" +
+          '<button type="button" class="btn sm" id="journalLock">Hide</button></div>' +
+        '<label class="switch" style="margin-top:16px">' +
+          '<input type="checkbox" id="showHistory"' + (state.settings.showHistory ? " checked" : "") + ">" +
+          '<span class="track"><span class="thumb"></span></span>' +
+          '<span class="switch-text"><strong>Show earlier check-ins on the Journal tab</strong>' +
+            '<small>Off by default. The weekly average shows either way.</small></span></label>' +
+        '<div class="row-wrap" style="margin-top:16px">' +
+          '<button type="button" class="btn" id="journalExport">' + icon("download") + " Download a copy</button>" +
+          '<button type="button" class="btn danger" id="clearMoods">Delete check-ins</button>' +
+          '<button type="button" class="btn danger" id="clearMoments">Delete moments</button>' +
+        "</div>" +
+        '<p class="tiny muted" style="margin-top:10px">Deleting clears them from this device. Download a copy first if you want to keep them.</p>' +
+      "</div>" +
+      '<div class="section-head"><h2 class="section-title">Earlier check-ins</h2>' +
+        '<span class="tiny muted">' + moods.length + " kept</span></div>" +
+      moodEntriesHTML(moods, true) +
+      '<div class="section-head"><h2 class="section-title">Tricky moments</h2>' +
+        '<span class="tiny muted">' + moments.length + " logged</span></div>" +
+      momentEntriesHTML(moments, true);
+    }
+
+    function bindGrownups() {
+      var unlock = $("#journalUnlock", view);
+      if (unlock) {
+        function begin(e) {
+          if (holdTimer) clearTimeout(holdTimer);
+          unlock.classList.add("is-holding");
+          if (e && e.pointerId != null && unlock.setPointerCapture) {
+            try { unlock.setPointerCapture(e.pointerId); } catch (err) {}
+          }
+          holdTimer = setTimeout(function () {
+            holdTimer = null;
+            journalUnlocked = true;
+            render();
+          }, 1400);
+        }
+        function cancel() {
+          if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; }
+          unlock.classList.remove("is-holding");
+        }
+        unlock.addEventListener("pointerdown", begin);
+        unlock.addEventListener("pointerup", cancel);
+        unlock.addEventListener("pointerleave", cancel);
+        unlock.addEventListener("pointercancel", cancel);
+        unlock.addEventListener("keydown", function (e) {
+          if ((e.key === " " || e.key === "Enter") && !e.repeat) { e.preventDefault(); begin(); }
+        });
+        unlock.addEventListener("keyup", cancel);
+        unlock.addEventListener("blur", cancel);
+        return;
+      }
+
+      var lock = $("#journalLock", view);
+      if (lock) lock.addEventListener("click", function () {
+        journalUnlocked = false;
+        render();
+        toast("Grown-ups area hidden.");
+      });
+
+      var show = $("#showHistory", view);
+      if (show) show.addEventListener("change", function () {
+        state.settings.showHistory = show.checked;
+        save();
+        toast(show.checked ? "Earlier check-ins will show on the Journal tab." : "Earlier check-ins hidden again.");
+      });
+
+      var exp = $("#journalExport", view);
+      if (exp) exp.addEventListener("click", downloadData);
+
+      var clearMoods = $("#clearMoods", view);
+      if (clearMoods) clearMoods.addEventListener("click", function () {
+        if (!state.moods.length) { toast("No check-ins to delete."); return; }
+        if (!window.confirm("Delete all " + state.moods.length + " check-in entries on this device? This cannot be undone.")) return;
+        state.moods = [];
+        save();
+        render();
+        toast("Check-ins deleted.");
+      });
+
+      var clearMoments = $("#clearMoments", view);
+      if (clearMoments) clearMoments.addEventListener("click", function () {
+        if (!state.behaviour.length) { toast("No moments to delete."); return; }
+        if (!window.confirm("Delete all " + state.behaviour.length + " logged moments on this device? This cannot be undone.")) return;
+        state.behaviour = [];
+        save();
+        render();
+        toast("Moments deleted.");
+      });
+
+      $$("[data-del-mood]", view).forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var id = btn.getAttribute("data-del-mood");
+          state.moods = state.moods.filter(function (m) { return m.id !== id; });
+          save();
+          render();
+          toast("Entry deleted.");
+        });
+      });
+      $$("[data-del-beh]", view).forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var id = btn.getAttribute("data-del-beh");
+          state.behaviour = state.behaviour.filter(function (b) { return b.id !== id; });
+          save();
+          render();
+          toast("Entry deleted.");
+        });
+      });
     }
 
     function bindMood() {
@@ -1964,8 +2126,31 @@
       }).join("");
     }
 
+    function momentEntriesHTML(list, withDelete) {
+      if (!list.length) {
+        return '<div class="empty"><strong>Nothing logged.</strong>Moments you save will be kept here.</div>';
+      }
+      return '<div class="timeline">' + list.map(function (b) {
+        var tags = (b.triggers || []).map(function (t) {
+          return '<span class="badge">' + esc(t) + "</span>";
+        }).concat((b.helps || []).map(function (h) {
+          return '<span class="badge mint">' + esc(h) + "</span>";
+        })).join("");
+        return '<article class="entry">' +
+          '<span class="entry-face" aria-hidden="true">📝</span>' +
+          '<div class="entry-body"><div class="entry-head">' +
+            '<span class="entry-mood">Tricky moment</span>' +
+            '<span class="entry-time">' + dateLabel(b.ts) + "</span></div>" +
+            (b.note ? '<p class="entry-note">' + esc(b.note) + "</p>" : "") +
+            '<div class="entry-tags">' + tags + "</div></div>" +
+          (withDelete
+            ? '<button type="button" class="icon-btn" data-del-beh="' + b.id + '" aria-label="Delete this entry">' + icon("trash") + "</button>"
+            : "") +
+        "</article>";
+      }).join("") + "</div>";
+    }
+
     function behaviourPanel() {
-      var entries = state.behaviour.slice().reverse();
       var week = state.behaviour.filter(function (b) { return Date.now() - b.ts < 7 * 86400000; });
       var triggerCount = {};
       var helpCount = {};
@@ -1980,25 +2165,6 @@
       }
       var topTrigger = top(triggerCount);
       var topHelp = top(helpCount);
-
-      var list = entries.length
-        ? entries.map(function (b) {
-            var tags = (b.triggers || []).map(function (t) {
-              return '<span class="badge coral">' + esc(t) + "</span>";
-            }).concat((b.helps || []).map(function (h) {
-              return '<span class="badge mint">' + esc(h) + "</span>";
-            })).join("");
-            return '<article class="entry">' +
-              '<span class="entry-face" aria-hidden="true">📝</span>' +
-              '<div class="entry-body"><div class="entry-head">' +
-                '<span class="entry-mood">Tricky moment</span>' +
-                '<span class="entry-time">' + dateLabel(b.ts) + "</span></div>" +
-                (b.note ? '<p class="entry-note">' + esc(b.note) + "</p>" : "") +
-                '<div class="entry-tags">' + tags + "</div></div>" +
-              '<button type="button" class="icon-btn" data-del-beh="' + b.id + '" aria-label="Delete this entry">' +
-                icon("trash") + "</button></article>";
-          }).join("")
-        : '<div class="empty"><strong>Nothing logged yet.</strong>After a tricky moment, note what happened and what helped. Patterns show up fast.</div>';
 
       return '<div class="grid grid-2">' +
         '<div class="card">' +
@@ -2029,9 +2195,8 @@
           '<p class="tiny muted">This journal is for your own notes. It is not a diagnosis.</p>' +
         "</div>" +
       "</div>" +
-      '<div class="section-head"><h2 class="section-title">History</h2>' +
-        '<span class="tiny muted">' + entries.length + " logged</span></div>" +
-      '<div class="timeline">' + list + "</div>";
+      '<p class="tiny muted center" style="margin-top:16px">Earlier moments are kept on the <strong>Grown-ups</strong> tab, ' +
+        "so a child is not reading back over the hard ones.</p>";
     }
 
     function bindBehaviour() {
@@ -3011,22 +3176,7 @@
       });
     }
 
-    function exportData() {
-      try {
-        var blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement("a");
-        a.href = url;
-        a.download = "zenzac-" + todayKey() + ".json";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
-        toast("Copy downloaded.");
-      } catch (e) {
-        toast("Could not export on this browser.");
-      }
-    }
+    function exportData() { downloadData(); }
 
     render();
   };
