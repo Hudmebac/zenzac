@@ -1335,7 +1335,7 @@
         tileHTML("#/routine", "📋", "Now & Next", "One step at a time, with a timer.", "sky") +
         tileHTML("#/focus", "🎯", "Focus", "Fidget wheel and Wac-A-Zac.", "lilac") +
         tileHTML("#/journal", "📔", "Journal", "Feelings and behaviour, kept private.", "amber") +
-        tileHTML("#/play", "😂", "Play", "Jokes and silly sounds.", "coral") +
+        tileHTML("#/play", "😂", "Play", "Knock-knock jokes and fart sounds.", "coral") +
         tileHTML("#/learn", "📚", "Learn", "Short, practical guides for grown-ups.", "") +
       "</div>" +
 
@@ -2949,7 +2949,7 @@
       var backgrounds = D.ambience.map(function (a) {
         return padHTML(' data-amb="' + a.id + '"', a.emoji, a.name, AudioEngine.isPlaying(a.id));
       }).join("");
-      var silly = D.farts.map(function (f, i) {
+      var fartPads = D.farts.map(function (f, i) {
         return padHTML(' data-fart="' + i + '"', f.emoji, f.name);
       }).join("");
       return '<div class="card">' +
@@ -2957,7 +2957,7 @@
           '<p class="card-sub">Tap a pad. A new silly sound stops the last one; backgrounds can layer.</p></div>' +
           '<button type="button" class="btn" id="stopSounds">' + icon("pause") + " Stop everything</button></div>" +
         soundGroup("Background", "Calm and looping. Tap one again to stop it.", backgrounds) +
-        soundGroup("Silly sounds", "", silly) +
+        soundGroup("Fart sounds 💨", "It is what it is. Tap a pad, or let the app surprise you.", fartPads) +
         soundGroup("Animals", "", padHTML(' id="animalSound"', "🐘", "Animal noises")) +
         '<div class="row-wrap" style="margin-top:16px">' +
           '<button type="button" class="btn primary" id="randomFart">' + icon("shuffle") + " Surprise me</button>" +
@@ -3799,7 +3799,7 @@
       '<div class="grid grid-auto">' +
         tileHTML("#/focus", "🎯", "Focus", "Fidget wheel and Wac-A-Zac.", "lilac") +
         tileHTML("#/journal", "📔", "Journal", "Feelings check-ins and tricky moments.", "amber") +
-        tileHTML("#/play", "😂", "Play", "Jokes and silly sounds.", "coral") +
+        tileHTML("#/play", "😂", "Play", "Knock-knock jokes and fart sounds.", "coral") +
         tileHTML("#/compendium", "📖", "Compendium", "Nutrition, health, activities, behaviour and more.", "mint") +
         tileHTML("#/setup", "🎛️", "Your plan", "Mode, answers and house rules.", "") +
         tileHTML("#/learn", "📚", "Learn", "Practical guides, no lectures.", "") +
