@@ -10,7 +10,7 @@ Open `index.html` in a browser. Everything works from a double-click; a local se
 | --- | --- |
 | **Home** | Greeting, mood check-in, "start here today" suggestions from the child's plan, house rules, today's numbers. |
 | **Set-up** | Seven short questions: name, age band, mode (ADHD / autism / both / not sure), what is hard, what helps, sensory notes, house rules, colours. Every answer can be changed later. |
-| **Calm** | Guided breathing (three patterns) with a soft sound cue that follows each phase, eleven ambient sounds including pink and brown noise, fan hum and slow heartbeat, and a 5-4-3-2-1 grounding exercise with four places (home, outside, car, bed), step-by-step guidance and soft answer pictures to tap. |
+| **Calm** | Guided breathing (three patterns) with a spoken number count that follows each phase, eleven ambient sounds including pink and brown noise, fan hum and slow heartbeat, and a 5-4-3-2-1 grounding exercise with four places (home, outside, car, bed), step-by-step guidance and soft answer pictures to tap. |
 | **Now & Next** | Two-slot routine with timer, task queue, stickers, and the house rules kept in view. |
 | **Focus** | Choice wheel with themed sets (foods, sports, colours, animals, computer, silly), Wac-A-Zac with gold/mover/grump targets and a best-rounds board, focus timer. |
 | **Journal** | Private feelings check-ins, behaviour notes, weekly chart, ranked trigger/help lists, and full edit or delete of every saved entry in the grown-ups area. |

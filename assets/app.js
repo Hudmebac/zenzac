@@ -418,9 +418,9 @@
       oneShots = [];
     }
 
-    /* Stop everything: loops, generated sounds, breathing cues and one-off sounds. */
+    /* Stop everything: loops, generated sounds, speech and one-off sounds. */
     function stopAll() {
-      stopBreathCue();
+      hush();
       Object.keys(tracks).forEach(function (id) {
         try { tracks[id].pause(); } catch (e) {}
         active[id] = false;
@@ -521,90 +521,6 @@
       } catch (e) {}
     }
 
-    /* A soft, airy breath cue. The in-breath rises, a hold sits low, and
-       the out-breath falls away, all over the exact phase length. */
-    var breathVoice = null;
-
-    function stopBreathCue() {
-      var voice = breathVoice;
-      breathVoice = null;
-      if (!voice || !ctx) return;
-      var t = ctx.currentTime;
-      try {
-        voice.noiseGain.gain.cancelScheduledValues(t);
-        voice.noiseGain.gain.setTargetAtTime(0.0001, t, 0.04);
-        voice.toneGain.gain.cancelScheduledValues(t);
-        voice.toneGain.gain.setTargetAtTime(0.0001, t, 0.04);
-      } catch (e) {}
-      try { voice.src.stop(t + 0.2); } catch (e) {}
-      try { voice.osc.stop(t + 0.2); } catch (e) {}
-    }
-
-    function breathCue(kind, seconds) {
-      if (!soundOn()) return;
-      var c = ctxOn();
-      if (!c) return;
-      stopBreathCue();
-      var dur = clamp(typeof seconds === "number" ? seconds : 4, 1, 20);
-      var t = c.currentTime + 0.03;
-      var attack = kind === "hold" ? 0.35 : Math.min(1.1, dur * 0.3);
-      var release = Math.max(0.45, dur * 0.3);
-      var noiseLevel = clamp(0.16 * master(), 0.012, 0.32);
-      var toneLevel = clamp(0.04 * master(), 0.004, 0.07);
-
-      try {
-        var src = c.createBufferSource();
-        src.buffer = noiseBuffer();
-        src.loop = true;
-
-        var filter = c.createBiquadFilter();
-        filter.type = "bandpass";
-        filter.Q.value = 0.65;
-        filter.frequency.setValueAtTime(kind === "out" ? 980 : 340, t);
-        filter.frequency.exponentialRampToValueAtTime(kind === "in" ? 1050 : 300, t + dur);
-
-        var noiseGain = c.createGain();
-        noiseGain.gain.setValueAtTime(0.0001, t);
-        if (kind === "out") {
-          noiseGain.gain.exponentialRampToValueAtTime(noiseLevel, t + 0.2);
-          noiseGain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-        } else {
-          var noiseTop = kind === "hold" ? noiseLevel * 0.3 : noiseLevel;
-          noiseGain.gain.exponentialRampToValueAtTime(noiseTop, t + attack);
-          noiseGain.gain.setValueAtTime(noiseTop, t + Math.max(attack, dur - release));
-          noiseGain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-        }
-
-        var osc = c.createOscillator();
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(kind === "in" ? 196 : kind === "out" ? 294 : 233, t);
-        osc.frequency.exponentialRampToValueAtTime(kind === "in" ? 294 : kind === "out" ? 196 : 233, t + dur * 0.9);
-
-        var toneGain = c.createGain();
-        toneGain.gain.setValueAtTime(0.0001, t);
-        if (kind === "out") {
-          toneGain.gain.exponentialRampToValueAtTime(toneLevel * 0.5, t + 0.35);
-          toneGain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-        } else {
-          var toneTop = kind === "hold" ? toneLevel * 0.3 : toneLevel;
-          toneGain.gain.exponentialRampToValueAtTime(toneTop, t + attack);
-          toneGain.gain.setValueAtTime(toneTop, t + Math.max(attack, dur - release));
-          toneGain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-        }
-
-        src.connect(filter);
-        filter.connect(noiseGain);
-        noiseGain.connect(c.destination);
-        osc.connect(toneGain);
-        toneGain.connect(c.destination);
-        src.start(t);
-        src.stop(t + dur + 0.1);
-        osc.start(t);
-        osc.stop(t + dur + 0.1);
-        breathVoice = { src: src, osc: osc, noiseGain: noiseGain, toneGain: toneGain };
-      } catch (e) {}
-    }
-
     function chime() {
       if (!soundOn()) return;
       var AC = window.AudioContext || window.webkitAudioContext;
@@ -626,6 +542,22 @@
           osc.start(start);
           osc.stop(start + 1);
         });
+      } catch (e) {}
+    }
+
+    /* The breathing countdown is spoken, one number per second, so it stays
+       with the circle rather than adding another sound underneath it. */
+    function count(n) {
+      if (!soundOn()) return;
+      if (!("speechSynthesis" in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        var u = new window.SpeechSynthesisUtterance(String(n));
+        u.lang = "en-GB";
+        u.rate = 0.9;
+        u.pitch = 1.05;
+        u.volume = clamp(master(), 0.2, 1);
+        window.speechSynthesis.speak(u);
       } catch (e) {}
     }
 
@@ -699,8 +631,7 @@
       tick: tick,
       knock: knock,
       chime: chime,
-      breathCue: breathCue,
-      stopBreathCue: stopBreathCue,
+      count: count,
       say: say,
       ask: ask,
       tell: tell,
@@ -856,7 +787,7 @@
     balloon: { label: "Balloon", phases: [["Breathe in", 4, "in"], ["Hold", 2, "hold"], ["Breathe out", 6, "out"]] }
   };
 
-  var breath = { pattern: "calm", running: false, timer: null, left: 0, pi: 0, round: 0, scale: 0.82 };
+  var breath = { pattern: "calm", running: false, timer: null, left: 0, pi: 0, round: 0, scale: 0.82, spoken: 0 };
 
   /* "in 4 · hold 4 · out 6" - the numbers mean nothing without the words. */
   function patternNote(p) {
@@ -887,8 +818,8 @@
     var count = $("#orbCount");
     if (count) count.textContent = String(phase[1]);
     breathMeta();
-    AudioEngine.say(phase[0]);
-    AudioEngine.breathCue(phase[2], phase[1]);
+    breath.spoken = phase[1];
+    AudioEngine.count(phase[1]);
   }
 
   function startBreath() {
@@ -917,7 +848,12 @@
         elapsed = 0;
       }
       var count = $("#orbCount");
-      if (count) count.textContent = String(Math.max(1, Math.ceil(phase[1] - elapsed)));
+      var number = Math.max(1, Math.ceil(phase[1] - elapsed));
+      if (count) count.textContent = String(number);
+      if (number !== breath.spoken) {
+        breath.spoken = number;
+        AudioEngine.count(number);
+      }
       breath.timer = setTimeout(frame, 200);
     }
 
@@ -928,7 +864,6 @@
   function stopBreath() {
     breath.running = false;
     if (breath.timer) { clearTimeout(breath.timer); breath.timer = null; }
-    AudioEngine.stopBreathCue();
     AudioEngine.hush();
     var orb = $("#orb");
     if (orb) {
@@ -1722,7 +1657,7 @@
             }).join("") +
           "</div>" +
           '<p class="tiny muted center" id="patternNote" style="margin-top:8px">' + patternNote(PATTERNS[breath.pattern]) + "</p>" +
-          '<p class="tiny muted center" style="margin-top:2px">A soft breath sound follows the circle when sound is on.</p>' +
+          '<p class="tiny muted center" style="margin-top:2px">The count is read aloud when sound is on.</p>' +
         "</div>" +
       "</div>" +
       '<div class="card tight" style="margin-top:14px">' +
@@ -4259,7 +4194,7 @@
               '<label class="switch">' +
                 '<input type="checkbox" id="voiceSwitch"' + (state.settings.voice ? " checked" : "") + ">" +
                 '<span class="track"><span class="thumb"></span></span>' +
-                '<span class="switch-text"><strong>Spoken cues</strong><small>Reads breathing and grounding prompts aloud. Uses the device voice.</small></span>' +
+                '<span class="switch-text"><strong>Spoken cues</strong><small>Reads grounding prompts aloud. Breathing numbers follow the sound switch.</small></span>' +
               "</label>" +
             "</div>" +
           "</div>" +
