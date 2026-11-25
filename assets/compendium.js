@@ -11,12 +11,15 @@ window.ZenCompendium = {
     { id: "focus",       name: "Focus, homework & waiting",emoji: "🎯", blurb: "Starting, sticking and stopping — in child-sized pieces." },
     { id: "communication", name: "Communication",          emoji: "💬", blurb: "Fewer words, more time, and other things that actually land." },
     { id: "sleep",       name: "Sleep & evenings",         emoji: "🌙", blurb: "Wind-downs, night waking and the 6am start." },
-    { id: "food",        name: "Food & eating",            emoji: "🍎", blurb: "Safe foods, steady fuel and when to ask for help." },
+    { id: "food",        name: "Food & nutrition",         emoji: "🍎", blurb: "What goes on the plate, safe foods, and when to ask for help." },
     { id: "school",      name: "School & learning",        emoji: "🏫", blurb: "Scripts, profiles and adjustments worth asking for." },
     { id: "out",         name: "Out & about",              emoji: "🚌", blurb: "Trips, shops, haircuts and birthday parties." },
     { id: "connection",  name: "Play & connection",        emoji: "🧸", blurb: "Ten minutes that do more than an hour of talking." },
     { id: "grownups",    name: "For grown-ups",            emoji: "🫖", blurb: "You are part of the system too. These are for you." },
-    { id: "understand",  name: "Understanding & rights",   emoji: "🧭", blurb: "What is happening, why it is not naughtiness, and what you can ask for." }
+    { id: "understand",  name: "Understanding & rights",   emoji: "🧭", blurb: "What is happening, why it is not naughtiness, and what you can ask for." },
+    { id: "health",      name: "Health & body",             emoji: "🩺", blurb: "Tummies, headaches, ears, medication and growing up." },
+    { id: "activity",    name: "Activities & movement",     emoji: "🤸", blurb: "How to burn energy, by age, in a small house or a big park." },
+    { id: "behaviour",   name: "Behaviour & tracking",      emoji: "📝", blurb: "ABC notes, patterns and records that get taken seriously." },
   ],
 
   entries: [
@@ -702,6 +705,280 @@ window.ZenCompendium = {
         "Ask for outcomes to be recorded and reviewed, not just agreed verbally.",
         "If needs are long-term and complex, ask the local authority for an EHC needs assessment."
       ]
+    },
+
+    /* ---------------- food & nutrition ---------------- */
+    {
+      cat: "food", emoji: "🍽️", title: "What a balanced day looks like",
+      summary: "You do not need a perfect plate. You need a shape to the day that survives a tired child.",
+      steps: [
+        "Base meals on starchy carbohydrates — bread, pasta, rice, potatoes — and choose wholegrain when it is accepted.",
+        "Aim for five portions of fruit and vegetables across the day, not five at dinner. Juice counts once.",
+        "Include beans, pulses, fish, eggs, meat or another protein at two meals if you can.",
+        "Dairy or a fortified alternative gives calcium. Children over one need about 10 micrograms of vitamin D a day.",
+        "Six to eight drinks a day, water first. Sweets and crisps are fine in small amounts — they are not a moral failure."
+      ]
+    },
+    {
+      cat: "food", emoji: "🍳", title: "Protein at breakfast changes the morning",
+      summary: "A sugary breakfast peaks fast and crashes by assembly. Protein flattens the curve.",
+      steps: [
+        "Easy wins: eggs, Greek yoghurt, beans on toast, peanut butter, cheese, or last night's leftovers.",
+        "Pair carbohydrate with protein rather than removing the carbohydrate — the combination is what sustains.",
+        "If breakfast is refused, offer a protein snack at break instead of fighting at 7am.",
+        "Keep the same two or three breakfasts on rotation. Decision-making is expensive in the morning.",
+        "Watch the 10am meltdown: if it happens most days, breakfast is the first thing to change."
+      ]
+    },
+    {
+      cat: "food", emoji: "💧", title: "Water, before anything else",
+      summary: "Mild dehydration looks like grumpiness, headache and poor concentration — not thirst.",
+      steps: [
+        "Put a named bottle where the child can see it, and refill it at the same times each day.",
+        "Offer a drink with every snack and every transition, not only with meals.",
+        "Fizzy, squash and juice all count as fluid, but water is the one that does not add sugar.",
+        "More in heat, and more after sport. A headache after school is often a water problem.",
+        "If a child barely drinks, try a straw, a special cup, or ice — the method matters more than the lecture."
+      ]
+    },
+    {
+      cat: "food", emoji: "🥩", title: "Iron, tiredness and 'lazy' afternoons",
+      summary: "Low iron is common and mimics ADHD symptoms: tired, foggy, irritable, unable to settle.",
+      steps: [
+        "Iron-rich foods: red meat, beans, lentils, fortified cereal, dark green vegetables, eggs.",
+        "Vitamin C with the meal helps absorption — a glass of orange juice or some fruit alongside.",
+        "Tea and coffee block iron. Keep them well away from meals for children.",
+        "Persistent tiredness, pallor or breathlessness deserves a GP conversation and a blood test.",
+        "Do not start iron supplements without advice; too much is harmful."
+      ]
+    },
+    {
+      cat: "food", emoji: "💊", title: "Vitamins and supplements, without the hype",
+      summary: "A supplement can fill a gap. It cannot replace food, and more is not better.",
+      steps: [
+        "NHS advice: children aged 6 months to 5 years should take a daily supplement with vitamins A, C and D.",
+        "Children over one, and adults, should consider 10 micrograms of vitamin D daily, especially in autumn and winter.",
+        "Avoid mega-doses and 'focus' blends. Check with a pharmacist before combining products.",
+        "If a child eats a very limited range of foods, ask the GP or dietitian rather than guessing.",
+        "Keep all supplements out of reach — iron tablets in particular are dangerous to children."
+      ]
+    },
+    {
+      cat: "food", emoji: "🥪", title: "A packed lunch that comes home empty",
+      summary: "The best lunch is the one that gets eaten in a loud hall in ten minutes.",
+      steps: [
+        "Small portions, easy-open packets, and nothing that needs assembling at the table.",
+        "One safe favourite, one protein, one fruit, one crunchy thing. Repeat it without shame.",
+        "Practise opening the box and the wrappers at home before term starts.",
+        "Cut sandwiches small if big bites are overwhelming, and avoid strong smells near other children.",
+        "Ask the school about a quiet place to eat if the dining hall is the reason lunch is skipped."
+      ]
+    },
+    {
+      cat: "food", emoji: "📉", title: "When eating needs more than patience",
+      summary: "Picky eating is common. A shrinking diet with distress and weight loss is different.",
+      steps: [
+        "Keep a two-week note of what is actually eaten, not what is offered. Patterns beat memory.",
+        "Ask the GP about a dietitian referral if the range is shrinking, or if whole food groups have gone.",
+        "Ask specifically about ARFID — avoidant/restrictive food intake disorder — if fear or sensory distress is driving it.",
+        "Do not remove safe foods to force variety. That reliably makes the list shorter.",
+        "Growth, energy and weight matter more than the colour of the plate. Say so at appointments."
+      ]
+    },
+
+    /* ---------------- health & body ---------------- */
+    {
+      cat: "health", emoji: "🩺", title: "When to ask the GP",
+      summary: "You do not need a diagnosis in mind to book. Persistent change is reason enough.",
+      steps: [
+        "Book if something lasts weeks, keeps returning, or is changing school, sleep or eating.",
+        "Write three examples with dates before you go: what happened, how long, what you tried.",
+        "Say the impact out loud — missed school, no sleep, family falling apart — not just the symptom.",
+        "Ask one clear question: what happens next, who decides, and when should we come back?",
+        "You can ask for a second opinion, and you can take someone with you. Both are allowed."
+      ]
+    },
+    {
+      cat: "health", emoji: "🫄", title: "Tummy aches and constipation",
+      summary: "Recurring tummy pain in children is often constipation — even when parents are sure it is not.",
+      steps: [
+        "Ask about poo: how often, what it looks like, and whether it hurts. Water and fibre help, but so does routine.",
+        "Toilet time after meals, feet supported, no rush and no audience. A stool softener may be needed.",
+        "Keep a note of pain, food, poo and mood for two weeks. It is far more useful than a description.",
+        "See the GP if there is blood, weight loss, fever, pain that wakes them, or pain in a fixed spot.",
+        "Tummy aches that appear before school every day are worth taking seriously in both directions — body and worry."
+      ]
+    },
+    {
+      cat: "health", emoji: "🤕", title: "Headaches: the boring checklist first",
+      summary: "Most childhood headaches are fluid, food, sleep and screens. Check those before worrying.",
+      steps: [
+        "Water, a proper meal, and an earlier night for three days — then judge.",
+        "Screens close to the face and late at night are a common trigger. Try a screen curfew for a week.",
+        "Note time of day, what was eaten, and how much sleep. Bring the note to the GP.",
+        "See the GP if headaches wake the child, happen most days, or come with sickness, vision changes or weakness.",
+        "Painkillers more than a couple of days a week can cause rebound headaches. Ask before using them regularly."
+      ]
+    },
+    {
+      cat: "health", emoji: "👂", title: "Ears, eyes and hearing",
+      summary: "A child who cannot hear the instruction is not ignoring it. Rule it out.",
+      steps: [
+        "Glue ear is common and fluctuating — behaviour can look worse on bad hearing days.",
+        "Ask for a hearing test if speech is unclear, the TV is always loud, or they watch faces intently.",
+        "A vision check matters too: headaches, squinting, and losing their place when reading.",
+        "In the UK, NHS sight tests are free for children, and school hearing checks happen at reception age.",
+        "Tell school if hearing fluctuates, so seating and instructions can be adjusted."
+      ]
+    },
+    {
+      cat: "health", emoji: "💊", title: "ADHD medication: the questions to ask",
+      summary: "Medication is a family decision. These are the questions that make it an informed one.",
+      steps: [
+        "What is being prescribed, what is it meant to change, and how will we know it is working?",
+        "What about appetite, sleep, headaches, mood and growth? What do we monitor, and how often?",
+        "Who reviews the dose, how do we reach them, and what do we do on a day we forget?",
+        "Can we stop for weekends or holidays, and what does the guidance say about that?",
+        "Ask for the plan in writing. This is general information — not advice to start or stop anything."
+      ]
+    },
+    {
+      cat: "health", emoji: "🌱", title: "Puberty, hygiene and growing up",
+      summary: "Autistic and ADHD children often need the facts earlier, more literally, and in smaller pieces.",
+      steps: [
+        "Start before the changes, not after. Short, factual sentences beat one big talk.",
+        "Build a private, repeatable routine: shower, deodorant, clean clothes — same order every day.",
+        "Prepare for periods, wet dreams and body hair with plain language and visual supports.",
+        "Mood changes are real, but do not attribute everything to hormones. Keep the usual supports.",
+        "Ask the GP or school nurse about puberty resources if you are not sure where to start."
+      ]
+    },
+
+    /* ---------------- activities & movement ---------------- */
+    {
+      cat: "activity", emoji: "📏", title: "How much movement, by age",
+      summary: "The official guidelines are simpler than the internet suggests. Aim for the shape, not the number.",
+      steps: [
+        "Under 5: about three hours of active play a day, spread across the day, including walking and climbing.",
+        "5 to 18: an average of 60 minutes a day of moderate-to-vigorous activity, and strengthening play three days a week.",
+        "Anything counts: scooting to school, trampolining, dancing, carrying shopping, climbing trees.",
+        "Split it up. Three twenty-minute bursts beat one hour nobody will agree to.",
+        "Some movement is always better than none, especially on a hard day."
+      ]
+    },
+    {
+      cat: "activity", emoji: "🧱", title: "Heavy work in five minutes",
+      summary: "Pushing, pulling and carrying calms a body faster than running does — and needs no equipment.",
+      steps: [
+        "Wall presses: hands flat, push for ten slow counts, three times.",
+        "Carry something safe and heavy from one room to another — a bag of books, a water bottle crate.",
+        "Push the shopping trolley, or help carry the laundry basket up the stairs.",
+        "Cushion sandwich: roll the child in a blanket and press gently along arms and legs, if they like it.",
+        "Do it before the demand, not as a punishment after. Movement is the warm-up, not the consequence."
+      ]
+    },
+    {
+      cat: "activity", emoji: "⚡", title: "Movement snacks",
+      summary: "Two minutes, several times a day, keeps the wriggles from turning into a crisis.",
+      steps: [
+        "Ten star jumps, ten wall pushes, or ten squats between lessons — count out loud together.",
+        "Animal walks across the room: bear, crab, frog, frog with a jump.",
+        "Blow a cotton ball across the table with a straw. Slow, hard breathing is the point.",
+        "Dance one song, then stop. A defined end makes starting much easier.",
+        "Keep a short list on the fridge so nobody has to invent an idea at the worst moment."
+      ]
+    },
+    {
+      cat: "activity", emoji: "⚽", title: "Clubs that survive the first term",
+      summary: "The right club is the one the child wants to go back to. That is not always the obvious one.",
+      steps: [
+        "Ask for a trial session before paying for a block of anything.",
+        "Check the practical things: noise, waiting time, changing rooms, one named coach.",
+        "Tell the coach what helps — a warning before transitions, a job to do while waiting.",
+        "Have an exit plan agreed before the first session: a signal, and no shame in leaving early.",
+        "One activity at a time. Three clubs is a schedule, not a childhood."
+      ]
+    },
+    {
+      cat: "activity", emoji: "🏠", title: "Rainy day, small room",
+      summary: "You do not need a garden or a trampoline. You need a route and a rule.",
+      steps: [
+        "Cushion obstacle course: over, under, around, then back again. Time it and beat the time.",
+        "Balloon volleyball with a line down the middle of the room. Slow, floaty and hard to break.",
+        "Freeze dance: when the music stops, the body stops. Great for transitions practice.",
+        "Rolled-up socks into a bucket, from further and further back.",
+        "Finish with a lie-down and a story. The stop is part of the activity."
+      ]
+    },
+    {
+      cat: "activity", emoji: "🚶", title: "The everyday movement nobody counts",
+      summary: "The school run, the shop and the stairs do more than a formal exercise plan.",
+      steps: [
+        "Walk or scoot part of the journey rather than all of it — the last ten minutes counts.",
+        "Give a carrying job on every trip. Purpose makes walking possible.",
+        "Take the stairs, park further away, and let the child lead the route home.",
+        "Use a visual timer for 'outside time' so it has a shape and an end.",
+        "Bad weather is not a reason to cancel movement; it is a reason to choose an indoor version."
+      ]
+    },
+
+    /* ---------------- behaviour & tracking ---------------- */
+    {
+      cat: "behaviour", emoji: "📝", title: "ABC: the three columns",
+      summary: "Antecedent, Behaviour, Consequence. Three columns turn a horrible afternoon into usable information.",
+      steps: [
+        "Antecedent — what happened just before: hunger, noise, a transition, being told no, a change of plan.",
+        "Behaviour — what you actually saw: shouted, hit the door, ran upstairs, went silent. Describe, do not judge.",
+        "Consequence — what happened next: adult attention, removal, a snack, the demand dropped, a hug.",
+        "Log it the same day, in five minutes, or it will not happen. The Journal's Tricky moments tab does this.",
+        "Look for the antecedent that repeats. That is usually the one you can actually change."
+      ],
+      link: { href: "#/journal", label: "Log a moment" }
+    },
+    {
+      cat: "behaviour", emoji: "✍️", title: "Write facts, not verdicts",
+      summary: "A record that says 'defiant' cannot be used. A record that says what happened can.",
+      steps: [
+        "Replace adjectives with behaviour: not 'aggressive' but 'threw a shoe at the door'.",
+        "Write the time, the place, who was there, and how long it lasted.",
+        "Note what you tried and what happened next. That is the part professionals ask for.",
+        "Keep it factual even when you are furious. You can vent elsewhere; this is evidence.",
+        "Do not delete the good days. A record of only crises tells half the story."
+      ]
+    },
+    {
+      cat: "behaviour", emoji: "📊", title: "Frequency, duration, intensity",
+      summary: "Three numbers turn 'it is getting worse' into something you can check and challenge.",
+      steps: [
+        "Frequency: how many times this week. A tally on the fridge is enough.",
+        "Duration: roughly how long each one lasted. Minutes, not feelings.",
+        "Intensity: a simple 1 to 3 — needed a hug, needed a room, needed a professional.",
+        "Track for two weeks before drawing a conclusion. One terrible Tuesday is not a pattern.",
+        "Bring the numbers to school and GP meetings. They change the conversation immediately."
+      ]
+    },
+    {
+      cat: "behaviour", emoji: "🔍", title: "Read the pattern, then change one thing",
+      summary: "Most behaviour is communication about a condition, not a character flaw. Find the condition.",
+      steps: [
+        "Is it always the same time of day? Then look at hunger, tiredness and transitions first.",
+        "Is it always the same place or person? Then look at sensory load and demand.",
+        "Is it always after screens or after school? Then plan a landing, not a lecture.",
+        "Change the antecedent before you change the consequence. It is kinder and it works better.",
+        "Change one thing for two weeks. Two changes at once and you will not know which one helped."
+      ]
+    },
+    {
+      cat: "behaviour", emoji: "🗂️", title: "Taking your records to school or the GP",
+      summary: "Patterns beat anecdotes in every meeting. Bring the pattern.",
+      steps: [
+        "Print or download the Journal from the Grown-ups tab, or write a one-page summary.",
+        "Lead with dates and frequency, then two short examples, then the impact on school and sleep.",
+        "Say what you have already tried, so nobody suggests it as though it were new.",
+        "Ask for the outcome in writing, and for a review date before you leave the room.",
+        "Keep a copy. Schools change staff; your record does not."
+      ],
+      link: { href: "#/journal", label: "Open the Journal" }
     }
   ]
 };

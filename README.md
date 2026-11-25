@@ -12,11 +12,12 @@ Open `index.html` in a browser. Everything works from a double-click; a local se
 | **Set-up** | Seven short questions: name, age band, mode (ADHD / autism / both / not sure), what is hard, what helps, sensory notes, house rules, colours. Every answer can be changed later. |
 | **Calm** | Guided breathing (three patterns), six ambient sounds, grounding exercises. |
 | **Now & Next** | Two-slot routine with timer, task queue, stickers, and the house rules kept in view. |
-| **Focus** | Fidget wheel, Wac-A-Zac, focus timer. |
+| **Focus** | Choice wheel with themed sets (foods, sports, colours, animals, computer, silly), Wac-A-Zac with gold/mover/grump targets and a best-rounds board, focus timer. |
 | **Journal** | Private feelings check-ins, behaviour notes, weekly chart. |
-| **Play** | Knock-knock jokes and the fart machine. |
-| **Compendium** | 65 practical entries in 12 categories, searchable and filterable, plus links into the matching app tool. |
-| **Learn** | Ten longer guides for grown-ups. |
+| **Play** | Knock-knock jokes with a knock-at-the-door sound, and the fart machine. |
+| **Compendium** | 89 practical entries in 15 categories — including nutrition, health, activities and behaviour tracking — searchable and filterable, plus links into the matching app tool. |
+| **Learn** | Thirteen longer guides for grown-ups, plus official guidance and charity links (NHS, NICE, NAS, ADHD Foundation, IPSEA, Contact). |
+| **Parent support** | The long version: 45 entries across 13 topics, searchable, with scripts, a GP appointment guide, medication questions and a direct email contact. |
 | **Settings** | Name, sound, spoken cues, calm motion, bigger text, six soft palettes, plan summary, export and delete. |
 
 ## The plan
@@ -30,8 +31,9 @@ Six palettes are included — three light (Meadow, Blossom, Sea glass) and three
 ```
 index.html            shell, SVG icon sprite, inline palette bootstrap
 assets/theme.css      design system, palettes, layout (rail → bottom tabs)
-assets/data.js        moods, sounds, jokes, guides, setup questions, rule defaults
-assets/compendium.js  65 entries across 12 categories
+assets/data.js        moods, sounds, jokes, guides, spinner sets, official sources, setup questions, rule defaults
+assets/compendium.js  89 entries across 15 categories
+assets/support.js     45 long-form parent support entries across 13 topics
 assets/app.js         state, storage, audio, router and every view
 assets/logo.svg       favicon
 legacy/               the original 15 standalone pages, archived not deleted

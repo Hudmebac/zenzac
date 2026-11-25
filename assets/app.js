@@ -75,6 +75,7 @@
       showHistory: false,
       whackTheme: "aliens",
       whackLevel: "normal",
+      spinTopic: "mix",
       mix: DEFAULT_MIX
     },
     profile: { done: false, mode: "", age: "", hard: [], helps: [], sensory: [], updated: 0 },
@@ -85,7 +86,8 @@
     routines: [],
     stickers: 0,
     bestWhack: 0,
-    whackBest: {}
+    whackBest: {},
+    whackScores: []
   };
 
   var state = load();
@@ -110,6 +112,7 @@
       base.settings.showHistory = s.showHistory === true;
       base.settings.whackTheme = typeof s.whackTheme === "string" ? s.whackTheme : "aliens";
       base.settings.whackLevel = typeof s.whackLevel === "string" ? s.whackLevel : "normal";
+      base.settings.spinTopic = typeof s.spinTopic === "string" ? s.spinTopic : "mix";
       var p = saved.profile || {};
       base.profile.done = !!p.done;
       base.profile.mode = typeof p.mode === "string" ? p.mode : "";
@@ -137,6 +140,9 @@
       } else if (base.bestWhack) {
         base.whackBest = { "zacs:normal": base.bestWhack };
       }
+      base.whackScores = Array.isArray(saved.whackScores) ? saved.whackScores.filter(function (r) {
+        return r && typeof r.score === "number";
+      }).slice(0, 5) : [];
     } catch (e) {
       return base;
     }
@@ -363,6 +369,35 @@
       } catch (e) {}
     }
 
+    /* Two knocks on a door. Synthesised, so it works offline. */
+    function knock() {
+      if (!soundOn()) return;
+      var c = ctxOn();
+      if (!c) return;
+      try {
+        [0, 0.15].forEach(function (offset, n) {
+          var t = c.currentTime + offset;
+          var len = Math.floor(c.sampleRate * 0.11);
+          var buf = c.createBuffer(1, len, c.sampleRate);
+          var data = buf.getChannelData(0);
+          for (var i = 0; i < len; i++) {
+            data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 7);
+          }
+          var src = c.createBufferSource();
+          src.buffer = buf;
+          var filter = c.createBiquadFilter();
+          filter.type = "lowpass";
+          filter.frequency.value = n ? 800 : 1050;
+          var gain = c.createGain();
+          gain.gain.value = clamp((n ? 0.4 : 0.55) * master(), 0.02, 0.8);
+          src.connect(filter);
+          filter.connect(gain);
+          gain.connect(c.destination);
+          src.start(t);
+        });
+      } catch (e) {}
+    }
+
     function chime() {
       if (!soundOn()) return;
       var AC = window.AudioContext || window.webkitAudioContext;
@@ -420,6 +455,7 @@
       stopAll: stopAll,
       playFile: playFile,
       tick: tick,
+      knock: knock,
       chime: chime,
       say: say,
       hush: hush,
@@ -755,23 +791,34 @@
   /* ------------------------------- wheel ------------------------------- */
 
   var WHEEL_COLORS = ["#4fe3c1", "#8fb4ff", "#b8a5ff", "#ffcc7a", "#ff9a86", "#7ee2c4", "#9ad7ff", "#ffd9a8"];
-  var WHEEL_SHAPES = [
-    "🌈", "⭐", "🐢", "🎈", "🍀", "🐳", "🌙", "☀️", "❤️", "🌸",
-    "🦋", "🐙", "🍭", "🧩", "🚀", "🐝", "🫧", "🎵", "🍄", "⚡",
-    "🐬", "🌻", "🧸", "🎨", "🍉", "🐞", "🪀", "🎠"
-  ];
-  var spin = { rot: 0, raf: null, dragging: false, lastAngle: 0, lastTime: 0, vel: 0, faces: null, lastSeg: 0, tickAt: 0 };
+  var spin = { rot: 0, raf: null, dragging: false, lastAngle: 0, lastTime: 0, vel: 0, items: null, lastSeg: 0, tickAt: 0 };
 
+  function spinTopicById(id) {
+    var list = D.spinTopics || [];
+    for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i];
+    return list[0];
+  }
+
+  function spinTopic() { return spinTopicById(state.settings.spinTopic || "mix"); }
+
+  /* Eight choices from the chosen shelf. "Surprise" mixes every shelf. */
   function pickFaces() {
-    var pool = WHEEL_SHAPES.slice();
-    var out = [];
-    for (var i = 0; i < 8; i++) out.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
-    return out;
+    var topic = spinTopic();
+    var pool = [];
+    if (topic.id === "mix" || !topic.items || !topic.items.length) {
+      (D.spinTopics || []).forEach(function (t) {
+        if (t.items && t.items.length) pool = pool.concat(t.items);
+      });
+    } else {
+      pool = topic.items.slice();
+    }
+    pool = shuffle(pool);
+    return pool.slice(0, 8);
   }
 
   function wheelFaces() {
-    if (!spin.faces) spin.faces = pickFaces();
-    return spin.faces;
+    if (!spin.items) spin.items = pickFaces();
+    return spin.items;
   }
 
   function polar(cx, cy, r, deg) {
@@ -791,16 +838,16 @@
       parts += '<path d="M' + cx + " " + cy + " L" + p0.x.toFixed(1) + " " + p0.y.toFixed(1) +
         " A" + r + " " + r + " 0 0 1 " + p1.x.toFixed(1) + " " + p1.y.toFixed(1) + ' Z" fill="' +
         WHEEL_COLORS[i] + '" fill-opacity="' + (i % 2 ? "0.82" : "0.62") + '"/>';
-      var mid = polar(cx, cy, r * 0.65, a0 + seg / 2);
-      parts += '<text x="' + mid.x.toFixed(1) + '" y="' + (mid.y + 10).toFixed(1) +
-        '" text-anchor="middle" font-size="30" aria-hidden="true">' + faces[i] + "</text>";
+      var mid = polar(cx, cy, r * 0.66, a0 + seg / 2);
+      parts += '<text x="' + mid.x.toFixed(1) + '" y="' + (mid.y + 11).toFixed(1) +
+        '" text-anchor="middle" font-size="34" aria-hidden="true">' + faces[i].e + "</text>";
     }
     return parts;
   }
 
   function wheelSVG() {
     return '<svg class="wheel" id="wheel" viewBox="0 0 320 320" role="img" ' +
-      'aria-label="Spinning fidget wheel. Drag it or use the spin button.">' +
+      'aria-label="Spinning choice wheel. Drag it or press spin to pick something.">' +
       '<g id="wheelRotor">' + wheelParts() + "</g>" +
       '<circle class="wheel-cap" cx="160" cy="160" r="34"/>' +
       '<text x="160" y="166" text-anchor="middle" font-size="14" font-weight="700" fill="#dff8ff" ' +
@@ -836,9 +883,25 @@
         spin.raf = requestAnimationFrame(step);
       } else {
         spin.raf = null;
+        spinSettled();
       }
     }
     spin.raf = requestAnimationFrame(step);
+  }
+
+  /* The pointer sits at the top, so work out which slice is under it. */
+  function spinSettled() {
+    var faces = wheelFaces();
+    var deg = ((-spin.rot % 360) + 360) % 360;
+    var idx = Math.floor(deg / 45) % 8;
+    var item = faces[idx];
+    var out = $("#spinResult");
+    if (out && item) {
+      out.innerHTML = '<span class="spin-result-emoji" aria-hidden="true">' + item.e + "</span>" +
+        '<span class="spin-result-text"><small>It landed on</small><strong>' + esc(item.n) + "</strong></span>";
+      out.classList.add("is-set");
+      AudioEngine.tick(0.8);
+    }
   }
 
   /* One quiet click each time a segment passes the pointer. */
@@ -855,9 +918,13 @@
   }
 
   function spinButton() {
-    spin.faces = pickFaces();
+    if (!spin.items) spin.items = pickFaces();
     paintFaces();
-    paintWheel();
+    var out = $("#spinResult");
+    if (out) {
+      out.innerHTML = '<span class="spin-result-text"><small>Spinning…</small><strong>&nbsp;</strong></span>';
+      out.classList.remove("is-set");
+    }
     spinMomentum((26 + Math.random() * 18) * (Math.random() < 0.5 ? -1 : 1));
     AudioEngine.tick(0.9);
   }
@@ -917,10 +984,12 @@
   /* ---------------------------- Wac-A-Zac ------------------------------ */
 
   var WHACK_THEMES = [
-    { id: "aliens",   name: "Aliens",   emoji: "👽", bonus: "🛸", line: "Tap the aliens before they fly off." },
-    { id: "monsters", name: "Monsters", emoji: "👾", bonus: "⭐", line: "Tap the monsters before they bounce away." },
-    { id: "robots",   name: "Robots",   emoji: "🤖", bonus: "⚡", line: "Tap the robots before they power down." },
-    { id: "zacs",     name: "Zacs",     emoji: "🐹", bonus: "🌟", line: "Tap the Zacs before they duck." }
+    { id: "aliens",   name: "Aliens",   emoji: "👽", bonus: "🛸", mover: "🪐", grump: "👾", line: "Tap the aliens before they fly off." },
+    { id: "monsters", name: "Monsters", emoji: "👾", bonus: "⭐", mover: "🦠", grump: "🧟", line: "Tap the monsters before they bounce away." },
+    { id: "robots",   name: "Robots",   emoji: "🤖", bonus: "⚡", mover: "🔧", grump: "🔌", line: "Tap the robots before they power down." },
+    { id: "sea",      name: "Sea",      emoji: "🐙", bonus: "🐚", mover: "🐠", grump: "🦈", line: "Tap the sea creatures before they swim off." },
+    { id: "snacks",   name: "Snacks",   emoji: "🍕", bonus: "🍩", mover: "🍿", grump: "🌶️", line: "Tap the snacks before they disappear." },
+    { id: "zacs",     name: "Zacs",     emoji: "🐹", bonus: "🌟", mover: "⚡", grump: "🧦", line: "Tap the Zacs before they duck." }
   ];
 
   var WHACK_LEVELS = [
@@ -965,7 +1034,8 @@
 
   function hideHole(hole) {
     if (hole._whackTimer) { clearTimeout(hole._whackTimer); hole._whackTimer = null; }
-    hole.classList.remove("is-up", "is-bonus");
+    hole.classList.remove("is-up", "is-bonus", "is-mover", "is-grump");
+    delete hole.dataset.kind;
   }
 
   function stopWhack() {
@@ -985,16 +1055,40 @@
     if (free.length) {
       var hole = free[Math.floor(Math.random() * free.length)];
       var theme = whackTheme();
-      var bonus = Math.random() < 0.12;
+      var roll = Math.random();
+      var kind = roll < 0.09 ? "grump" : roll < 0.22 ? "bonus" : roll < 0.36 ? "mover" : "normal";
       var face = hole.querySelector(".mole");
-      if (face) face.textContent = bonus ? theme.bonus : theme.emoji;
-      hole.dataset.points = bonus ? "3" : "1";
-      hole.classList.toggle("is-bonus", bonus);
+      if (face) {
+        face.textContent = kind === "bonus" ? theme.bonus : kind === "mover" ? theme.mover :
+          kind === "grump" ? theme.grump : theme.emoji;
+      }
+      hole.dataset.kind = kind;
+      hole.dataset.points = String(kind === "bonus" ? 5 : kind === "mover" ? 2 : kind === "grump" ? -1 : 1);
+      hole.classList.remove("is-bonus", "is-mover", "is-grump");
+      if (kind !== "normal") hole.classList.add("is-" + kind);
       hole.classList.add("is-up");
       hole._whackTimer = setTimeout(function () { hideHole(hole); }, whackLevel().up);
     }
     var gap = whackLevel().gap;
     whack.next = setTimeout(popWhack, gap[0] + Math.random() * (gap[1] - gap[0]));
+  }
+
+  function whackBoardHTML() {
+    var list = (state.whackScores || []).slice(0, 5);
+    if (!list.length) {
+      return '<p class="tiny muted" style="margin-top:8px">Your best rounds will show here once you have played one.</p>';
+    }
+    return '<ol class="whack-board">' + list.map(function (row, i) {
+      return '<li><span class="whack-rank">' + (i + 1) + '</span>' +
+        '<strong>' + row.score + '</strong>' +
+        '<span class="whack-who">' + esc(row.theme || "Zacs") + " · " + esc(row.level || "Normal") + "</span>" +
+        '<small>' + dateLabel(row.ts) + "</small></li>";
+    }).join("") + "</ol>";
+  }
+
+  function paintWhackBoard() {
+    var board = $("#whackBoard");
+    if (board) board.innerHTML = whackBoardHTML();
   }
 
   function startWhack() {
@@ -1036,13 +1130,22 @@
 
   function hitWhack(hole) {
     if (!whack.running || whack.paused || !hole.classList.contains("is-up")) return;
+    var kind = hole.dataset.kind || "normal";
     var points = parseInt(hole.dataset.points || "1", 10);
-    whack.score += points;
+    if (kind === "grump") {
+      whack.score = Math.max(0, whack.score - 1);
+      whackSay("That one was a grump. Minus one — no harm done.");
+      AudioEngine.tick(0.3);
+    } else {
+      whack.score += points;
+      if (kind === "bonus") whackSay("Gold! Five points.");
+      else if (kind === "mover") whackSay("That one was moving — two points!");
+      AudioEngine.tick(points > 1 ? 1 : 0.65);
+    }
     hideHole(hole);
     hole.classList.add("is-hit");
     setTimeout(function () { hole.classList.remove("is-hit"); }, 260);
     paintWhack();
-    AudioEngine.tick(points > 1 ? 1 : 0.65);
   }
 
   function endWhack() {
@@ -1064,7 +1167,17 @@
     var pause = $("#whackPause");
     if (pause) pause.hidden = true;
     paintWhack();
-    if (score > 0) AudioEngine.chime();
+    if (score > 0) {
+      state.whackScores = state.whackScores || [];
+      state.whackScores.push({
+        score: score, theme: theme.name, level: whackLevel().name, ts: Date.now()
+      });
+      state.whackScores.sort(function (a, b) { return b.score - a.score; });
+      state.whackScores = state.whackScores.slice(0, 5);
+      save();
+      paintWhackBoard();
+      AudioEngine.chime();
+    }
   }
 
   /* ------------------------------- views ------------------------------- */
@@ -1840,24 +1953,41 @@
     }
 
     function spinnerPanel() {
-      return '<div class="grid grid-2">' +
-        '<div class="card spinner-stage">' +
-          wheelSVG() +
-          '<div class="row-wrap" style="justify-content:center;margin-top:12px">' +
-            '<button type="button" class="btn primary" id="spinNow">' + icon("shuffle") + " Give it a spin</button>" +
-            '<button type="button" class="btn ghost" id="spinStop">Stop</button>' +
-          "</div>" +
-          '<p class="tiny muted center" style="margin-top:8px">Fresh shapes every spin, a long slow roll, and quiet ticks while it turns.</p>' +
+      var topic = spinTopic();
+      var chips = (D.spinTopics || []).map(function (t) {
+        var on = t.id === topic.id;
+        return '<button type="button" class="chip' + (on ? " is-on" : "") + '" data-spin-topic="' + t.id +
+          '" aria-pressed="' + on + '">' + t.emoji + " " + esc(t.name) + "</button>";
+      }).join("");
+      return '<div class="card spinner-card">' +
+        '<div class="row-between" style="gap:12px">' +
+          '<div><h2 class="card-title">What shall we pick?</h2>' +
+            '<p class="card-sub">' + esc(topic.note || "Spin it and let the wheel decide.") + "</p></div>" +
+          '<button type="button" class="btn sm ghost" id="spinShuffle">' + icon("shuffle") + " New choices</button>" +
         "</div>" +
-        '<div class="card">' +
-          '<h2 class="card-title">Make it feel nice</h2>' +
-          '<p class="card-sub">Sit comfortably. Let your shoulders drop. Spin it as fast or slow as you like.</p>' +
-          '<ul class="stack" style="margin-top:14px;color:var(--ink-2);font-size:0.94rem">' +
-            "<li>👀 Watch one colour and let your eyes follow it.</li>" +
-            "<li>🫁 Breathe out slowly each time it passes the top.</li>" +
-            "<li>🤲 Swap hands — left, then right.</li>" +
-            "<li>🧘 When you are ready, stop and sit still for three breaths.</li>" +
+        '<div class="chips" role="group" aria-label="What to spin for" style="margin-top:14px">' + chips + "</div>" +
+        '<div class="spinner-stage">' + wheelSVG() + "</div>" +
+        '<div class="spin-result" id="spinResult" aria-live="polite">' +
+          '<span class="spin-result-text"><small>Ready when you are</small><strong>Give it a spin</strong></span>' +
+        "</div>" +
+        '<div class="row-wrap" style="justify-content:center;margin-top:14px">' +
+          '<button type="button" class="btn primary lg" id="spinNow">' + icon("shuffle") + " Spin</button>" +
+          '<button type="button" class="btn ghost" id="spinStop">Stop</button>' +
+        "</div>" +
+        '<p class="tiny muted center" style="margin-top:10px">Drag the wheel, or press Spin. It always tells you what it landed on.</p>' +
+      "</div>" +
+      '<div class="grid grid-2" style="margin-top:14px">' +
+        '<div class="card tight"><h2 class="card-title">Ways to use it</h2>' +
+          '<ul class="stack" style="margin-top:10px;color:var(--ink-2);font-size:0.94rem">' +
+            "<li>🍽️ Tea, snack or takeaway — the wheel decides, not the argument.</li>" +
+            "<li>🎮 Which game next, when nobody can agree.</li>" +
+            "<li>🌳 What to do outside, when 'I&rsquo;m bored' arrives.</li>" +
+            "<li>🫁 A slow one: breathe out each time it passes the top.</li>" +
           "</ul>" +
+        "</div>" +
+        '<div class="card tight"><h2 class="card-title">Make it feel nice</h2>' +
+          '<p class="card-sub">Sit comfortably. Let your shoulders drop. Spin it as fast or slow as you like.</p>' +
+          '<p class="tiny muted" style="margin-top:10px">No result is a bad result. If the wheel picks something you cannot do, spin again — that is allowed too.</p>' +
         "</div>" +
       "</div>";
     }
@@ -1893,13 +2023,22 @@
           "</div>" +
         "</div>" +
         '<p class="card-sub" id="whackMsg" aria-live="polite">' + esc(theme.line) + "</p>" +
-        '<div class="whack-grid" style="margin-top:14px">' + holes + "</div>" +
+        '<div class="whack-legend">' +
+          '<span>' + theme.bonus + " Gold <strong>5</strong></span>" +
+          '<span>' + theme.mover + " Mover <strong>2</strong></span>" +
+          '<span>' + theme.grump + " Grump <strong>−1</strong> — leave it</span>" +
+        "</div>" +
+        '<div class="whack-grid" style="margin-top:12px">' + holes + "</div>" +
         '<div class="whack-picks">' +
           '<div class="row-wrap"><span class="label">Who</span>' + themes + "</div>" +
           '<div class="row-wrap"><span class="label">How long</span>' + levels + "</div>" +
         "</div>" +
-        '<p class="tiny muted center" style="margin-top:14px">Nothing is lost if you miss one. The ' +
-          theme.bonus + " is worth 3.</p>" +
+        '<hr class="divider">' +
+        '<div class="row-between"><h2 class="card-title">Best rounds</h2>' +
+          '<span class="tiny muted">Top 5, on this device</span></div>' +
+        '<div id="whackBoard">' + whackBoardHTML() + "</div>" +
+        '<p class="tiny muted" style="margin-top:12px">Nothing is lost if you miss one. ' +
+          "Gold is worth 5, movers are worth 2, and the grump costs you one — so leave it be.</p>" +
       "</div>";
     }
 
@@ -1911,6 +2050,31 @@
       if (halt) halt.addEventListener("click", function () {
         stopSpin();
         paintWheel();
+        spinSettled();
+      });
+      var again = $("#spinShuffle");
+      if (again) again.addEventListener("click", function () {
+        stopSpin();
+        spin.rot = 0;
+        spin.items = pickFaces();
+        paintFaces();
+        paintWheel();
+        var out = $("#spinResult");
+        if (out) {
+          out.innerHTML = '<span class="spin-result-text"><small>New choices</small><strong>Ready to spin</strong></span>';
+          out.classList.remove("is-set");
+        }
+        AudioEngine.tick(0.6);
+      });
+      $$("[data-spin-topic]", view).forEach(function (chip) {
+        chip.addEventListener("click", function () {
+          state.settings.spinTopic = chip.getAttribute("data-spin-topic");
+          save();
+          stopSpin();
+          spin.rot = 0;
+          spin.items = pickFaces();
+          render();
+        });
       });
       paintWheel();
     }
@@ -2383,7 +2547,11 @@
       if (stage === 0) {
         content = '<p class="joke-step">Step 1</p>' +
           '<p class="joke-setup">Knock knock!</p>' +
-          '<button type="button" class="btn primary lg" id="jokeNext">Who&rsquo;s there?</button>';
+          '<p class="tiny muted" style="margin-top:-6px">Press the door and hear the knock.</p>' +
+          '<div class="row-wrap" style="justify-content:center">' +
+            '<button type="button" class="btn primary lg" id="jokeNext">' + icon("sound") + " Who&rsquo;s there?</button>" +
+            '<button type="button" class="btn ghost" id="jokeKnock" aria-label="Play the knock knock sound again">🔊 Knock again</button>' +
+          "</div>";
       } else if (stage === 1) {
         content = '<p class="joke-step">Step 2</p>' +
           '<p class="joke-setup">' + esc(j.setup) + "</p>" +
@@ -2408,9 +2576,12 @@
     function bindJokes() {
       var next = $("#jokeNext");
       if (next) next.addEventListener("click", function () {
+        AudioEngine.knock();
         jokeDeck.stage++;
         render();
       });
+      var knock = $("#jokeKnock");
+      if (knock) knock.addEventListener("click", function () { AudioEngine.knock(); });
       var again = $("#jokeAgain");
       if (again) again.addEventListener("click", function () {
         nextJoke();
@@ -2519,6 +2690,45 @@
       }).join("");
     }
 
+    function sourcesHTML() {
+      var groups = D.sources || [];
+      if (!groups.length) return "";
+      var total = groups.reduce(function (n, g) { return n + g.items.length; }, 0);
+      return '<details class="guide learn-sources">' +
+        "<summary><span class=\"guide-emoji\" aria-hidden=\"true\">🏛️</span>" +
+          "<span>Official guidance &amp; trusted sources</span>" +
+          '<span class="guide-tag">' + total + " links</span></summary>" +
+        '<div class="guide-body">' +
+          "<p>The organisations that actually set the guidance, so you can check anything here against the source. " +
+          "Links open their own site in a new tab. ZenZac is not affiliated with any of them.</p>" +
+          groups.map(function (group) {
+            return '<div class="source-group"><h3>' + esc(group.group) + '</h3><ul class="source-list">' +
+              group.items.map(function (item) {
+                return '<li><a href="' + item.url + '" target="_blank" rel="noopener">' + esc(item.name) + "</a>" +
+                  "<span>" + esc(item.note) + "</span></li>";
+              }).join("") + "</ul></div>";
+          }).join("") +
+        "</div></details>";
+    }
+
+    function shelfHTML() {
+      var shelves = [
+        { id: "food", emoji: "🍎", label: "Nutrition" },
+        { id: "health", emoji: "🩺", label: "Health" },
+        { id: "activity", emoji: "🤸", label: "Activities" },
+        { id: "behaviour", emoji: "📝", label: "Behaviour" }
+      ];
+      return '<div class="card tight" style="margin-top:18px">' +
+        '<h2 class="card-title">More on the shelf</h2>' +
+        '<p class="card-sub">Nutrition, health, activities and behaviour tracking now have their own shelves in the Compendium.</p>' +
+        '<div class="row-wrap" style="margin-top:12px">' +
+          shelves.map(function (s) {
+            return '<button type="button" class="btn sm" data-comp-cat="' + s.id + '">' +
+              s.emoji + " " + esc(s.label) + "</button>";
+          }).join("") +
+        "</div></div>";
+    }
+
     function render() {
       view.innerHTML = pageHead("Learn", "Short guides that help today",
         "Written for tired grown-ups. Every one of these works on a bad afternoon, not just a good one.") +
@@ -2536,7 +2746,9 @@
           '<div class="card tight"><h2 class="card-title">Need the long version?</h2>' +
             '<p class="card-sub">Scripts, school meetings, sleep, money, and what to do when it gets physical.</p>' +
             '<a class="btn sm" href="#/support" style="margin-top:12px">Parent support</a></div>' +
-        "</div>" +
+                "  </div>" +
+        shelfHTML() +
+        '<div style="margin-top:18px">' + sourcesHTML() + "</div>" +
         '<p class="tiny muted" style="margin-top:12px">ZenZac is a support tool, not a medical device or a diagnosis. ' +
           "If you are worried, speak to your GP, health visitor or school SENCO.</p>";
 
@@ -2544,6 +2756,12 @@
         btn.addEventListener("click", function () {
           learnTag = btn.getAttribute("data-tag");
           render();
+        });
+      });
+
+      $$("[data-comp-cat]", view).forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          openCompCat(btn.getAttribute("data-comp-cat"));
         });
       });
     }
@@ -2555,6 +2773,16 @@
 
   var compQuery = "";
   var compCat = "All";
+
+  /* Deep link from Learn into one Compendium shelf. */
+  function openCompCat(id) {
+    compCat = id;
+    compQuery = "";
+    var here = (window.location.hash || "").replace(/^#\/?/, "").split("?")[0];
+    window.location.hash = "#/compendium";
+    if (here === "compendium") route();
+    else route();
+  }
 
   VIEWS.compendium = function (view) {
     var C = window.ZenCompendium;
@@ -2773,11 +3001,25 @@
         "</div>" +
         '<p class="tiny muted comp-count" id="supCount"></p>' +
         '<div id="supList"></div>' +
-        '<div class="card" style="margin-top:22px">' +
+        '<div class="card sup-chat" style="margin-top:22px">' +
+          '<h2 class="card-title">Just want a general chat?</h2>' +
+          '<p class="card-sub">ZenZac is made by one parent, not a clinic. If you want to compare notes, ask a question, ' +
+            "or just say that this is hard, you can email me directly. No forms, no newsletter, no automation.</p>" +
+          '<p class="sup-email"><a href="mailto:craigheggie@googlemail.com">craigheggie@googlemail.com</a></p>' +
+          '<p class="tiny muted">Replies are slow and honest. This is not a crisis service — if you or your child are at risk, ' +
+            "call 999, or Samaritans on 116 123, free, any time.</p>" +
+        "</div>" +
+        '<div class="card" style="margin-top:14px">' +
           '<h2 class="card-title">If you need a person, not a page</h2>' +
-          '<p class="card-sub">If you are worried about your child, start with your GP. For school problems, ask for the SENCO in writing. ' +
-            "If you are in crisis, call 999, or Samaritans on 116 123 — free, any time.</p>" +
-          '<p class="tiny muted" style="margin-top:10px">General guidance for UK families. Not a diagnosis, not medical advice, ' +
+          '<p class="card-sub">If you are worried about your child, start with your GP. For school problems, ask for the SENCO in writing.</p>' +
+          '<div class="row-wrap" style="margin-top:12px">' +
+            '<a class="btn sm ghost" href="https://www.nhs.uk/conditions/attention-deficit-hyperactivity-disorder-adhd/" target="_blank" rel="noopener">NHS — ADHD</a>' +
+            '<a class="btn sm ghost" href="https://www.autism.org.uk/" target="_blank" rel="noopener">National Autistic Society</a>' +
+            '<a class="btn sm ghost" href="https://www.adhdfoundation.org.uk/" target="_blank" rel="noopener">ADHD Foundation</a>' +
+            '<a class="btn sm ghost" href="https://www.ipsea.org.uk/" target="_blank" rel="noopener">IPSEA — school rights</a>' +
+            '<a class="btn sm ghost" href="https://contact.org.uk/" target="_blank" rel="noopener">Contact — money &amp; support</a>' +
+          "</div>" +
+          '<p class="tiny muted" style="margin-top:12px">General guidance for UK families. Not a diagnosis, not medical advice, ' +
             "and not a substitute for the professionals who know your child.</p>" +
         "</div>";
 
@@ -3209,7 +3451,7 @@
         tileHTML("#/focus", "🎯", "Focus", "Fidget wheel and Wac-A-Zac.", "lilac") +
         tileHTML("#/journal", "📔", "Journal", "Feelings check-ins and tricky moments.", "amber") +
         tileHTML("#/play", "😂", "Play", "Jokes and silly sounds.", "coral") +
-        tileHTML("#/compendium", "📖", "Compendium", "65 tools and guides, searchable.", "mint") +
+        tileHTML("#/compendium", "📖", "Compendium", "Nutrition, health, activities, behaviour and more.", "mint") +
         tileHTML("#/setup", "🎛️", "Your plan", "Mode, answers and house rules.", "") +
         tileHTML("#/learn", "📚", "Learn", "Practical guides, no lectures.", "") +
         tileHTML("#/support", "💗", "Parent support", "Scripts, school, sleep and the long version.", "lilac") +

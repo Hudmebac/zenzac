@@ -258,7 +258,123 @@ window.ZenData = (function () {
         "Never remove a reward already earned; that teaches the system is unfair.",
         "Keep the reward close to the behaviour — same day, ideally within minutes."
       ]
+    },
+    {
+      emoji: "🍽️", tag: "Food", title: "The plate that actually gets eaten",
+      summary: "Nutrition advice fails when it assumes a calm, hungry child at a table. Start from what they will eat.",
+      points: [
+        "Aim for a protein, a carbohydrate and a fruit or vegetable across the day — not on every plate.",
+        "Keep one safe food on the plate every time. New food sits beside it, never instead of it.",
+        "Water on the table before anything else. A thirsty child reads as a grumpy one.",
+        "Regular times matter as much as contents: blood sugar dips look exactly like bad behaviour.",
+        "If the range of foods is shrinking rather than growing, ask the GP about a dietitian referral. Do not wait for a crisis."
+      ]
+    },
+    {
+      emoji: "🤸", tag: "Activities", title: "Movement snacks, not exercise",
+      summary: "Two minutes of movement, several times a day, beats one big workout nobody agrees to.",
+      points: [
+        "Put movement before the demand, not after: ten star jumps, then homework.",
+        "Heavy work calms faster than running — pushing, carrying, pulling, wall presses.",
+        "Keep a short list on the fridge: five things that take under two minutes.",
+        "Join in for the first minute. A child is far more likely to move if you are moving too.",
+        "Finish with something slow — a stretch, a drink, a lie-down — so the body knows it is over."
+      ]
+    },
+    {
+      emoji: "🩺", tag: "Grown-ups", title: "What to say to the GP",
+      summary: "Ten minutes goes further with dates, examples and one clear ask written down first.",
+      points: [
+        "Take three examples with dates: what happened, how long it lasted, what you tried.",
+        "Say the impact, not just the symptom: 'he has not slept before 11pm for six weeks and cannot get to school.'",
+        "Ask one clear question: 'Can we be referred, and what happens next?'",
+        "Ask for the outcome in writing, and for the name of who decides next.",
+        "You can ask for a second opinion, and you can take someone with you. Both are allowed."
+      ]
     }
+  ];
+
+  /* Spinner choices. Eight at a time, big enough to read across a room. */
+  var spinTopics = [
+    { id: "mix", name: "Surprise", emoji: "🎲", note: "A bit of everything.", items: [] },
+    { id: "foods", name: "Foods", emoji: "🍕", note: "What shall we eat?", items: [
+      { e: "🍕", n: "Pizza" }, { e: "🍝", n: "Pasta" }, { e: "🍟", n: "Chips" },
+      { e: "🍛", n: "Curry" }, { e: "🍣", n: "Sushi" }, { e: "🥞", n: "Pancakes" },
+      { e: "🍎", n: "Apples" }, { e: "🍿", n: "Popcorn" }, { e: "🧀", n: "Cheese" },
+      { e: "🍦", n: "Ice cream" }, { e: "🥪", n: "Sandwich" }, { e: "🍌", n: "Banana" }
+    ] },
+    { id: "sports", name: "Sports", emoji: "⚽", note: "Something to burn it off.", items: [
+      { e: "⚽", n: "Football" }, { e: "🏊", n: "Swimming" }, { e: "🚲", n: "Cycling" },
+      { e: "🏀", n: "Basketball" }, { e: "🏃", n: "Running" }, { e: "🛹", n: "Skating" },
+      { e: "🤸", n: "Trampoline" }, { e: "💃", n: "Dancing" }, { e: "🎾", n: "Tennis" },
+      { e: "🧗", n: "Climbing" }, { e: "🏓", n: "Table tennis" }, { e: "🥋", n: "Martial arts" }
+    ] },
+    { id: "colours", name: "Colours", emoji: "🎨", note: "Pick a colour for the day.", items: [
+      { e: "🔴", n: "Red" }, { e: "🟠", n: "Orange" }, { e: "🟡", n: "Yellow" },
+      { e: "🟢", n: "Green" }, { e: "🔵", n: "Blue" }, { e: "🟣", n: "Purple" },
+      { e: "🟤", n: "Brown" }, { e: "⚫", n: "Black" }, { e: "⚪", n: "White" },
+      { e: "🩷", n: "Pink" }, { e: "🩵", n: "Aqua" }, { e: "🟥", n: "Scarlet" }
+    ] },
+    { id: "animals", name: "Animals", emoji: "🦊", note: "Eight animals, one winner.", items: [
+      { e: "🐶", n: "Dog" }, { e: "🐱", n: "Cat" }, { e: "🦊", n: "Fox" },
+      { e: "🐼", n: "Panda" }, { e: "🐧", n: "Penguin" }, { e: "🐬", n: "Dolphin" },
+      { e: "🦁", n: "Lion" }, { e: "🐸", n: "Frog" }, { e: "🦉", n: "Owl" },
+      { e: "🐢", n: "Turtle" }, { e: "🐝", n: "Bee" }, { e: "🦈", n: "Shark" }
+    ] },
+    { id: "computer", name: "Computer", emoji: "💻", note: "Gadgets and games.", items: [
+      { e: "💻", n: "Laptop" }, { e: "⌨️", n: "Keyboard" }, { e: "🤖", n: "Robot" },
+      { e: "🎮", n: "Game" }, { e: "🧑‍💻", n: "Code" }, { e: "🎧", n: "Headphones" },
+      { e: "🚀", n: "Rocket" }, { e: "🔋", n: "Battery" }, { e: "📶", n: "Wifi" },
+      { e: "🐛", n: "Bug" }, { e: "🖨️", n: "Printer" }, { e: "🕹️", n: "Joystick" }
+    ] },
+    { id: "silly", name: "Silly", emoji: "🤪", note: "Nonsense, on purpose.", items: [
+      { e: "🧦", n: "Sock" }, { e: "🍌", n: "Banana" }, { e: "🫧", n: "Bubbles" },
+      { e: "🟩", n: "Slime" }, { e: "🥔", n: "Potato" }, { e: "🦄", n: "Unicorn" },
+      { e: "🎈", n: "Balloon" }, { e: "🥒", n: "Pickle" }, { e: "🪀", n: "Yo-yo" },
+      { e: "🐙", n: "Octopus" }, { e: "🦶", n: "Stinky foot" }, { e: "🌈", n: "Rainbow" }
+    ] }
+  ];
+
+  /* Official and charity sources. The app quotes none of them word for word;
+     these are the doors to the people who actually set the guidance. */
+  var sources = [
+    {
+      group: "Health & diagnosis",
+      items: [
+        { name: "NHS — ADHD", url: "https://www.nhs.uk/conditions/attention-deficit-hyperactivity-disorder-adhd/", note: "Symptoms, assessment and treatment, in plain English." },
+        { name: "NHS — Autism", url: "https://www.nhs.uk/conditions/autism/", note: "What autism is, signs, and how to ask for an assessment." },
+        { name: "NICE NG87 — ADHD", url: "https://www.nice.org.uk/guidance/ng87", note: "The clinical guidance NHS teams and schools work from." },
+        { name: "NICE CG170 — Autism", url: "https://www.nice.org.uk/guidance/cg170", note: "Support and management for autistic children and young people." }
+      ]
+    },
+    {
+      group: "Charities that answer the phone",
+      items: [
+        { name: "National Autistic Society", url: "https://www.autism.org.uk/", note: "Autism information, helplines and parent-to-parent support." },
+        { name: "ADHD Foundation", url: "https://www.adhdfoundation.org.uk/", note: "Neurodiversity training, support and family resources." },
+        { name: "ADHD UK", url: "https://adhduk.co.uk/", note: "Practical help, webinars and a parent community." },
+        { name: "YoungMinds", url: "https://www.youngminds.org.uk/", note: "Mental health support for children, young people and parents." },
+        { name: "Mind", url: "https://www.mind.org.uk/", note: "For your own mental health, not just your child's." }
+      ]
+    },
+    {
+      group: "School, money & your rights (UK)",
+      items: [
+        { name: "IPSEA", url: "https://www.ipsea.org.uk/", note: "Free, legally based advice on SEN and EHCPs." },
+        { name: "Contact", url: "https://contact.org.uk/", note: "Benefits, grants and support for families with additional needs." },
+        { name: "Autism Education Trust", url: "https://www.autismeducationtrust.org.uk/", note: "What good school support for autistic pupils looks like." },
+        { name: "Cerebra", url: "https://cerebra.org.uk/", note: "Legal advice, grants and sleep support for families." }
+      ]
+    },
+    {
+      group: "Everyday health",
+      items: [
+        { name: "NHS — The Eatwell Guide", url: "https://www.nhs.uk/live-well/eat-well/food-guidelines-and-food-labels/the-eatwell-guide/", note: "What a balanced day of food looks like." },
+        { name: "NHS — Sleep and tiredness", url: "https://www.nhs.uk/live-well/sleep-and-tiredness/", note: "How much sleep children need, and what helps." },
+        { name: "NHS — Vitamins for children", url: "https://www.nhs.uk/live-well/vitamin-supplements/vitamins-for-children/", note: "Which vitamins, who needs them, and how much." },
+        { name: "NHS — Physical activity guidelines", url: "https://www.nhs.uk/live-well/exercise/exercise-guidelines/physical-activity-guidelines-children-and-young-people/", note: "How much movement children need at each age." }
+      ]
+    },
   ];
 
   var dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -369,6 +485,7 @@ window.ZenData = (function () {
     guides: guides, dayNames: dayNames,
     themes: themes, modes: modes, mode: mode, ageBands: ageBands,
     hardBits: hardBits, helpChips: helpChips, sensoryChips: sensoryChips,
-    hardTools: hardTools, ruleDefaults: ruleDefaults
+    hardTools: hardTools, ruleDefaults: ruleDefaults,
+    spinTopics: spinTopics, sources: sources
   };
 })();

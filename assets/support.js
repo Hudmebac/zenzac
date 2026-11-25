@@ -17,7 +17,10 @@ window.ZenSupport = {
     { id: "siblings", name: "Siblings & family", emoji: "🧸", blurb: "Fairness, one-to-one time, and the child who copes." },
     { id: "you", name: "You", emoji: "🫖", blurb: "Burnout, respite, and your own wiring." },
     { id: "help", name: "Getting help", emoji: "🧭", blurb: "GP, school, money and the paper trail that gets things done." },
-    { id: "words", name: "What to say", emoji: "💬", blurb: "Telling your child, and words they can use for themselves." }
+    { id: "words", name: "What to say", emoji: "💬", blurb: "Telling your child, and words they can use for themselves." },
+    { id: "nutrition", name: "Food & growth", emoji: "🍽️", blurb: "Eating, growth and the long game — without turning dinner into a fight." },
+    { id: "health", name: "Health & medication", emoji: "🩺", blurb: "Getting heard by the GP, and the questions worth asking about medication." },
+    { id: "activity", name: "Activities & energy", emoji: "🤸", blurb: "Burning it off, joining clubs, and surviving birthday parties." }
   ],
   entries: []
 };
@@ -797,6 +800,155 @@ window.ZenSupport.entries.push(
       ] },
       { h: "What to keep private", p: [
         "The Grown-ups area is for you. If a child asks, it is fair to say: 'That part is for me, like my emails.' It is not a secret; it is just yours."
+      ] }
+    ]
+  }
+);
+
+window.ZenSupport.entries.push(
+  {
+    topic: "nutrition", emoji: "🥣", title: "The beige diet, without the battle",
+    summary: "A narrow diet is usually about safety and sensory certainty, not defiance. Pressure makes the list shorter.",
+    sections: [
+      { h: "What is actually happening", p: [
+        "Many autistic and ADHD children eat a small range of foods because those foods are predictable: same brand, same texture, same colour, same crunch. A new food is not just a new taste — it is an unknown quantity in a body that already feels unreliable.",
+        "The instinct to negotiate, hide vegetables or withhold pudding is understandable. It also teaches the child that eating is a contest, and contests are exhausting for everyone."
+      ] },
+      { h: "What helps more than pressure", list: [
+        "Keep a safe food on the plate at every meal. New food sits beside it with no expectation.",
+        "Serve new food in tiny amounts, repeatedly, without comment. Familiarity comes before tasting.",
+        "Separate eating from behaviour. Do not use food as a reward or a punishment, and do not remove a safe food to force variety.",
+        "Protect the routine: same plate, same seat, same time where possible. Predictability lowers the cost of eating.",
+        "Ask about a dietitian if the range is shrinking, whole food groups have gone, or weight and energy are affected."
+      ] },
+      { h: "When it is more than fussy", p: [
+        "Ask the GP specifically about ARFID (avoidant/restrictive food intake disorder) if the child is frightened of eating, avoids whole textures, or is losing weight. It is a recognised condition and it needs proper support, not a stricter table rule.",
+        "In the meantime, a children's multivitamin may be worth asking about if the diet is very limited. Ask a pharmacist or GP rather than guessing at doses."
+      ] },
+      { h: "Say this", say: [
+        "There is nothing wrong with liking what you like. Let's just keep the other thing on the plate, no pressure.",
+        "You don't have to eat it. You can just leave it there."
+      ] }
+    ]
+  },
+  {
+    topic: "nutrition", emoji: "🕓", title: "The after-school food window",
+    summary: "A child who did not eat at school is not being fussy at 4pm. They are running on empty.",
+    sections: [
+      { h: "Why 4pm looks like a crisis", p: [
+        "Lunch in a loud hall, a rushed ten minutes and unfamiliar food is a lot to ask. Many children eat very little at school and then arrive home starving, tired and unable to explain either.",
+        "The meltdown at 4pm is often a blood-sugar and dehydration problem wearing a behaviour costume."
+      ] },
+      { h: "Plan the landing", list: [
+        "Have food ready before they walk in — something with protein and carbohydrate, not just a biscuit.",
+        "Offer a drink first. Two hours without a drink is enough to make anyone brittle.",
+        "Do not ask about the day until they have eaten. Questions before food rarely go well.",
+        "If dinner becomes impossible afterwards, make the after-school snack the substantial meal and keep dinner small and low-pressure.",
+        "Check with school what is actually eaten, not what is served. Ask for a quiet table if the hall is the barrier."
+      ] },
+      { h: "Try this", try: [
+        "A plate of toast, cheese and fruit on the table at 3.45pm, before anyone speaks.",
+        "A named water bottle in the school bag, refilled at pick-up, every day."
+      ] }
+    ]
+  },
+  {
+    topic: "health", emoji: "🩺", title: "Getting the GP to hear you",
+    summary: "Appointments are short. A page of facts and one clear ask gets you further than a long story.",
+    sections: [
+      { h: "Before the appointment", list: [
+        "Write three examples with dates: what happened, how long it lasted, what you tried, what happened next.",
+        "Write the impact in one line: school missed, sleep lost, work affected, family at breaking point.",
+        "Decide the one question you need answered today. Write it down and ask it early.",
+        "Take the Journal download or your ABC notes with you. Patterns are hard to argue with.",
+        "Take someone with you if you are likely to be emotional or rushed. Two sets of ears are better than one."
+      ] },
+      { h: "In the room", p: [
+        "Lead with the pattern and the impact, not the diagnosis you have researched. 'For six weeks he has woken at 5am, and he has missed eleven days of school' lands harder than 'I think it might be ADHD'.",
+        "It is fair to ask directly: 'What is the referral pathway, and how long is the wait?' and 'What should we do in the meantime?' Ask for the answer in writing — a text or a letter is fine."
+      ] },
+      { h: "If you are not heard", list: [
+        "Ask for the practice's policy on referrals, and for the GP's reason for not referring to be recorded.",
+        "You can ask for a second opinion, or to see another GP at the same practice.",
+        "You can ask the practice manager for help if access is the problem.",
+        "Keep every letter and date. A paper trail is what turns 'we have tried' into evidence.",
+        "In the UK, charities such as IPSEA (SEN law) and Contact (benefits and support) offer free, specific advice."
+      ] },
+      { h: "Say this", say: [
+        "I am not asking you to diagnose today. I am asking what happens next, and when.",
+        "Can you record in my child's notes that I asked for a referral, and why it was not made?"
+      ] }
+    ]
+  },
+  {
+    topic: "health", emoji: "💊", title: "Medication: monitoring, not just swallowing",
+    summary: "A prescription is the start of a monitoring job. These are the things worth writing down from day one.",
+    sections: [
+      { h: "Questions before the first dose", list: [
+        "What is it, what is it meant to change, and how will we know it is working?",
+        "What time should it be taken, and what happens if we forget or it is refused?",
+        "What are the common side effects, and which ones mean we should call someone?",
+        "What do we monitor — appetite, sleep, height, weight, mood, blood pressure — and how often?",
+        "Who reviews the dose, how do we reach them, and what is the plan for weekends and holidays?"
+      ] },
+      { h: "The first two weeks", p: [
+        "Keep a simple daily note: time taken, appetite at lunch and dinner, bedtime, sleep, and one word for mood. It takes a minute and it is the difference between a useful review and a vague one.",
+        "Appetite usually drops most at lunchtime. A substantial breakfast before the dose and a planned after-school snack are practical, not fussy.",
+        "Never adjust or stop a dose without advice. If you are worried, phone the team that prescribed it — that is what they are there for."
+      ] },
+      { h: "A word about 'holidays'", p: [
+        "Some families use medication only on school days; others use it every day. Both can be reasonable, but the decision should come from the prescriber who knows your child, not from a forum. Ask the question directly and get the answer recorded."
+      ] },
+      { h: "Try this", try: [
+        "A one-page medication log on the fridge, with columns for time, food, sleep and mood.",
+        "A photo of the label and the review date in your phone, so it is never a scramble."
+      ] }
+    ]
+  },
+  {
+    topic: "activity", emoji: "🧱", title: "Burning energy without a fight",
+    summary: "The goal is not fitness. It is a body that can sit down afterwards.",
+    sections: [
+      { h: "Move before the demand", p: [
+        "Movement works best as a warm-up, not a reward. Ten minutes of heavy work before homework does more than an hour of running afterwards.",
+        "Heavy work — pushing, pulling, carrying, wall presses — is calming for most children. Fast spinning and running are alerting, which is useful in the morning and unhelpful at bedtime."
+      ] },
+      { h: "The ten-minute rule", list: [
+        "Pick movement that needs no changing, no equipment and no adult energy: stairs, wall pushes, animal walks, a balloon.",
+        "Set a visible timer for ten minutes. A visible end makes starting easier.",
+        "Join in for the first minute, then step back. Children move more when someone moves with them.",
+        "Finish with something slow and quiet, so the body gets the message that the burst is over.",
+        "Do not remove movement as a punishment. It is a need, not a privilege."
+      ] },
+      { h: "If they will not move", p: [
+        "Offer two choices rather than an instruction: 'stairs or wall pushes?' Resistance often drops when the child has picked the route.",
+        "If the refusal is total, try proprioceptive input instead: a tight blanket, a cushion sandwich, carrying the laundry, or pushing the trolley at the shop."
+      ] }
+    ]
+  },
+  {
+    topic: "activity", emoji: "🎉", title: "Clubs and parties: preparation beats bravery",
+    summary: "The child who falls apart at a party is usually the one who was not told what would happen.",
+    sections: [
+      { h: "Before", list: [
+        "Ask for the plan: who will be there, what happens first, how long it lasts, where the quiet space is.",
+        "Show photos of the venue or the coach if you can. Familiarity reduces the load.",
+        "Agree an exit signal and a time limit before you arrive. Knowing they can leave makes staying more likely.",
+        "Eat and drink before you go. A hungry child at a party is a predictable disaster.",
+        "For clubs, ask for a trial session before paying for a block, and tell the coach one thing that helps."
+      ] },
+      { h: "During", p: [
+        "Arrive early or late on purpose — whichever is quieter. The crowded doorway is often the hardest part.",
+        "Find one job or one person. A child with a role to play does not have to improvise social contact.",
+        "Do not insist on joining in. Watching from the edge is participation, and it often comes before joining."
+      ] },
+      { h: "After", p: [
+        "Expect a crash. A party is a sensory marathon, and the bill arrives at home. Plan a quiet hour and food, and do not debrief the social performance.",
+        "If it went badly, the lesson is about preparation and exit plans, not about the child's character."
+      ] },
+      { h: "Say this", say: [
+        "We can stay for twenty minutes, and then we can go. I will show you the door we will leave by.",
+        "You do not have to play. You can watch, and we can go whenever you give me the signal."
       ] }
     ]
   }
