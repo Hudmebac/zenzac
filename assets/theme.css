@@ -483,6 +483,26 @@ input[type="range"]::-moz-range-thumb {
 .hero p { color: var(--ink-2); margin-top: 8px; max-width: 52ch; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
 
+/* Wordmark — ZENZAC with each letter turning slowly. The lowercase e and n
+   read as other letters at half turn, which is what made the old logo work. */
+.wordmark {
+  display: flex; align-items: baseline;
+  font-weight: 800; font-size: clamp(1.55rem, 1.15rem + 1.7vw, 2.15rem);
+  line-height: 1; letter-spacing: -0.02em;
+  color: var(--ink); margin: 0 0 14px;
+}
+.wordmark .wm-l {
+  display: inline-block; width: 0.78em; text-align: center;
+  transform-origin: 50% 52%;
+  animation: wm-turn 9s linear infinite;
+  animation-delay: calc(var(--l) * 0.18s);
+}
+@keyframes wm-turn {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+html[data-motion="calm"] .wordmark .wm-l { animation: none; }
+
 .mood-check { margin-top: 22px; }
 .mood-check > p { font-weight: 650; margin-bottom: 10px; }
 .mood-row { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; max-width: 560px; }
@@ -1156,6 +1176,12 @@ html[data-motion="calm"] .orb { transition-duration: 1.2s; }
   gap: 12px; margin-top: 26px; padding-top: 18px;
   border-top: 1px solid var(--line);
 }
+.setup-jump {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+  margin-top: 18px;
+}
+.setup-jump .tiny { margin-right: 2px; }
+.chip.sm { min-height: 34px; padding: 4px 12px; font-size: 0.8rem; border-color: var(--line); }
 
 .mode-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
 .mode-card {

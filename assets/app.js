@@ -766,6 +766,13 @@
       (sub ? '<p class="page-sub">' + sub + "</p>" : "") + "</div>";
   }
 
+  function wordmarkHTML() {
+    return '<div class="wordmark" role="img" aria-label="ZenZac">' +
+      ["Z", "e", "n", "Z", "a", "c"].map(function (ch, i) {
+        return '<span class="wm-l" style="--l:' + i + '">' + ch + "</span>";
+      }).join("") + "</div>";
+  }
+
   function tileHTML(href, emoji, title, sub, colour) {
     return '<a class="tile" href="' + href + '">' +
       '<span class="tile-ico ' + (colour || "") + '" aria-hidden="true">' + emoji + "</span>" +
@@ -798,7 +805,7 @@
   function setupCTAHtml() {
     return '<div class="card setup-cta">' +
       '<div class="setup-cta-text"><h2 class="card-title">Make it fit your child</h2>' +
-      '<p class="card-sub">Seven short questions set the mode, the house rules and the colours. About two minutes, and every answer can be changed later.</p></div>' +
+      '<p class="card-sub">Seven quick questions choose a starting point, your house rules and the colours. About two minutes, and you can change any answer later.</p></div>' +
       '<a class="btn primary" href="#/setup">Set up my plan</a></div>';
   }
 
@@ -856,8 +863,6 @@
 
   VIEWS.home = function (view) {
     var name = (state.settings.name || "").trim();
-    var hour = new Date().getHours();
-    var greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
     var moodsToday = state.moods.filter(function (m) { return isToday(m.ts); }).length;
     var doneToday = state.routine.done.filter(function (d) { return isToday(d.ts); }).length;
     var streak = computeStreak();
@@ -867,9 +872,9 @@
 
     view.innerHTML =
       '<section class="hero">' +
-        '<p class="eyebrow">' + greeting + (name ? ", " + esc(name) : "") + "</p>" +
+        wordmarkHTML() +
         "<h1>" + (name ? "Hi " + esc(name) + " 👋" : "Hello there 👋") + "</h1>" +
-        "<p>This is your calm little corner. Breathe, see what is next, or just play for a bit.</p>" +
+        "<p>This is your calm corner. Breathe, see what&rsquo;s next, or play for a while.</p>" +
         '<div class="hero-actions">' +
           '<a class="btn primary lg" href="#/calm">' + icon("calm") + " Breathe with me</a>" +
           '<a class="btn lg" href="#/routine">' + icon("routine") + " What&rsquo;s next?</a>" +
@@ -877,7 +882,7 @@
         '<div class="mood-check">' +
           '<p id="moodQ">How are you feeling right now?</p>' +
           '<div class="mood-row" role="group" aria-labelledby="moodQ">' + moodButtons(picked) + "</div>" +
-          '<p class="tiny muted" id="moodHint" style="margin-top:10px">Tap a face. It stays private on this device.</p>' +
+          '<p class="tiny muted" id="moodHint" style="margin-top:10px">Tap a face. It stays on this device.</p>' +
         "</div>" +
       "</section>" +
 
@@ -2087,23 +2092,28 @@
 
   var STEP_TITLES = {
     who: "Who is this for?",
-    mode: "What fits best?",
+    mode: "Which fits best right now?",
     hard: "What is hardest right now?",
     helps: "What already helps?",
-    sensory: "Anything that hurts the senses?",
+    sensory: "Anything that feels too much?",
     rules: "Our house rules",
     look: "How should it look?",
     done: "Here is your plan"
   };
 
+  var STEP_SHORT = {
+    who: "Name", mode: "Mode", hard: "Hard bits", helps: "What helps",
+    sensory: "Senses", rules: "Rules", look: "Colours"
+  };
+
   var STEP_SUBS = {
-    who: "A first name is enough, and you can leave anything blank. Every answer stays on this device.",
-    mode: "This sets what the app puts first. It is a starting point, not a label, and it can change any time.",
-    hard: "Pick up to four. These become your shortcuts on Home and your starting points in the compendium.",
-    helps: "Include the things that work, even the small ones. The app will lean on these first.",
-    sensory: "Used to plan ahead and avoid surprises — never to label anyone.",
+    who: "A first name or nickname is enough. You can leave anything blank, and nothing leaves this device.",
+    mode: "This changes what the app puts first. It is a starting point, not a label — and you can change it whenever you like.",
+    hard: "Pick the ones that matter most. They become your shortcuts on Home.",
+    helps: "Include the small things that work. The app will offer these first.",
+    sensory: "So the app can plan ahead and avoid surprises — never to label anyone.",
     rules: "Short agreements for the whole household. Switch on what fits, and add your own in your own words.",
-    look: "Six soft palettes. No pure white, no harsh colours, and the choice is saved straight away.",
+    look: "Six soft palettes, no harsh white. Your choice saves straight away.",
     done: "Nothing here is permanent. Change an answer whenever your child changes."
   };
 
@@ -2190,14 +2200,14 @@
 
       if (step === "hard") {
         return '<div class="chip-row">' + chipButtons(D.hardBits, state.profile.hard, "hard") + "</div>" +
-          '<p class="tiny muted" style="margin-top:12px">Tap to choose. Tap again to remove. ' +
-          (state.profile.hard.length ? state.profile.hard.length + " chosen." : "None chosen yet.") + "</p>";
+          '<p class="tiny muted" style="margin-top:12px">Tap to choose, tap again to undo. ' +
+          (state.profile.hard.length ? state.profile.hard.length + " chosen." : "Nothing chosen yet — that is fine.") + "</p>";
       }
 
       if (step === "helps") {
         return '<div class="chip-row">' + chipButtons(D.helpChips, state.profile.helps, "help") + "</div>" +
           '<p class="tiny muted" style="margin-top:12px">' +
-          (state.profile.helps.length ? state.profile.helps.length + " chosen." : "Choose anything that already works.") + "</p>";
+          (state.profile.helps.length ? state.profile.helps.length + " chosen." : "Nothing chosen yet — that is fine.") + "</p>";
       }
 
       if (step === "sensory") {
@@ -2268,13 +2278,14 @@
     function footerHTML() {
       var step = SETUP_STEPS[setupStep];
       if (step === "done") return "";
-      if (step === "who") {
-        return '<div class="setup-foot"><button type="button" class="btn ghost" id="setupSkip">Skip for now</button>' +
-          '<button type="button" class="btn primary" id="setupNext">Next</button></div>';
-      }
       var nextLabel = step === "look" ? "See my plan" : "Next";
+      if (step === "who") {
+        return '<div class="setup-foot"><span class="tiny muted">Every answer is optional</span>' +
+          '<button type="button" class="btn primary" id="setupNext">' + nextLabel + "</button></div>";
+      }
       return '<div class="setup-foot"><button type="button" class="btn ghost" id="setupBack">' + icon("back") + " Back</button>" +
-        '<button type="button" class="btn primary" id="setupNext">' + nextLabel + "</button></div>";
+        '<div class="row" style="gap:8px"><button type="button" class="btn ghost sm" id="setupSkip">Skip</button>' +
+        '<button type="button" class="btn primary" id="setupNext">' + nextLabel + "</button></div></div>";
     }
 
     function go(next) {
@@ -2418,11 +2429,16 @@
       var back = $("#setupBack", view);
       if (back) back.addEventListener("click", function () { go(setupStep - 1); });
       var skip = $("#setupSkip", view);
-      if (skip) skip.addEventListener("click", function () { window.location.hash = "#/home"; });
+      if (skip) skip.addEventListener("click", function () { go(setupStep + 1); });
       var finishBtn = $("#setupFinish", view);
       if (finishBtn) finishBtn.addEventListener("click", finish);
       var again = $("#setupAgain", view);
       if (again) again.addEventListener("click", function () { go(0); });
+      $$("[data-jump]", view).forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          go(parseInt(btn.getAttribute("data-jump"), 10));
+        });
+      });
     }
 
     function render(keepScroll) {
@@ -2431,21 +2447,33 @@
       var total = SETUP_STEPS.length - 1;
       var shown = Math.min(setupStep + 1, total);
       var pct = Math.round((shown / total) * 100);
-      var eyebrow = step === "done" ? "Your plan" : "Set-up · " + shown + " of " + total;
+      var eyebrow = step === "done" ? "Your plan" : "Set-up";
+      var stepNote = step === "done" ? "All done" : "Step " + shown + " of " + total;
+      var jump = "";
+      if (state.profile.done && step !== "done") {
+        jump = '<div class="setup-jump" role="group" aria-label="Jump to a step">' +
+          '<span class="tiny muted">Jump to</span>' +
+          SETUP_STEPS.slice(0, -1).map(function (id, i) {
+            return '<button type="button" class="chip sm' + (i === setupStep ? " is-on" : "") + '" data-jump="' + i + '">' +
+              esc(STEP_SHORT[id]) + "</button>";
+          }).join("") + "</div>";
+      }
       view.innerHTML = '<div class="setup-wrap">' +
         '<div class="setup-head">' +
           '<div class="row-between"><a class="btn sm ghost" href="#/home">' + icon("back") + " Home</a>" +
-            '<span class="tiny muted">' + (step === "done" ? "Final step" : "Step " + shown + " of " + total) + "</span></div>" +
+            '<span class="tiny muted">' + stepNote + (shown === 1 && step !== "done" ? " · about 2 minutes" : "") + "</span></div>" +
           '<div class="setup-progress" role="progressbar" aria-label="Set-up progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><span style="width:' + pct + '%"></span></div>' +
         "</div>" +
         '<div class="setup-card">' +
           '<p class="eyebrow">' + esc(eyebrow) + "</p>" +
           '<h1 class="page-title">' + esc(STEP_TITLES[step]) + "</h1>" +
           '<p class="page-sub">' + esc(STEP_SUBS[step]) + "</p>" +
+          jump +
           '<div class="setup-body">' + bodyHTML() + "</div>" +
           footerHTML() +
         "</div>" +
-        '<p class="tiny muted center" style="margin-top:16px"><a href="#/settings">Settings</a> · <a href="#/home">Skip straight to the app</a></p>' +
+        (step === "done" ? "" :
+          '<p class="tiny muted center" style="margin-top:16px">Answers save as you go · <a href="#/settings">Settings</a></p>') +
       "</div>";
       bind();
       try { window.scrollTo(0, y); } catch (e) {}
