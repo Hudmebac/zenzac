@@ -2120,7 +2120,7 @@
   }
 
   VIEWS.routine = function (view) {
-    view.innerHTML = pageHead("Now &amp; Next", "One thing at a time",
+    view.innerHTML = pageHead("Now & Next", "One thing at a time",
       "Now is the only thing that needs attention for the moment. Next is a heads-up, so the handover is not a surprise.") +
       ruleStripHTML() +
       '<div id="routineBody"></div>';
